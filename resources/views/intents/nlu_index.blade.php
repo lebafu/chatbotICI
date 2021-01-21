@@ -1,10 +1,10 @@
-@extends('intents.layouts')
+@extends('layouts.app')
  
 @section('content')
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Check all Blogs</h2>
+                <h2>Todas las intenciones de Aprendizaje del Lenguaje Natural</h2>
             </div>
             <div class="pull-right">
                 <!- -->
@@ -22,7 +22,7 @@
         <tr>
             <th>ID</th>
             <th>nombre</th>
-            <th>respuestas</th>
+            <th>Expresión equivalente para nombre</th>
             <th width="250px">Action</th>
         </tr>
         @foreach ($datos as $dato)
