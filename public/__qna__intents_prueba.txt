@@ -1,0 +1,10 @@
+{
+  "name": "",
+  "contexts": [
+    "global"
+  ],
+  "utterances": {
+    "es": []
+  },
+  "slots": []
+}

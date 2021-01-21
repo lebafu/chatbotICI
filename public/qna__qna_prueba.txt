@@ -1,0 +1,18 @@
+{
+  "id": "",
+  "data": {
+    "action": "text",
+    "contexts": [
+      "global"
+    ],
+    "enabled": true,
+    "answers": {
+      "es": []
+    },
+    "questions": {
+      "es":[]
+    },
+    "redirectFlow": "",
+    "redirectNode": ""
+  }
+}
