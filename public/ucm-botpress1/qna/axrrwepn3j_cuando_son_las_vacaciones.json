@@ -1,0 +1,18 @@
+{
+  "id": "axrrwepn3j_cuando_son_las_vacaciones",
+  "data": {
+    "action": "text",
+    "contexts": [
+      "global"
+    ],
+    "enabled": true,
+    "answers": {
+      "es": ["En el mes de febrero 2021"]
+    },
+    "questions": {
+      "es":["¿Cuando son las vacaciones?" ]
+    },
+    "redirectFlow": "",
+    "redirectNode": ""
+  }
+}

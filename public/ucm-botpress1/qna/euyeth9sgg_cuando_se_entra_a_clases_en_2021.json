@@ -1,0 +1,18 @@
+{
+  "id": "euyeth9sgg_cuando_se_entra_a_clases_en_2021",
+  "data": {
+    "action": "text",
+    "contexts": [
+      "global"
+    ],
+    "enabled": true,
+    "answers": {
+      "es": ["La tercera semana de Marzo"]
+    },
+    "questions": {
+      "es":["¿Cuando se entra a clases en 2021?" ]
+    },
+    "redirectFlow": "",
+    "redirectNode": ""
+  }
+}

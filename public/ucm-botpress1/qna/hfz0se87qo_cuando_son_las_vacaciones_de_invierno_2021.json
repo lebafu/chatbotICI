@@ -1,0 +1,18 @@
+{
+  "id": "hfz0se87qo_cuando_son_las_vacaciones_de_invierno_2021",
+  "data": {
+    "action": "text",
+    "contexts": [
+      "global"
+    ],
+    "enabled": true,
+    "answers": {
+      "es": ["En Julio 2021"]
+    },
+    "questions": {
+      "es":["¿Cuando son las vacaciones de Invierno 2021?" ]
+    },
+    "redirectFlow": "",
+    "redirectNode": ""
+  }
+}

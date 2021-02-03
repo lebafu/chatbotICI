@@ -45,7 +45,7 @@
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Respuesta') }}</label>
 
                             <div class="col-md-6">
-                                <input id="nombre" type="text" class="form-control" name="nombre" value="{{$answer->nombre}}" required autocomplete="nombre" autofocus>
+                                <input id="respuesta" type="text" class="form-control" name="respuesta" value="{{$answer->nombre}}" required autocomplete="nombre" autofocus>
                             </div>
                         </div>
                        @endif
