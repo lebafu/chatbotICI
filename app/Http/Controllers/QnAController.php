@@ -7,6 +7,9 @@ use DB;
 use File;
 use App\Models\Question;
 use App\Models\Answers;
+use App\Models\Archivo_qna;
+use Auth;
+use Redirect;
 
 class QnAController extends Controller
 {
@@ -19,8 +22,11 @@ class QnAController extends Controller
     {
         //
         //Envio en la variable datos la información de las atblas questions y answer mediante el join.
-         $datos=DB::table('answer')->join('questions','answer.id','=','questions.id_answers')->select('questions.*', 'answer.nombre','answer.habilitada')->get();
+         $datos=DB::table('answer')->join('questions','answer.id','=','questions.id_answers')->select('questions.*', 'answer.nombre','answer.habilitada')->paginate(7);
     //dd($datos);
+         if(Auth::id()==null){
+        return Redirect::to('dashboard');
+      }
       return view('qna.index',compact('datos'));
     }
 
@@ -341,16 +347,26 @@ class QnAController extends Controller
       //Se esccribe en el archivo
       fwrite($escribir2_question, $datosnuevos2_question);
       fclose($escribir2_question);
-         
+      
+      $archivo_qna=new Archivo_qna();
+      //dd($randomString.$cadena_final);
+      $archivo_qna->nombre=$randomString.$cadena_final;
+      $archivo_qna->save();
+      $ids_archivos=DB::table('archivo_qna')->where('nombre','=',$randomString.$cadena_final)->select('id')->get();
+      foreach($ids_archivos as $id_archivo);
+      //dd($id_archivo);
       $respuesta=new Answers();
         $respuesta->nombre=$request->answer;
+        //dd($id_archivo);
+        $respuesta->id_archivo=$id_archivo->id;
+        $respuesta->habilitada=1;
         $respuesta->save();
         $answers=DB::table('answer')->where('nombre','=',$request->answer)->get();
         foreach($answers as $answer);
         $pregunta=new Question();
         $pregunta->id_answers=$answer->id;
         $pregunta->pregunta=$request->question;
-        $pregunta->habilitada=1;
+        //$pregunta->habilitada=1;
         $pregunta->save();
         //dd($request);
 
@@ -475,6 +491,7 @@ if ($gestor) {
       //Guardo en $contador_question cuantos answers o respuestas tengo asociadas a esa pregunta...
       $contador_question=DB::table('questions')->where('id_answers','=',$question->id_answers)->count();
       $question_min_id=DB::table('questions')->where('id_answers','=',$question->id_answers)->select('id')->min('id');
+      //dd($question_min_id,$question->id);
       $cadena=$request->pregunta;
       //dd($cadena);
         $cadena = str_replace(
@@ -525,7 +542,14 @@ if ($gestor) {
           //dd($pos_final);
           //dd($largo_cadena);
         if(($init_interrogacion==0 and $cerrar_interrogacion==0)){
-
+          $cadenaf1 = str_replace("¿", "", $cadena);
+        $cadenaf2 = str_replace("?","",$cadenaf1);
+        $cadena_final=strtolower($cadenaf2);
+         $cadena_final = str_replace(
+        array(' '),
+        array('_'),
+        $cadena_final
+        );
         }elseif($init_interrogacion==1 and $cerrar_interrogacion==1){
         $cadenaf1 = str_replace("¿", "", $cadena);
         $cadenaf2 = str_replace("?","",$cadenaf1);
@@ -590,7 +614,14 @@ if ($gestor) {
           //dd($largo_cadena);
           //dd($cadena_actual);
         if(($init_interrogacion==0 and $cerrar_interrogacion==0)){
-
+              $cadenaf1_actual = str_replace("¿", "", $cadena_actual);
+        $cadenaf2_actual = str_replace("?","",$cadenaf1_actual);
+        $cadena_final_actual=strtolower($cadenaf2_actual);
+         $cadena_final_actual = str_replace(
+        array(' '),
+        array('_'),
+        $cadena_final_actual
+        );
         }elseif($init_interrogacion==1 and $cerrar_interrogacion==1){
         $cadenaf1_actual = str_replace("¿", "", $cadena_actual);
         $cadenaf2_actual = str_replace("?","",$cadenaf1_actual);
@@ -651,6 +682,7 @@ if ($gestor) {
     
     //Se van abriendo cada uno de los archivos de la carpeta hasta que abre todos los archivos de la carpeta
     $path_archivo=("C:/Users/LI/Desktop/chatbot/public/".$res[$i]["Nombre"]);
+    //dd($encuentra);
     $encuentra=strpos($res[$i]["Nombre"],$cadena_final_actual);
     //dd($encuentra);
     if($encuentra==false){
@@ -700,6 +732,7 @@ if ($gestor) {
     //La ruta con los archivos que va abriendo 
     $path_archivo=("C:/Users/LI/Desktop/chatbot/public/".$res[$i]["Nombre"]);
      $find=strpos($res[$i]["Nombre"],$cadena_final_actual);
+     //dd($res[$i]["Nombre"]);
     //dd($find);
     if($find==false){
         //dd("NADA");
@@ -708,11 +741,14 @@ if ($gestor) {
         //dd(substr($res[$i]["Nombre"],46),$find);
         //dd($res[$i]["Nombre"],$cadena_final_actual);
     //print_r($res2[$i]["Nombre"]);
-    
+    //dd($cadena_final_actual,$cadena_final);
     //El string que es buscando en alguna linea en los archivos
+    //dd($cadena_final_actual);
     $patron= '"'.$question->pregunta.'","';
-    //Lo que viene del formulario edit para modificar y añadirlo a la base de datos
+    $patron2='"name": '.'"'.(substr($res[$i]["Nombre"],46,-5)).'",';    //Lo que viene del formulario edit para modificar y añadirlo a la base de datos
     $sustitucion='"'.$request->pregunta.'","';
+    $sustitucion2=str_replace($cadena_final_actual,$cadena_final,$patron2);
+    //dd($sustitucion2);
     //dd($sustitucion);
     //}
         $leer = fopen($path_archivo, 'r+');
@@ -720,8 +756,9 @@ if ($gestor) {
       //dd($data , $patron, $sustitucion);
       fclose($leer);
       $datosnuevos = str_replace($patron, $sustitucion, $data); //REEMPLAZA LO QUE CONTINE EL ARCHIVO VIEJO POR EL ARCHIVO NUEVO
+      $datosnuevos1= str_replace($patron2,$sustitucion2,$datosnuevos);
       $escribir = fopen($path_archivo, 'w');
-      fwrite($escribir, $datosnuevos);
+      fwrite($escribir, $datosnuevos1);
       fclose($escribir);
       //dd($datosnuevos);
       $largo_actual_archivo1=strlen("C:/Users/LI/Desktop/chatbot/public/".$res[$i]["Nombre"]);
@@ -730,22 +767,23 @@ if ($gestor) {
       //dd($nombre_archivo_mod1);
       //dd($largo_actual_archivo1,$find,$nombre_actual_archivo1);
       //dd($nombre_actual_archivo1,$encuentra,$largo_actual_archivo1);
+     
      $fichero="C:/Users/LI/Desktop/chatbot/public/".$res[$i]["Nombre"];
-     $nuevo_fichero="C:/Users/LI/Desktop/chatbot/public/botpress12120/data/ucm-botpress1/intents/".$nombre_archivo_mod1;
+     $nuevo_fichero="C:/Users/LI/Desktop/chatbot/public/botpress12120/data/bots/ucm-botpress1/intents/".$nombre_archivo_mod1;
      //dd($nuevo_fichero);
-     $leer_nuevo_fichero= fopen($nuevo_fichero, 'r');
-     $info_nuevo_fichero = fread($leer_nuevo_fichero, filesize($nuevo_fichero));
-     dd($info_nuevo_fichero);
-     fclose($leer_nuevo_fichero);
-     $escribir_nuevo_fichero = fopen($nuevo_fichero, 'w');
+     $leer_fichero= fopen($fichero, 'r+');
+     $info_nuevo_fichero = fread($leer_fichero, filesize($fichero));
+     //dd($info_nuevo_fichero);
+     fclose($leer_fichero);
+     //dd($info_nuevo_fichero);
+
+     $escribir_nuevo_fichero = fopen($nuevo_fichero, 'w+');
+     fwrite($escribir_nuevo_fichero,$info_nuevo_fichero);
      fclose($escribir_nuevo_fichero);
      //rename($nuevo_fichero,$fichero);
-     
-  if (!copy($fichero,$nuevo_fichero)){
-    dd("HA OCURRIDO UN ERROR");
-}else{
-    dd("EL ARCHIVO HA CAMBIAADO DE NNOMBRE");
-}
+     if($question_min_id==$question->id){
+     rename($fichero,$nuevo_fichero);
+     }
 
   //unlink("C:/Users/LI/Desktop/chatbot/public/".$res[$i]["Nombre"]);
       
@@ -797,14 +835,29 @@ if ($gestor) {
    while($i<$tam){
     //RUTA DE LA CARPETA PUBLIC + RUTA DE DIRECTORIO HASTA CARPETA QNA DONDE RECORRERA CADA UNO DE LOS NOMBRES DE LOS ARCHIVOS QUE TIENE ALMACENADO EN LA VARIABLE RES2
     $path_archivo=("C:/Users/LI/Desktop/chatbot/public/".$res2[$i]["Nombre"]);
+     $find=strpos($res2[$i]["Nombre"],$cadena_final_actual);
+     //dd($res[$i]["Nombre"]);
+    //dd($find);
+    if($find==false){
+      $archivo_nombre_original=(substr($res2[$i]["Nombre"],42,-5)).'.json';
+      $archivo_nombre_nuevo=str_replace($cadena_final_actual,$cadena_final,(substr($res2[$i]["Nombre"],42,-5))).'.json';
+        //dd("NADA");
+    }else{
+      $archivo_nombre_original=(substr($res2[$i]["Nombre"],42,-5)).'.json';
+
+      //dd($cadena_final_actual);
     //print_r($res2[$i]["Nombre"]);
     //EL STRING QUE SE ESTA BUSCANDO EN LOS ARCHIVOS DE LA CARPETA QNA, PARA MODIFICAR ALGUNA DE LAS PREGUNTAS, QUE COMO $patron como 
     //en este caso no lleva coma, sabemos que no será el ultimo del arreglo questions: es:[]
     $patron= '"'.$question->pregunta.'"';
+    $patron2='"id": '.'"'.(substr($res2[$i]["Nombre"],42,-5)).'",';
     //dd($patron);
     // LO QUE SE DESEA ESCRIBIR COMO NUEVA PREGUNTA EN LA TABLA QUESTIONS Y EN LA BASE DE DATOS DE BOTPRESS
     $sustitucion='"'.$request->pregunta.'"';
-    //dd($patron , $sustitucion);
+    $sustitucion2=str_replace($cadena_final_actual,$cadena_final,$patron2);
+    $archivo_nombre_nuevo=str_replace($cadena_final_actual,$cadena_final,(substr($res2[$i]["Nombre"],42,-5))).'.json';
+    //dd($archivo_nombre_original,$archivo_nombre_nuevo);
+    //dd($cadena_final_actual,$cadena_final,$patron2,$sustitucion2);
     //}
     //dd($path_archivo);
         //SE ABRE EL ARCHIVO PARA LEERLO
@@ -816,14 +869,16 @@ if ($gestor) {
       //SE CIERRA EL ARCHIVO QUE SE LEE
       fclose($leer);
       //SI EN EL ARCHIVO ENCUENTRA $patron entonces lo cambiará por $sustitucion y copiará lo demas del archivo data en la variable $datosnuevos
-      $datosnuevos = str_replace($patron, $sustitucion, $data); //REEMPLAZA LO QUE CONTINE EL ARCHIVO VIEJO POR EL ARCHIVO NUEVO
+      $datosnuevos = str_replace($patron, $sustitucion, $data);
+      $datosnuevos1= str_replace($patron2,$sustitucion2,$datosnuevos); //REEMPLAZA LO QUE CONTINE EL ARCHIVO VIEJO POR EL ARCHIVO NUEVO
       $escribir = fopen($path_archivo, 'w');
       //dd($datosnuevos);
       //Se escribe en $datosnuevos los en el aarchivo que corresponde
-      fwrite($escribir, $datosnuevos);
+      fwrite($escribir, $datosnuevos1);
       //cerramos la escritura en el archivo
       fclose($escribir);
       //dd($datosnuevos);
+    }
     $i=$i+1;
     //print_r($i);
    //}
@@ -837,9 +892,13 @@ if ($gestor) {
     //if($i+1==11){
 
         //RUTA DE LA CARPETA PUBLIC + RUTA DE DIRECTORIO HASTA CARPETA QNA DONDE RECORRERA CADA UNO DE LOS NOMBRES DE LOS ARCHIVOS QUE TIENE ALMACENADO EN LA VARIABLE RES2
+    $find=strpos($res2[$i]["Nombre"],$cadena_final_actual);
+     //dd($res[$i]["Nombre"]);
+    //dd($find);
+    if($find==false){
     $path_archivo=("C:/Users/LI/Desktop/chatbot/public/".$res2[$i]["Nombre"]);
     //print_r($res2[$i]["Nombre"]);
-   
+   }else{
     //EL STRING QUE SE ESTA BUSCANDO EN LOS ARCHIVOS DE LA CARPETA QNA, PARA MODIFICAR ALGUNA DE LAS PREGUNTAS, QUE COMO $patron como 
     //en este caso no lleva coma, sabemos que no será el ultimo del arreglo questions: es:[]
     $patron= '"'.$question->pregunta.'","';
@@ -860,7 +919,9 @@ if ($gestor) {
      //Se escribe en $datosnuevos los en el aarchivo que corresponda a esta iteracion
       fwrite($escribir, $datosnuevos);
       fclose($escribir);
+
       //dd($datosnuevos);
+    }
     $i=$i+1;
     //print_r($i);
   }
@@ -868,7 +929,7 @@ if ($gestor) {
      //dd($datosnuevos);
     //Se cierra directorio
      $dir2->close();
-  
+   //dd($archivo_nombre_original,$archivo_nombre_nuevo);
   //MODIFICANDO RESPUESTA DE QNA QUESTION PREGUNTA 
   $tam=sizeof($res2);
   $i=0;
@@ -879,14 +940,25 @@ if ($gestor) {
 
     //Se abre cada uno de los archivos de la carpeta  QNA
     $path_archivo=("C:/Users/LI/Desktop/chatbot/public/".$res2[$i]["Nombre"]);
+     $find=strpos($res2[$i]["Nombre"],$cadena_final_actual);
+     //dd($res[$i]["Nombre"]);
+    //dd($find);
+    if($find==false){
+         $archivo_nombre_original=(substr($res2[$i]["Nombre"],42,-5)).'.json';
+      $archivo_nombre_nuevo=str_replace($cadena_final_actual,$cadena_final,(substr($res2[$i]["Nombre"],42,-5))).'.json';
     //print_r($res2[$i]["Nombre"]);
+    }else{
 
+      $archivo_nombre_original=(substr($res2[$i]["Nombre"],42,-5)).'.json';
+    //dd($archivo_nombre_original);
     //EL STRING QUE SE ESTA BUSCANDO EN LOS ARCHIVOS DE LA CARPETA QNA, PARA MODIFICAR ALGUNA DE LA RESPUESTAS, QUE COMO $patron como 
     //en este caso no lleva coma, sabemos que no será el ultimo del arreglo answers: es:[], cbae señalar que las respuestas de QNA son solo son una fla con el texto entre comillas, no tienen ninguna coma final al ser solo una respuesta única.
     $patron= '"'.$answer->nombre.'"';
     //dd($patron);
-    $sustitucion='"'.$request->nombre.'"';
-    //dd($sustitucion);
+    $sustitucion='"'.$request->respuesta.'"';
+    $sustitucion2=str_replace($cadena_final_actual,$cadena_final,$patron2);
+    $archivo_nombre_nuevo=str_replace($cadena_final_actual,$cadena_final,(substr($res2[$i]["Nombre"],42,-5))).'.json';
+    //dd($archivo_nombre_original,$archivo_nombre_nuevo);
     //}
      //Abro el archivo que corresponda para leerlo
       $leer = fopen($path_archivo, 'r+');
@@ -897,23 +969,33 @@ if ($gestor) {
     //SI EN EL ARCHIVO ENCUENTRA $patron entonces lo cambiará por $sustitucion y copiará lo demas del archivo data en la variable $datosnuevos
 
       $datosnuevos = str_replace($patron, $sustitucion, $data); //REEMPLAZA LO QUE CONTINE EL ARCHIVO VIEJO POR EL ARCHIVO NUEVO
+      //dd($datosnuevos);
       //Abro el archivo para escribir en el
       $escribir = fopen($path_archivo, 'w');
       //Escribo lo que se encuentra en $datosnuevos lo que see haya en el archivo respectivo de la iteración en la que estemos
       fwrite($escribir, $datosnuevos);
       //Cerramos el archivo apara escribir
       fclose($escribir);
+      //dd($question_min_id,$question->id,"C:/Users/LI/Desktop/chatbot/public/botpress12120/data/bots/ucm-botpress1/qna/".$archivo_nombre_original,"C:/Users/LI/Desktop/chatbot/public/botpress12120/data/bots/ucm-botpress1/qna/".$archivo_nombre_nuevo);
+        if($question_min_id==$question->id){
+     rename("C:/Users/LI/Desktop/chatbot/public/botpress12120/data/bots/ucm-botpress1/qna/".$archivo_nombre_original,"C:/Users/LI/Desktop/chatbot/public/botpress12120/data/bots/ucm-botpress1/qna/".$archivo_nombre_nuevo);
+     }
+    }
       //dd($datosnuevos);
     $i=$i+1;
     //print_r($i);
   }
+  //dd($archivo_nombre_original,$archivo_nombre_nuevo);
+  
+
+  
 
   //Actualizamos la base de datos mysql con las respectivas tablas
   //dd($request);
    DB::table('questions')->where('id', $id)->update(['pregunta' => $request->pregunta]);
    //$question->pregunta=$request->pregunta;
    //$question->save();
-   //dd($request->nombre);
+   //dd($request);
     DB::table('answer')->where('id','=',$question->id_answers)->update(['nombre'=>$request->respuesta]);
 
    //$answer->nombre=$request->nombre;
@@ -1002,7 +1084,20 @@ if ($gestor) {
           //dd($largo_cadena);
           //dd($cadena_actual);
         if(($init_interrogacion==0 and $cerrar_interrogacion==0)){
-            $cadena_final_actual=$cadena_actual;
+            $cadenaf1_actual = str_replace("¿", "", $cadena_actual);
+        $cadenaf2_actual = str_replace("?","",$cadenaf1_actual);
+        $cadena_final_actual=strtolower($cadenaf2_actual);
+         $cadena_final_actual = str_replace(
+        array(' '),
+        array('_'),
+        $cadena_final_actual
+        );
+         $cadena_final_actual = str_replace(
+        array('-'),
+        array('_'),
+        $cadena_final_actual
+        );
+
         }elseif($init_interrogacion==1 and $cerrar_interrogacion==1){
         $cadenaf1_actual = str_replace("¿", "", $cadena_actual);
         $cadenaf2_actual = str_replace("?","",$cadenaf1_actual);
@@ -1055,12 +1150,13 @@ if ($gestor) {
    while($i<$tam){
     //RUTA DE LA CARPETA PUBLIC + RUTA DE DIRECTORIO HASTA CARPETA QNA DONDE RECORRERA CADA UNO DE LOS NOMBRES DE LOS ARCHIVOS QUE TIENE ALMACENADO EN LA VARIABLE RES2
     $path_archivo=("C:/Users/LI/Desktop/chatbot/public/".$res2[$i]["Nombre"]);
-    //dd($path_archivo);
+    //dd($path_archivo,$cadena_final_actual);
      $encuentra1=strpos($res2[$i]["Nombre"],$cadena_final_actual);
     //dd($encuentra1);
     if($encuentra1==false){
         //dd("NADA");
     }else{
+      //dd($encuentra1);
         //dd($path_archivo);
     //print_r($res2[$i]["Nombre"]);
 
@@ -1071,6 +1167,7 @@ if ($gestor) {
       $leer = fopen($path_archivo, 'r+');
       //if(filesize($path_archivo) > 0){
       //SE ALMACENA LO QUE SE LEE INTERMANETE EN EL ARCHIVO
+      //dd($path_archivo);
       $data = fread($leer, filesize($path_archivo));
       $encuentra2=strpos($data,'"enabled": true,');
       $encuentra3=strpos($data,'"enabled": false,');
@@ -1117,7 +1214,7 @@ if ($gestor) {
 
 
       //Envio en la variable datos la información de las atblas questions y answer mediante el join.
-         $datos=DB::table('answer')->join('questions','answer.id','=','questions.id_answers')->select('questions.*', 'answer.nombre','answer.habilitada')->get();
+         $datos=DB::table('answer')->join('questions','answer.id','=','questions.id_answers')->select('questions.*', 'answer.nombre','answer.habilitada')->paginate(7);
     //dd($datos);
       return view('qna.index',compact('datos'));
       //dd($qna);

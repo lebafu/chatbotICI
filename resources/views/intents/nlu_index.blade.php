@@ -44,6 +44,8 @@
     </table>
   
 
-      
+   {{$datos->links() }}
 @endsection
+
+
 © 2020 GitHub, Inc.

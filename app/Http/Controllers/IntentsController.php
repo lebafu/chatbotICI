@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use DB;
 use App\Models\Nlu_name;
 use App\Models\Nlu_question;
-	  
-
+use Auth;
+use Redirect;
 
 class IntentsController extends Controller
 {
@@ -56,8 +56,10 @@ class IntentsController extends Controller
    //Se hace join entre las tablas del aprendizaje del lenguaje natural(NLU), para mostrar información en la base de datos
        public function nlu_index()
     {
-      $datos=DB::table('nlu_name')->join('nlu_questions','nlu_name.id','=','nlu_questions.nlu_name_id')->select('nlu_questions.*', 'nlu_name.nombre')->get();
-
+      $datos=DB::table('nlu_name')->join('nlu_questions','nlu_name.id','=','nlu_questions.nlu_name_id')->select('nlu_questions.*', 'nlu_name.nombre')->paginate(7);
+      if(Auth::id()==null){
+        return Redirect::to('dashboard');
+      }
       return view('intents.nlu_index',compact('datos'));
 
 
