@@ -1,3 +1,114 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+body{
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/*.col-1 {
+    width: 70%;
+    background-image: url("http://www.portalalumnos.ucm.cl/v2/assets/img/universidad-ucm.jpg");
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    float: left;
+}*/
+
+.col-2 {
+    width: 30%;
+    height: 100%;
+    float: right;
+}
+
+.login {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    margin-top: 8%;
+}
+
+.login img {
+    width: 50%;
+    height: 50%;
+}
+
+.login h4 {
+    width: 80%;
+    font-size: 24px;
+    text-align: center;
+    color: #002A61;
+}
+
+
+.login form {
+    margin-top: 8%;
+    width: 70%;
+}
+
+.login input[type="submit"] {
+    padding: 10px 20px;
+
+    color: #00A2E1;
+    background: white;
+    text-transform: uppercase;
+    font-weight: 600;
+    border: 1px solid #00A2E1;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+.login input[type="submit"]:hover {
+    background: #00A2E1;
+    color: white;
+}
+
+.login a {
+    width: 100%;
+    margin-top: 40px;
+    text-align: center;
+}
+
+.error {
+    color: red;
+}
+
+
+@media (max-width: 600px) {
+    .col-1 {
+        display: none;
+    }
+    .col-2 {
+        width: 100%;
+    }
+}
+
+@media (min-width: 599px) and (max-width: 991px) {
+    .col-1 {
+        width: 50%;
+    }
+    .col-2 {
+        width: 50%;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1140px) {
+    .col-1 {
+        width: 60%;
+    }
+    .col-2 {
+        width: 40%;
+    }
+}
+
+
+
+
+
+
