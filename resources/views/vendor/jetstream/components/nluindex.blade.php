@@ -1,13 +1,5 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
-     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-              <div class="row">
+@section('content')
+<div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
                 <h2>Todas las intenciones de Aprendizaje del Lenguaje Natural</h2>
@@ -29,7 +21,7 @@
             <th>ID</th>
             <th>nombre</th>
             <th>Expresión equivalente para nombre</th>
-            <th>Action</th>
+            <th width="250px">Action</th>
         </tr>
         @foreach ($datos as $dato)
         <tr>
@@ -46,8 +38,8 @@
         </tr>
         @endforeach
     </table>
-            </div>
-        </div>
-    </div>
-</x-app-layout>
-   
+  
+
+   {{$datos->links() }}
+@endsection
+

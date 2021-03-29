@@ -1,7 +1,7 @@
 <x-guest-layout>
     <x-jet-authentication-card>
         <x-slot name="logo">
-           <img src="images/logo.png">
+            <img src="images/logo.png">
         </x-slot>
 
         <div x-data="{ recovery: false }">
@@ -48,7 +48,7 @@
                     </button>
 
                     <x-jet-button class="ml-4">
-                        {{ __('Login') }}
+                        {{ __('Log in') }}
                     </x-jet-button>
                 </div>
             </form>
