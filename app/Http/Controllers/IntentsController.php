@@ -170,7 +170,8 @@ class IntentsController extends Controller
     fclose($file);*/
     $nlu_question->respuestas=$request->respuestas;
     $nlu_question->save();
-    return view('intents.message', compact('datosnuevos','nlu_name'));
+    $datos=DB::table('nlu_name')->join('nlu_questions','nlu_name.id','=','nlu_questions.nlu_name_id')->select('nlu_questions.*', 'nlu_name.nombre')->paginate(7);
+    return view('intents.index_nlu', compact('datos'));
       
     }
 }
