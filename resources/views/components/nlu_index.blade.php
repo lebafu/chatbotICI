@@ -1,4 +1,5 @@
-<x-app-layout>
+<div>
+    <!-- Simplicity is an acquired taste. - Katharine Gerould -->
         <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -6,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-    <title>{{ config('app.name', 'UCMBot') }}</title>
+    <!--<title>{{ config('app.name', 'UCMBot') }}</title>-->
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -20,11 +21,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Intenciones') }}
-        </h2>
-    </x-slot>
      <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -67,9 +63,7 @@
         </tr>
         @endforeach
     </table>
-    {{$datos->links()}}
             </div>
         </div>
     </div>
-</x-app-layout>
-   
+</div>
