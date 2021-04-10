@@ -3,7 +3,7 @@
     "id": "builtin_image-Za01G8",
     "formData": {
       "typing$es": true,
-      "image$es": "/api/v1/bots/prueba/media/q8ehpsu5kur4kbpjkfcf-Mapa_salas.jpg",
+      "image$es": "/api/v1/bots/ucm-botpress1/media/q8ehpsu5kur4kbpjkfcf-Mapa_salas.jpg",
       "title$es": "Las ubicaciones de las diferentes salas y sectores las puedes encontrar en el siguiente link ...."
     },
     "createdBy": "admin",
@@ -14,7 +14,7 @@
     "id": "builtin_image-3wJIqI",
     "formData": {
       "typing$es": true,
-      "image$es": "/api/v1/bots/prueba/media/z026egppxp0ch779dn8p-Malla-ICI_pages-to-jpg-0001.jpg",
+      "image$es": "/api/v1/bots/ucm-botpress1/media/z026egppxp0ch779dn8p-Malla-ICI_pages-to-jpg-0001.jpg",
       "title$es": "Malla por objetivos"
     },
     "createdBy": "admin",
@@ -25,7 +25,7 @@
     "id": "builtin_image-gK59Oi",
     "formData": {
       "typing$es": true,
-      "image$es": "/api/v1/bots/prueba/media/93iubwephrb9ica2po0m-Malla-ICI_v7_pages-to-jpg-0001.jpg",
+      "image$es": "/api/v1/bots/ucm-botpress1/media/93iubwephrb9ica2po0m-Malla-ICI_v7_pages-to-jpg-0001.jpg",
       "title$es": "Malla por competencias"
     },
     "createdBy": "admin",
