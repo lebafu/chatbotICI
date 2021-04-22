@@ -26,8 +26,8 @@
             <div class="card">
                 <div class="card-header">{{ __('Editar QNA') }}</div>
 
-                <div class="card-body">
-                    <form action="{{route('qna.update', $question->id)}}" method="POST">
+               <div class="card-body">
+                    <form action="{{route('qna.update', $question->id)}}" method="POST" enctype="multipart/form-data">
                        @csrf
                        @method('PUT')
 
@@ -50,22 +50,36 @@
                               
                             </div>
                         </div>
-                        @if($question->id==1)
+
+                        @if($pos==0)
+                        <div class="form-group row">
+                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Respuesta') }}</label>
+                            <div class="col-md-6">
+                                <input id="respuesta" type="text" class="form-control" name="respuesta" value="{{$answer->nombre}}" required autocomplete="nombre">
+                            </div>
+                        </div>
+                         @elseif($pos==1)
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Respuesta') }}</label>
 
                             <div class="col-md-6">
-                                <input id="respuesta" type="text" class="form-control" name="respuesta" value="{{$answer->nombre}}" required autocomplete="nombre" autofocus readonly>
+                                <input id="respuesta" type="text" class="form-control" name="respuesta" value="{{$answer->nombre}}" required autocomplete="nombre" readonly="readonly">
                             </div>
                         </div>
-                        @else
-                         <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Respuesta') }}</label>
 
-                            <div class="col-md-6">
-                                <input id="respuesta" type="text" class="form-control" name="respuesta" value="{{$answer->nombre}}" required autocomplete="nombre" autofocus>
-                            </div>
+                        <div>
+                            <label for="img" class="negrita">La imagen seleccionada fue:</label>
+                            <input name="imagen" type=text class="form-control" value="{{$name_image}}" readonly="readonly" hidden="hidden">
+                            <img src="images/bp/{{ $name_image }}">
                         </div>
+                       
+                        <div>
+                             <label>Cambiar Imagen: </label>
+                            <input type="file" id="image_nueva" name="image_nueva" class="form-control"/>
+                        <div class='text-danger'>{{$errors->first('image_nueva')}}</div>
+                        </div>
+
+                        <!--<img >-->
                        @endif
 
                          
@@ -76,7 +90,7 @@
                                     {{ __('Guardar') }}
                                 </button>
 
-                                <a href="/" class="btn">{{ __('Cancelar') }}</a>
+                                <a href="/qna_index" class="btn">{{ __('Cancelar') }}</a>
                                     
                             </div>
 

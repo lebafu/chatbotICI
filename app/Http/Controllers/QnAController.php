@@ -462,8 +462,28 @@ if ($gestor) {
         $answers=DB::table('answer')->where('answer.id','=',$question->id_answers)->get();
         //Como tenemos 2 consultas question y answer lo mejor es recorrer con un foreach estas variables e imprimirlas de manera directa en la vista
         foreach($answers as $answer);
+         $nombre=$answer->nombre;
+        $pos=strpos($nombre,"builtin_image");
+        //dd($pos);
+        if($pos==false){
+          $pos=0;
+        }else{
+          $pos=1;
+        }
+        $qnas_images=DB::table('qnas_images')->where('id_answer','=',$answer->id)->get();
+        //dd($datos,$answers,$nombre,$qnas_images);
+        foreach($qnas_images as $qna_image);
+         //dd($qna_image);
+        //dd($pos);
+
+        if($qnas_images->isEmpty()){
+          $name_image=null;
+        }else{
+            $name_image=$qna_image->nombre_imagen_qna;
+        }
+
         //Les paso los elementos de las consultas a la vista.
-        return view('qna.edit',compact('question','answer'));
+        return view('qna.edit',compact('question','answer','pos','name_image'));
     }
 
     /**
@@ -476,6 +496,24 @@ if ($gestor) {
     public function update(Request $request,$id)
     {
         //
+       $rules = ['image_nueva' => 'required|image'];
+        $messages = [
+            'image_nueva.image' => 'Formato no permitido',
+        ];
+        $validator = Validator::make($request->all(), $rules, $messages);
+        if ($validator->fails()){
+            return redirect('/qna_edit{{$id}}')->withErrors($validator);
+        }
+        if(($request->file('image_nueva'))->isEmpty()==false){
+          $nombre_imagen=$request->file('image_nueva')->getClientOriginalName();
+          $request->file('image_nueva')->move('images/bp', $nombre_imagen);
+          $request->file('image_nueva')->move('data/bots/ucm-botpress1',$nombre_imagen);
+          unlink("public/images/bp/{{$imagen}}");
+          unlink("public/data/ucm-botpress1/{{$imagen}}");
+          rename("public/images/bp/{{$nombre_imagen}}","public/images/bp/{{$imagen}}");
+          rename("public/data/ucm-botpress1/{{$nombre_imagen}}","public/data/ucm-botpress1/{{$imagen}}");
+        }
+        
         //dd($id);
         //dd($request);
         //consulto por cual es la tupla editada en la tabla questions
