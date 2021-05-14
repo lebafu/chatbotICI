@@ -496,23 +496,37 @@ if ($gestor) {
     public function update(Request $request,$id)
     {
         //
-       $rules = ['image_nueva' => 'required|image'];
+        //
+      //dd($request,$request->file('image_nueva'));
+        //dd($id);
+        //dd($request);
+        $imagen=$request->imagen;
+        //dd($imagen);
+        //consulto por cual es la tupla editada en la tabla questions
+       /*$rules = ['image_nueva' => 'required|image'];
         $messages = [
             'image_nueva.image' => 'Formato no permitido',
         ];
         $validator = Validator::make($request->all(), $rules, $messages);
         if ($validator->fails()){
             return redirect('/qna_edit{{$id}}')->withErrors($validator);
-        }
-        if(($request->file('image_nueva'))->isEmpty()==false){
-          $nombre_imagen=$request->file('image_nueva')->getClientOriginalName();
+        }*/
+        $request->validate(
+              [
+              'image_nueva' => 'image',
+            ]);
+        if(($request->hasfile('image_nueva'))==true){
+          $nombre_imagen=time().$request->file('image_nueva')->getClientOriginalName();
+          //dd($imagen,$nombre_imagen);
           $request->file('image_nueva')->move('images/bp', $nombre_imagen);
-          $request->file('image_nueva')->move('data/bots/ucm-botpress1',$nombre_imagen);
-          unlink("public/images/bp/{{$imagen}}");
-          unlink("public/data/ucm-botpress1/{{$imagen}}");
-          rename("public/images/bp/{{$nombre_imagen}}","public/images/bp/{{$imagen}}");
-          rename("public/data/ucm-botpress1/{{$nombre_imagen}}","public/data/ucm-botpress1/{{$imagen}}");
-        }
+          $fichero=public_path().'/images/bp/'.$nombre_imagen;
+          $nuevo_fichero=public_path().'/botpress12120/data/bots/ucm-botpress1/media/'.$nombre_imagen;
+          copy($fichero,$nuevo_fichero);
+          unlink(public_path()."/images/bp/".$imagen);
+          unlink(public_path()."/botpress12120/data/bots/ucm-botpress1/media/".$imagen);
+          rename(public_path()."/images/bp/".$nombre_imagen,public_path()."/images/bp/".$imagen);
+          rename(public_path()."/botpress12120/data/bots/ucm-botpress1/media/".$nombre_imagen,public_path()."/botpress12120/data/bots/ucm-botpress1/media/".$imagen);
+       }
         
         //dd($id);
         //dd($request);

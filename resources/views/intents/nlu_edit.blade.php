@@ -59,6 +59,49 @@
                             </div>
                         </div>
 
+                        @for($i=0;$i<$cantidad_image;$i++)
+                       <div>
+                            <b><label for="img" class="negrita">{{$array_name[2*$i+2]}}</label></b>
+                            <input name="imagen{{$i}}" type=text class="form-control" value="{{$array_ruta_image[$i]}}" readonly="readonly" hidden="hidden">
+                            <img src="images/bp/{{$array_ruta_image[$i]}}">
+                        </div>
+                       
+                        <div>
+                             <label>Cambiar Imagen: </label>
+                            <input type="file"  id="image_nueva{{$i}}" name="image_nueva{{$i}}" class="form-control-file"  accept="image/*" />
+                            <!--<div class='text-danger'>{{$errors->first('image_nueva$i')}}</div>-->
+                            @if($i==0)
+                            @error('image_nueva0')
+                                <small class='text-danger'>{{$message}}</small>
+                            @enderror
+                            @endif
+                            @if($i==1)
+                            @error('image_nueva1')
+                                <small class='text-danger'>{{$message}}</small>
+                            @enderror
+                            @endif
+                        </div>
+                        
+
+                        <!--<img >-->
+                    
+                        @endfor
+                       
+                     <!-- Colocar campo Hidden para ocultar cantidad_image y saber cuantas imagenes debo modificar -->
+                       <input type="hidden" name="cantidad_image" value="{{$cantidad_image}}">
+                      
+                         
+
+                        <div class="form-group row mb-0">
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-primary">
+                                    {{ __('Guardar') }}
+                                </button>
+
+                                <a href="/" class="btn">{{ __('Cancelar') }}</a>
+                                    
+                            </div>
+
                          
 
                         <div class="form-group row mb-0">
