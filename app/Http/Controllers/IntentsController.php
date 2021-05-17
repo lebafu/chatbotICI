@@ -91,10 +91,13 @@ class IntentsController extends Controller
         //dd($nlu_question);
         //Mediante la fk descubro el nombre del archivo .json al que debe pertenece.
         $nlu_names=DB::table('nlu_name')->where('nlu_name.id','=',$nlu_question->nlu_name_id)->get();
+      $nlu_names1=DB::table('nlu_name')->where('nlu_name.id','=',$nlu_question->nlu_name_id)->get();
      // dd($nlu_names);
         //Uso foreach para acceder a cada elemento de la tabla.
         
         foreach($nlu_names as $nlu_name);
+        foreach($nlu_names1 as $nlu_name1);
+
         $carpeta_flujos='botpress12120/data/bots/ucm-botpress1/flows';
 
       
@@ -377,7 +380,7 @@ $encuentra=strpos($data,$cadena_buscada);
         //De esta forma se puede imprimir de manera directa los campos deseados en la vista intents.nlu_edit
 //dd($array_nodo,$array_name,$array_codigo_image,$array_ruta_image);
 //dd($lista_images);
-        return view('intents.nlu_edit',compact('nlu_question','nlu_name','array_codigo_image','array_ruta_image','array_name','cantidad_image'));
+        return view('intents.nlu_edit',compact('nlu_question','nlu_name1','array_codigo_image','array_ruta_image','array_name','cantidad_image'));
     }
 
     public function nlu_update(Request $request, Nlu_question $nlu_question){

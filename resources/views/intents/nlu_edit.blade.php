@@ -43,7 +43,7 @@
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Nombre') }}</label>
 
                             <div class="col-md-6">
-                                <input id="nombre" type="text" class="form-control" name="nombre" value="{{ $nlu_name->nombre }}" required autocomplete="nombre" autofocus disabled>
+                                <input id="nombre" type="text" class="form-control" name="nombre" value="{{ $nlu_name1->nombre }}" required autocomplete="nombre" autofocus disabled>
 
                               
                             </div>
@@ -102,17 +102,6 @@
                                     
                             </div>
 
-                         
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Guardar') }}
-                                </button>
-
-                                <a href="/" class="btn">{{ __('Cancelar') }}</a>
-                                    
-                            </div>
 
                                 
                             
