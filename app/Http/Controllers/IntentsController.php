@@ -53,6 +53,33 @@ class IntentsController extends Controller
 		//return view('intents.modify_despedida', compact($datosnuevos));
     }
 
+
+        public function nlu_name_index(){
+      $datos=DB::table('nlu_name')->paginate(7);
+      $nlus_questions=DB::table('nlu_questions')->get();
+      $data=array();
+      $number=array();
+      $i=1;
+      foreach($nlus_questions as $nlu_question){
+      //dd($nlu_question);
+        if($nlu_question->nlu_name_id==$i){
+            array_push($data,$nlu_question->respuestas);
+            //array_push($number, $i)
+            $i=$i+1;
+        }
+        
+       
+      }
+      $i=0;
+      foreach($datos as $dato){
+        $dato->respuesta=$data[$i];
+        $i=$i+1;
+      }
+      $i=0;
+      //dd($datos->groupby('nombre'));
+      return view('intents.nlu_name_index',compact('datos','data'));
+
+    }
    //Se hace join entre las tablas del aprendizaje del lenguaje natural(NLU), para mostrar información en la base de datos
        public function nlu_index()
     {

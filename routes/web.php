@@ -28,8 +28,10 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
 
 Route::get('/modify_despedida','IntentsController@modify_despedida')->name('intents.modify_despedida');
-Route::get('/nlu_index','IntentsController@nlu_index')->name('intents.nlu_index');
-Route::get('/qna_index','QnaController@index')->name('qna.index');
+Route::get('/nlu_name_index','IntentsController@nlu_name_index')->name('intents.nlu_name_index');
+Route::get('/qna_name_index','QnaController@qna_name_index')->name('qna.qna_name_index');
+Route::get('/nlu_index{id}','IntentsController@nlu_index')->name('intents.nlu_index');
+Route::get('/qna_index{id}','QnaController@index')->name('qna.index');
 Route::get('/qna_create', 'QnAController@create')->name('qna.create');
 Route::post('/qna','QnAController@store')->name('qna.store');
 Route::get('/nlu_edit{id}', 'IntentsController@nlu_edit')->name('intents.nlu_edit');

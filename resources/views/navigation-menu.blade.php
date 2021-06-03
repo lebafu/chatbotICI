@@ -17,10 +17,10 @@
                     <x-jet-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-jet-nav-link>
-                    <x-jet-nav-link href="{{ route('intents.nlu_index') }}" :active="request()->routeIs('intents.nlu_index')">
+                    <x-jet-nav-link href="{{ route('intents.nlu_name_index') }}" :active="request()->routeIs('intents.nlu_name_index')">
                         {{ __('Intenciones') }}
                     </x-jet-nav-link>
-                    <x-jet-nav-link href="{{ route('qna.index') }}" :active="request()->routeIs('qna.index')">
+                    <x-jet-nav-link href="{{ route('qna.qna_name_index') }}" :active="request()->routeIs('qna.qna_name_index')">
                         {{ __('QnA') }}
                     </x-jet-nav-link>
                 </div>

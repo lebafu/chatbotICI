@@ -18,6 +18,34 @@ class QnAController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+     public function qna_name_index(){
+      
+      $datos=DB::table('answer')->paginate(7);
+      $questions=DB::table('questions')->get();
+      $data=array();
+      $number=array();
+      $i=1;
+      foreach($questions as $question){
+      //dd($nlu_question);
+        if($question->id_answers==$i){
+            array_push($data,$question->pregunta);
+            //array_push($number, $i)
+            $i=$i+1;
+        }
+      }
+      $i=0;
+      foreach($datos as $dato){
+        $dato->pregunta=$data[$i];
+        $i=$i+1;
+      }
+     
+      //dd($datos);
+      return view('qna.qna_name_index',compact('datos','data'));
+
+    }
+
+
     public function index()
     {
         //
