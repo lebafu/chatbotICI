@@ -46,11 +46,11 @@ class QnAController extends Controller
     }
 
 
-    public function index()
+    public function index($id)
     {
         //
         //Envio en la variable datos la información de las atblas questions y answer mediante el join.
-         $datos=DB::table('answer')->join('questions','answer.id','=','questions.id_answers')->select('questions.*', 'answer.nombre','answer.habilitada')->paginate(7);
+         $datos=DB::table('answer')->join('questions','answer.id','=','questions.id_answers')->select('questions.*', 'answer.nombre','answer.habilitada')->where('questions.id_answers','=',$id)->paginate(7);
     //dd($datos);
          if(Auth::id()==null){
         return Redirect::to('dashboard');

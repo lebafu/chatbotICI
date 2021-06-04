@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Qna') }}
@@ -54,7 +56,7 @@
    
                     -->
     
-                    <a class="btn btn-primary" href="{{route('qna.edit',$dato->id)}}">Editar</a>
+                    <a class="btn btn-primary btn-xs" href="{{route('qna.edit',$dato->id)}}"><span class="fa fa-edit fa-xs" style="color:black"></span></a>
                     @if($dato->habilitada==1)
                     <a class="btn btn-danger" href="{{route('qna.habilitada',$dato->id)}}">Deshabilitar</a>
                     @else

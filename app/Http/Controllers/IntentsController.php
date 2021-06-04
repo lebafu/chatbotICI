@@ -81,9 +81,9 @@ class IntentsController extends Controller
 
     }
    //Se hace join entre las tablas del aprendizaje del lenguaje natural(NLU), para mostrar información en la base de datos
-       public function nlu_index()
+       public function nlu_index($id)
     {
-      $datos=DB::table('nlu_name')->join('nlu_questions','nlu_name.id','=','nlu_questions.nlu_name_id')->select('nlu_questions.*', 'nlu_name.nombre')->paginate(7);
+      $datos=DB::table('nlu_name')->join('nlu_questions','nlu_name.id','=','nlu_questions.nlu_name_id')->select('nlu_questions.*', 'nlu_name.nombre')->where('nlu_name.id','=',$id)->paginate(7);
       if(Auth::id()==null){
         return Redirect::to('dashboard');
       }
