@@ -95,7 +95,8 @@ class QnAController extends Controller
         $randomString .= $characters[rand(0, $charactersLength - 1)];
     } 
     //dd($randomString);
-     $nombre_parte1='__qna__'.$randomString;
+     //$nombre_parte1='__qna__'.$randomString;
+    $nombre_parte1=$randomString;
      //dd($nombre_parte1);
      //Reemplazamos la A y a
         //dd(strlen($request->question));
@@ -165,9 +166,9 @@ class QnAController extends Controller
         $id_qna=$randomString.'_'.$cadena_final;
         //dd($nombre_archivo);
 
-        $path_archivo1=("C:/Users/LI/Desktop/chatbot/public/botpress12120/data/bots/ucm-botpress1/intents/".$nombre_archivo);
+        $path_archivo1=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/intents/".$nombre_archivo);
         //dd($path_archivo1);
-         $directorio1="botpress12120/data/bots/ucm-botpress1/intents";
+         $directorio1="botpress12120/data/bots/icibot/intents";
       
       //Se creaa arreglo para guadar direccion de archivos de carpeta
       $res = array();
@@ -203,7 +204,7 @@ class QnAController extends Controller
    while($i<$tam){
     
     //Se van abriendo cada uno de los archivos de la carpeta hasta que abre todos los archivos de la carpeta
-    $path_archivo=("C:/Users/LI/Desktop/chatbot/public/".$res[$i]["Nombre"]);
+    $path_archivo=("C:/Users/LI/Desktop/chtbtICI/public/".$res[$i]["Nombre"]);
     $pos = strpos($path_archivo, $cadena_final);
     //dd($pos);
     array_push($vector_substring,$pos);
@@ -229,8 +230,8 @@ class QnAController extends Controller
   //dd($vector_substring);
         
         
-        $archivo_ejemplo1="C:/Users/LI/Desktop/chatbot/public/__qna__intents_prueba.txt";
-        $archivo_ejemplo2="C:/Users/LI/Desktop/chatbot/public/qna__qna_prueba.txt";
+        $archivo_ejemplo1="C:/Users/LI/Desktop/chtbtICI/public/__qna__intents_prueba.txt";
+        $archivo_ejemplo2="C:/Users/LI/Desktop/chtbtICI/public/qna__qna_prueba.txt";
 
         $leer1 = fopen($archivo_ejemplo1, 'r+');
       //if(filesize($path_archivo) > 0){
@@ -271,7 +272,7 @@ class QnAController extends Controller
 
 
   
-      $path_archivo11=("C:/Users/LI/Desktop/chatbot/public/botpress12120/data/bots/ucm-botpress1/intents/".$nombre_archivo);
+      $path_archivo11=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/intents/".$nombre_archivo);
       $leer11 = fopen($path_archivo11, 'rb');
       //dd($leer11,$path_archivo1);
       //if(filesize($path_archivo) > 0){
@@ -301,7 +302,7 @@ class QnAController extends Controller
        //CARPETA QNA CREAR ARCHIVO
 
 
-        $path_archivo2=("C:/Users/LI/Desktop/chatbot/public/botpress12120/data/bots/ucm-botpress1/qna/".$nombre_archivo2);
+        $path_archivo2=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/qna/".$nombre_archivo2);
         $leer2 = fopen($archivo_ejemplo2, 'r+');
       //if(filesize($path_archivo) > 0){
       // Se almacena en data el contenido inicial del archivo
@@ -548,12 +549,12 @@ if ($gestor) {
           //dd($imagen,$nombre_imagen);
           $request->file('image_nueva')->move('images/bp', $nombre_imagen);
           $fichero=public_path().'/images/bp/'.$nombre_imagen;
-          $nuevo_fichero=public_path().'/botpress12120/data/bots/ucm-botpress1/media/'.$nombre_imagen;
+          $nuevo_fichero=public_path().'/botpress12120/data/bots/icibot/media/'.$nombre_imagen;
           copy($fichero,$nuevo_fichero);
           unlink(public_path()."/images/bp/".$imagen);
-          unlink(public_path()."/botpress12120/data/bots/ucm-botpress1/media/".$imagen);
+          unlink(public_path()."/botpress12120/data/bots/icibot/media/".$imagen);
           rename(public_path()."/images/bp/".$nombre_imagen,public_path()."/images/bp/".$imagen);
-          rename(public_path()."/botpress12120/data/bots/ucm-botpress1/media/".$nombre_imagen,public_path()."/botpress12120/data/bots/ucm-botpress1/media/".$imagen);
+          rename(public_path()."/botpress12120/data/bots/icibot/media/".$nombre_imagen,public_path()."/botpress12120/data/bots/icibot/media/".$imagen);
        }
         
         //dd($id);
@@ -720,7 +721,7 @@ if ($gestor) {
       //dd($contador_question);
       //La ruta del directorio dentro de la carpeta public, que como se dijo anteriormente irá dentro de directorio1
 
-      $directorio1="botpress12120/data/bots/ucm-botpress1/intents";
+      $directorio1="botpress12120/data/bots/icibot/intents";
       
       //Se creaa arreglo para guadar direccion de archivos de carpeta
       $res = array();
@@ -761,10 +762,10 @@ if ($gestor) {
    while($i<$tam){
     
     //Se van abriendo cada uno de los archivos de la carpeta hasta que abre todos los archivos de la carpeta
-    $path_archivo=("C:/Users/LI/Desktop/chatbot/public/".$res[$i]["Nombre"]);
+    $path_archivo=public_path($res[$i]["Nombre"]);
     //dd($encuentra);
     $encuentra=strpos($res[$i]["Nombre"],$cadena_final_actual);
-    //dd($encuentra);
+    //dd($encuentra,$res[$i]["Nombre"],$cadena_final_actual);
     if($encuentra==false){
         //dd("NADA");
     }else{
@@ -810,7 +811,7 @@ if ($gestor) {
     while($i<$tam){
     
     //La ruta con los archivos que va abriendo 
-    $path_archivo=("C:/Users/LI/Desktop/chatbot/public/".$res[$i]["Nombre"]);
+    $path_archivo=("C:/Users/LI/Desktop/chtbtICI/public/".$res[$i]["Nombre"]);
      $find=strpos($res[$i]["Nombre"],$cadena_final_actual);
      //dd($res[$i]["Nombre"]);
     //dd($find);
@@ -841,15 +842,15 @@ if ($gestor) {
       fwrite($escribir, $datosnuevos1);
       fclose($escribir);
       //dd($datosnuevos);
-      $largo_actual_archivo1=strlen("C:/Users/LI/Desktop/chatbot/public/".$res[$i]["Nombre"]);
+      $largo_actual_archivo1=strlen("C:/Users/LI/Desktop/chtbtICI/public/".$res[$i]["Nombre"]);
       $nombre_archivo_mod=substr($res[$i]["Nombre"],46);
       $nombre_archivo_mod1=str_replace($cadena_final_actual,$cadena_final,$nombre_archivo_mod);
       //dd($nombre_archivo_mod1);
       //dd($largo_actual_archivo1,$find,$nombre_actual_archivo1);
       //dd($nombre_actual_archivo1,$encuentra,$largo_actual_archivo1);
      
-     $fichero="C:/Users/LI/Desktop/chatbot/public/".$res[$i]["Nombre"];
-     $nuevo_fichero="C:/Users/LI/Desktop/chatbot/public/botpress12120/data/bots/ucm-botpress1/intents/".$nombre_archivo_mod1;
+     $fichero="C:/Users/LI/Desktop/chtbtICI/public/".$res[$i]["Nombre"];
+     $nuevo_fichero="C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/intents/".$nombre_archivo_mod1;
      //dd($nuevo_fichero);
      $leer_fichero= fopen($fichero, 'r+');
      $info_nuevo_fichero = fread($leer_fichero, filesize($fichero));
@@ -865,7 +866,7 @@ if ($gestor) {
      rename($fichero,$nuevo_fichero);
      }
 
-  //unlink("C:/Users/LI/Desktop/chatbot/public/".$res[$i]["Nombre"]);
+  //unlink("C:/Users/LI/Desktop/chtbtICI/public/".$res[$i]["Nombre"]);
       
   }
     $i=$i+1;
@@ -877,7 +878,7 @@ if ($gestor) {
 
 
 
-  $directorio2="botpress12120/data/bots/ucm-botpress1/qna";
+  $directorio2="botpress12120/data/bots/icibot/qna";
   $res2 = array();
 
   // Agregamos la barra invertida al final en caso de que no exista
@@ -914,7 +915,7 @@ if ($gestor) {
   $i=0;
    while($i<$tam){
     //RUTA DE LA CARPETA PUBLIC + RUTA DE DIRECTORIO HASTA CARPETA QNA DONDE RECORRERA CADA UNO DE LOS NOMBRES DE LOS ARCHIVOS QUE TIENE ALMACENADO EN LA VARIABLE RES2
-    $path_archivo=("C:/Users/LI/Desktop/chatbot/public/".$res2[$i]["Nombre"]);
+    $path_archivo=("C:/Users/LI/Desktop/chtbtICI/public/".$res2[$i]["Nombre"]);
      $find=strpos($res2[$i]["Nombre"],$cadena_final_actual);
      //dd($res[$i]["Nombre"]);
     //dd($find);
@@ -976,7 +977,7 @@ if ($gestor) {
      //dd($res[$i]["Nombre"]);
     //dd($find);
     if($find==false){
-    $path_archivo=("C:/Users/LI/Desktop/chatbot/public/".$res2[$i]["Nombre"]);
+    $path_archivo=("C:/Users/LI/Desktop/chtbtICI/public/".$res2[$i]["Nombre"]);
     //print_r($res2[$i]["Nombre"]);
    }else{
     //EL STRING QUE SE ESTA BUSCANDO EN LOS ARCHIVOS DE LA CARPETA QNA, PARA MODIFICAR ALGUNA DE LAS PREGUNTAS, QUE COMO $patron como 
@@ -1018,26 +1019,28 @@ if ($gestor) {
     //dd($question->pregunta);
     //if($i+1==11){
 
-    //Se abre cada uno de los archivos de la carpeta  QNA
-    $path_archivo=("C:/Users/LI/Desktop/chatbot/public/".$res2[$i]["Nombre"]);
+    //Se abre cada uno de los archivos de la carpeta  QNA, SI SE MODIFICA EL NOMBRE DE BOT DESDE icibot a otro nombree modificar numero 35
+    $path_archivo=("C:/Users/LI/Desktop/chtbtICI/public/".$res2[$i]["Nombre"]);
+    //dd($path_archivo);
      $find=strpos($res2[$i]["Nombre"],$cadena_final_actual);
-     //dd($res[$i]["Nombre"]);
+     //dd($res[$i]["Nombre"],$res2[$i]["Nombre"],$cadena_final_actual);
     //dd($find);
     if($find==false){
-         $archivo_nombre_original=(substr($res2[$i]["Nombre"],42,-5)).'.json';
-      $archivo_nombre_nuevo=str_replace($cadena_final_actual,$cadena_final,(substr($res2[$i]["Nombre"],42,-5))).'.json';
+         $archivo_nombre_original=(substr($res2[$i]["Nombre"],35,-5)).'.json';
+      $archivo_nombre_nuevo=str_replace($cadena_final_actual,$cadena_final,(substr($res2[$i]["Nombre"],35,-5))).'.json';
     //print_r($res2[$i]["Nombre"]);
     }else{
-
-      $archivo_nombre_original=(substr($res2[$i]["Nombre"],42,-5)).'.json';
-    //dd($archivo_nombre_original);
+       //dd($archivo_nombre_original,$res2[$i]["Nombre"]);
+      $archivo_nombre_original=(substr($res2[$i]["Nombre"],35,-5)).'.json';
+    //dd($path_archivo,$archivo_nombre_original);
     //EL STRING QUE SE ESTA BUSCANDO EN LOS ARCHIVOS DE LA CARPETA QNA, PARA MODIFICAR ALGUNA DE LA RESPUESTAS, QUE COMO $patron como 
     //en este caso no lleva coma, sabemos que no será el ultimo del arreglo answers: es:[], cbae señalar que las respuestas de QNA son solo son una fla con el texto entre comillas, no tienen ninguna coma final al ser solo una respuesta única.
     $patron= '"'.$answer->nombre.'"';
     //dd($patron);
     $sustitucion='"'.$request->respuesta.'"';
     $sustitucion2=str_replace($cadena_final_actual,$cadena_final,$patron2);
-    $archivo_nombre_nuevo=str_replace($cadena_final_actual,$cadena_final,(substr($res2[$i]["Nombre"],42,-5))).'.json';
+    $archivo_nombre_nuevo=str_replace($cadena_final_actual,$cadena_final,(substr($res2[$i]["Nombre"],35,-5))).'.json';
+    //dd($archivo_nombre_nuevo);
     //dd($archivo_nombre_original,$archivo_nombre_nuevo);
     //}
      //Abro el archivo que corresponda para leerlo
@@ -1056,9 +1059,9 @@ if ($gestor) {
       fwrite($escribir, $datosnuevos);
       //Cerramos el archivo apara escribir
       fclose($escribir);
-      //dd($question_min_id,$question->id,"C:/Users/LI/Desktop/chatbot/public/botpress12120/data/bots/ucm-botpress1/qna/".$archivo_nombre_original,"C:/Users/LI/Desktop/chatbot/public/botpress12120/data/bots/ucm-botpress1/qna/".$archivo_nombre_nuevo);
+      //dd($question_min_id,$question->id,"C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/qna/".$archivo_nombre_original,"C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/qna/".$archivo_nombre_nuevo);
         if($question_min_id==$question->id){
-     rename("C:/Users/LI/Desktop/chatbot/public/botpress12120/data/bots/ucm-botpress1/qna/".$archivo_nombre_original,"C:/Users/LI/Desktop/chatbot/public/botpress12120/data/bots/ucm-botpress1/qna/".$archivo_nombre_nuevo);
+     rename("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/qna/".$archivo_nombre_original,"C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/qna/".$archivo_nombre_nuevo);
      }
     }
       //dd($datosnuevos);
@@ -1195,7 +1198,7 @@ if ($gestor) {
   $res2 = array();
 
   // Agregamos la barra invertida al final en caso de que no exista
- $directorio2="botpress12120/data/bots/ucm-botpress1/qna";
+ $directorio2="botpress12120/data/bots/icibot/qna";
 
   if(substr($directorio2, -1) != "/") $directorio2 .= "/";
 
@@ -1229,7 +1232,7 @@ if ($gestor) {
    //dd($i,$tam,$res2[$i]["Nombre"]);
    while($i<$tam){
     //RUTA DE LA CARPETA PUBLIC + RUTA DE DIRECTORIO HASTA CARPETA QNA DONDE RECORRERA CADA UNO DE LOS NOMBRES DE LOS ARCHIVOS QUE TIENE ALMACENADO EN LA VARIABLE RES2
-    $path_archivo=("C:/Users/LI/Desktop/chatbot/public/".$res2[$i]["Nombre"]);
+    $path_archivo=("C:/Users/LI/Desktop/chtbtICI/public/".$res2[$i]["Nombre"]);
     //dd($path_archivo,$cadena_final_actual);
      $encuentra1=strpos($res2[$i]["Nombre"],$cadena_final_actual);
     //dd($encuentra1);

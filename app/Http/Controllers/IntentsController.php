@@ -17,7 +17,7 @@ class IntentsController extends Controller
 
       //$path_archivo = public_path('botpress12120/ucm-botpress1/intents/despedida.json');
       //Ruta de archivo a abrir
-      $path_archivo = public_path('botpress12120\data\bots\ucm-botpress1\intents\despedida.json'); 
+      $path_archivo = public_path('botpress12120\data\bots\icibot\intents\despedida.json'); 
 
       //Se abre el archivo y se lee
       $leer = fopen($path_archivo, 'r+');
@@ -125,7 +125,7 @@ class IntentsController extends Controller
         foreach($nlu_names as $nlu_name);
         foreach($nlu_names1 as $nlu_name1);
 
-        $carpeta_flujos='botpress12120/data/bots/ucm-botpress1/flows';
+        $carpeta_flujos='botpress12120/data/bots/icibot/flows';
 
       
       //Se creaa arreglo para guadar direccion de archivos de carpeta
