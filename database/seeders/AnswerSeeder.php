@@ -15,8 +15,10 @@ class AnswerSeeder extends Seeder
     public function run()
     {
         //
-                 $directorio1="public/botpress12120/data/bots/ucm-botpress1/intents";
-                 $directorio2="public/botpress12120/data/bots/ucm-botpress1/qna/";
+                 /*$directorio1="public/botpress12120/data/bots/ucm-botpress1/intents";
+                 $directorio2="public/botpress12120/data/bots/ucm-botpress1/qna/";*/
+                 $directorio1="public/botpress12120/data/bots/icibot/intents";
+                 $directorio2="public/botpress12120/data/bots/icibot/qna/";
          //dd($directorio1);
       //Se creaa arreglo para guadar direccion de archivos de carpeta
       $res = array();
@@ -56,7 +58,8 @@ class AnswerSeeder extends Seeder
    while($i<$tam){
    		 if((strpos($res[$i]["Nombre"],'qna'))==false){
    		 }else{
- 		 $res_nombres[$j]=substr($res[$i]["Nombre"],60,-5);
+ 		 $res_nombres[$j]=substr($res[$i]["Nombre"],53,-5);
+     //dd($res_nombres[$j]);
  		 $j=$j+1;
          /*if(($res[$i]["Nombre"])){
   		 	$path_archivo=("C:/Users/LI/Desktop/chatbot/public/".$res_nombre[$i]);
@@ -64,6 +67,7 @@ class AnswerSeeder extends Seeder
   	}
   		$i=$i+1;
     }
+    //dd($res[$i]["Nombre"],60,-5);
    
     $tam_nombres=sizeof($res_nombres);
     $i=0;
@@ -75,6 +79,7 @@ class AnswerSeeder extends Seeder
     	if($i==1){
     		//dd($path_archivo);
     	}
+    //dd($res_nombres,$path_archivo);
     	$leer = fopen($path_archivo, 'r+');
 
     	$numlinea=0;
@@ -104,10 +109,11 @@ class AnswerSeeder extends Seeder
         }
     }else{
     	$nombre=substr($aux[9],14,-4);
-         if($i==0){
-          //dd($nombre);
-         }
+         //if($i==2){
+         // dd('vacio',$nombre);
+         //}
         	//dd(substr($nombre,14,-6));
+         //dd($archivos_qnas);
         	$archivos_qnas=DB::table('archivo_qna')->where('nombre','=',$res_nombres[$i])->get();
         	foreach($archivos_qnas as $archivo_qna);
         	$pos2=strpos($aux[7],'true');
@@ -118,7 +124,11 @@ class AnswerSeeder extends Seeder
         	$habilitada=1;
         }
     }
-            //dd($nombre,$archivo_qna->id,$habilitada);			
+            //dd($nombre,$archivo_qna->id,$habilitada);	
+         if($nombre==false){
+          //dd(substr($aux[$numlinea-4],21,-3));
+          $nombre=substr($aux[$numlinea-4],21,-3);
+         }		
      		DB::table('answer')->insert(['nombre'=>$nombre,'id_archivo'=> $archivo_qna->id,'habilitada'=> $habilitada]);
     
     	//DB::table('answer')->insert(['nombre'=>$res_nombres[$i]]);

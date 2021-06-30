@@ -16,8 +16,10 @@ class QuestionSeeder extends Seeder
     public function run()
     {
         //
-                    $directorio1="public/botpress12120/data/bots/ucm-botpress1/intents";
-                 $directorio2="public/botpress12120/data/bots/ucm-botpress1/qna/";
+                    //$directorio1="public/botpress12120/data/bots/ucm-botpress1/intents";
+                 //$directorio2="public/botpress12120/data/bots/ucm-botpress1/qna/";
+                 $directorio1="public/botpress12120/data/bots/icibot/intents";
+                 $directorio2="public/botpress12120/data/bots/icibot/qna/";
          //dd($directorio1);
       //Se creaa arreglo para guadar direccion de archivos de carpeta
       $res = array();
@@ -57,7 +59,7 @@ class QuestionSeeder extends Seeder
    while($i<$tam){
    		 if((strpos($res[$i]["Nombre"],'qna'))==false){
    		 }else{
- 		 $res_nombres[$j]=substr($res[$i]["Nombre"],60,-5);
+ 		 $res_nombres[$j]=substr($res[$i]["Nombre"],53,-5);
  		 $j=$j+1;
          /*if(($res[$i]["Nombre"])){
   		 	$path_archivo=("C:/Users/LI/Desktop/chatbot/public/".$res_nombre[$i]);
@@ -131,10 +133,41 @@ class QuestionSeeder extends Seeder
 
     	$nombre=substr($aux[9],14,-4);
     	$question=substr($aux[12],15,-5);
+      //dd($nombre,$question,$path_archivo);
+      if($nombre==false and $question==false){
+            //dd($nombre,$question,$answer,$path_archivo);
+            $l=13;
+            $nombre=substr($aux[$numlinea-4],21,-3);
+            $question=substr($aux[$l],9,-3);
+            //dd($nombre,$question,$answer,$path_archivo);
+          $answers=DB::table('answer')->where('nombre','=',$nombre)->get();
+          foreach($answers as $answer);
+          //dd($nombre,$question,$answer,$path_archivo);
+            $buscar_coma=strpos($aux[$l],',');
+              while($buscar_coma!=false){
+                $pregunta=substr($aux[$l],9,-3);
+                //dd($nombre,$question,$answer,$path_archivo);
+                DB::table('questions')->insert(['pregunta'=>$pregunta,'id_answers'=>$answer->id]);
+                $l=$l+1;
+                $buscar_coma=strpos($aux[$l],',');
+              }
+              $question=substr($aux[$l],9,-2);
+              DB::table('questions')->insert(['pregunta'=>$pregunta,'id_answers'=>$answer->id]);
+            }
+          //}
+          //break;
     	    //dd(substr($nombre,14,-6));
     		//dd($nombre,$question);
+          
         	$answers=DB::table('answer')->where('nombre','=',$nombre)->get();
-        	foreach($answers as $answer);
+        	foreach($answers as $answer){
+
+          /*if($nombre==false){
+            $nombre=substr($aux[$numlinea-4],21,-3);
+            $question=substr($aux[15],9,-2);
+            dd($nombre,$question,$answer,$path_archivo);
+          }*/
+        }
         	//if($i==4){
     		//dd($i,$nombre,$answer);
     	    //}
@@ -146,6 +179,8 @@ class QuestionSeeder extends Seeder
         			        	DB::table('questions')->insert(['pregunta'=>'¿'.$question,'id_answers'=>$answer->id]);
         			 }
         	}else{
+
+               DB::table('questions')->insert(['pregunta'=>$question,'id_answers'=>$answer->id]);
         	//$j=12;
             //dd($aux,$j);
         	//while($pos2==false){

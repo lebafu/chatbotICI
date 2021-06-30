@@ -20,7 +20,7 @@ class NluImageSeeder extends Seeder
         //dd($images_qnas);
         $res = array();
 
-           $path_archivo="public/botpress12120/data/bots/ucm-botpress1/content-elements/builtin_image.json";
+           $path_archivo="public/botpress12120/data/bots/icibot/content-elements/builtin_image.json";
             $leer = fopen($path_archivo, 'r+');
             $numlinea=0;
       foreach($images_qnas as $image_qna){
@@ -48,7 +48,8 @@ class NluImageSeeder extends Seeder
             		}else{
             			$builtin_image=substr($aux[$i],11,-3);
             			$i=$i+3;
-        				$nombre=substr($aux[$i],45,-2);
+                        //Cambiar el numero 57 dependiendo de largo del nombre del bot
+        				$nombre=substr($aux[$i],57,-2);
         				//dd($nombre);
         				DB::table('nlus_images')->insert(['nombre_imagen_nlu'=>$nombre,'codigo_imagen_nlu'=> $builtin_image]);
 

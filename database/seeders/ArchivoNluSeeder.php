@@ -15,7 +15,9 @@ class ArchivoNluSeeder extends Seeder
     public function run()
     {
         //
-               $directorio1="public/botpress12120/data/bots/ucm-botpress1/intents";
+               //$directorio1="public/botpress12120/data/bots/ucm-botpress1/intents";
+                 $directorio1="public/botpress12120/data/bots/icibot/intents";
+                 $directorio2="public/botpress12120/data/bots/icibot/qna/";
          //dd($directorio1);
       //Se creaa arreglo para guadar direccion de archivos de carpeta
       $res = array();
@@ -55,7 +57,8 @@ class ArchivoNluSeeder extends Seeder
   $j=0;
    while($i<$tam){
        if((strpos($res[$i]["Nombre"],'qna'))==false){
-          $res_nombres[$j]=substr($res[$i]["Nombre"],53,-5);
+        //Cambiar el numero 46 si cambia el nombre del bot
+          $res_nombres[$j]=substr($res[$i]["Nombre"],46,-5);
      $j=$j+1;
        }else{
      

@@ -17,7 +17,9 @@ class ArchivoQnaSeeder extends Seeder
     public function run()
     {
         //
-         $directorio1="public/botpress12120/data/bots/ucm-botpress1/intents";
+         //$directorio1="public/botpress12120/data/bots/ucm-botpress1/intents";
+                 $directorio1="public/botpress12120/data/bots/icibot/intents";
+                 $directorio2="public/botpress12120/data/bots/icibot/qna/";
          //dd($directorio1);
       //Se creaa arreglo para guadar direccion de archivos de carpeta
       $res = array();
@@ -57,7 +59,7 @@ class ArchivoQnaSeeder extends Seeder
    while($i<$tam){
    		 if((strpos($res[$i]["Nombre"],'qna'))==false){
    		 }else{
- 		 $res_nombres[$j]=substr($res[$i]["Nombre"],60,-5);
+ 		 $res_nombres[$j]=substr($res[$i]["Nombre"],53,-5);
  		 $j=$j+1;
          /*if(($res[$i]["Nombre"])){
   		 	$path_archivo=("C:/Users/LI/Desktop/chatbot/public/".$res_nombre[$i]);
@@ -65,7 +67,7 @@ class ArchivoQnaSeeder extends Seeder
   	}
   		$i=$i+1;
     }
-
+    //dd($res_nombres);
     $tam_nombres=sizeof($res_nombres);
     $i=0;
     //dd($res_nombres[$i]);
