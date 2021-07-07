@@ -20,24 +20,33 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Actualización Exitosa') }}
-        </h2>
-    </x-slot>
+    <div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Actualizacion exitosa</div>
 
-   
+@if($es_archivo_flow==false)   
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
             <p>{{ $message }}</p>
         </div>
     @endif
  
-@section('content')
 El archivo Modificado fue 
 <p>Pregunta:{{$question->pregunta}}<p>
 <p>Respuesta:{{$answer->nombre}} </p>
+@else
+    @for($i=0;$i<$tam_array_imagen;$i++)
+        En la actualización han quedado añadido las siguientes imagenes:
+        <img src="images/bp/{{$imagen_actual[$i]}}">
+    @endfor
 
+    @for($i=0;$i<$tam_array_text;$i++)
+    <p>El {{$textos_originales[$i]}} fue actualizado a:<p>
+    <p>{{$strings[$i]}}.<p>
+    @endfor
+@endif
 
 <!--<button class="btn btn-primary" href="/dashboard">Ir Dashboard</button>-->
 </x-app-layout>

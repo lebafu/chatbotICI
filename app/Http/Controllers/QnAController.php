@@ -642,8 +642,8 @@ if ($gestor) {
           array_push($textos,substr($aux_text[$i+4],18,-3));
           array_push($todo,$builtins_texts[$j],"builtin_text",substr($aux_text[$i+4],18,-3));
           }else{
-            array_push($textos,substr($aux_text[$i+4],18,-2));
-            array_push($todo,$builtins_texts[$j],"builtin_text",substr($aux_text[$i+4],18,-2));
+            array_push($textos,substr($aux_text[$i+4],18,-3));
+            array_push($todo,$builtins_texts[$j],"builtin_text",substr($aux_text[$i+4],18,-3));
 
             //array_push($todo,substr($aux_image[$i+4],18,-2));
           }
@@ -684,7 +684,7 @@ if ($gestor) {
           $j=$j+1;
           }
         
-       //dd($builtins,$path_archivo,$textos,$todo,$es_archivo_flow,$tam_array_todo,$todo_ordenado,$nombre_imagen,$j,$nombres_imagenes);
+       //dd($aux_text,$builtins,$path_archivo,$textos,$todo,$es_archivo_flow,$tam_array_todo,$todo_ordenado,$nombre_imagen,$j,$nombres_imagenes);
         //}
         //dd($path_archivo,$aux,$builtins);
         }
@@ -704,7 +704,104 @@ if ($gestor) {
         //
         //
       if($request->es_archivo_flow){
-      dd($request);
+      //dd($request,$request->file('imagen_nueva'));
+      $imagenes_nuevas=$request->file('imagen_nueva');
+      $imagen_actual=array();
+      //$imagenes_actuales=$request->file('imagenes_actual');
+      $imagen_nueva=array();
+      //$imagen1=$imagenes[1]->getClientOriginalName();
+      $i=0;
+      $tam_array_imagen=count($request->file('imagen_nueva'));
+      $tam_array_text=count($request->string);
+      $textos_originales=$request->textos_originales;
+      $strings=$request->string;
+      $es_archivo_flow=$request->es_archivo_flow;
+      //dd($es_archivo_flow);
+      //dd($imagen1,$request,$request->file('imagen'),$tam_array_imagen);
+      //dd($request);
+      while($i<$tam_array_imagen){
+        array_push($imagen_nueva,$imagenes_nuevas[$i]->getClientOriginalName());
+        array_push($imagen_actual,$request->imagen_actual[$i]);
+        $i=$i+1;
+      }
+      //dd($request,$request->file('imagen'),$request->imagen_actual,$imagen_nueva);
+      
+      $path_chatbot=public_path("botpress12120/data/bots/icibot/media/");
+      $path_bp_laravel=public_path("images/bp/");
+      $path_text=public_path("botpress12120/data/bots/icibot/content-elements/builtin_text.json");
+          $leer = fopen($path_text, 'r+');
+      $numlinea=0;
+      while ($linea = fgets($leer)){
+        //echo $linea.'<br/>';
+            $aux[] = $linea;    
+             $numlinea++;
+        }
+        fclose($leer);
+        //dd($aux);
+
+      //$data = fread($leer, filesize($path_text));
+      //while($i<$tam_array_text){
+
+         //Se realiza el reeemplzado de la linea $patron por lo que dice en sustitución y lo demas queda exactamente igual a cmo esta en $data
+      //$datosnuevos = str_replace($textos_originales[$i],$strings[$i],$data); //REEMPLAZA LO QUE CONTINE EL ARCHIVO VIEJO POR EL ARCHIVO NUEVO
+        //Se abre el archivo para reescribirlo
+      
+      $i=0;
+      while($i<$numlinea){
+        for($j=0;$j<$tam_array_text;$j++){
+          $encuentra_texto=strpos($aux[$i],$textos_originales[$j]);
+          if($encuentra_texto!=false){
+                $aux[$i]=str_replace(
+                $textos_originales[$j],
+                $strings[$j],$aux[$i]);
+        
+          }
+          
+        }
+        $i=$i+1;
+      }
+      $i=0;
+      $contenido="";
+      while($i<$numlinea){
+        $contenido .=$aux[$i];
+        $i=$i+1;
+      }
+
+        //file_put_contents(public_path("botpress12120/data/bots/icibot/content-elements/builtin_text.json"),$contenido);
+      
+      
+        
+       //dd($request,$request->file('imagen'),$request->imagen_actual,$imagen_nueva,$path_chatbot,$path_bp_laravel,$strings,$textos_originales,$tam_array_text,$aux,$contenido);
+      //fclose($leer);
+       unlink($path_text);
+       file_put_contents(public_path("botpress12120/data/bots/icibot/content-elements/builtin_text.json"),$contenido);
+       //$ruta= public_path("botpress12120/data/bots/icibot/content-elements/");
+       //rename($ruta."textos.json", $ruta."builtin_text.json");
+        //dd($request,$request->file('imagen'),$request->imagen_actual,$imagen_nueva,$path_chatbot,$path_bp_laravel,$strings,$textos_originales,$tam_array_text,$aux,$contenido);
+        
+      $i=0;
+      //dd($request->hasfile('imagen_nueva'));
+      if(($request->hasfile('imagen_nueva'))==true){
+      foreach($imagenes_nuevas as $imagen_nueva){
+         //dd($imagenes_nuevas[$i]->getClientOriginalName(),$imagen_nueva);
+        $filename=time().$imagen_nueva->getClientOriginalName();
+        //dd($filename);
+         $imagen_nueva->move(public_path('images/bp/'),$filename);
+        $fichero=public_path().'/images/bp/'.$filename;
+      $nuevo_fichero=public_path().'/botpress12120/data/bots/icibot/media/'.$filename;
+      copy($fichero,$nuevo_fichero);
+          unlink($path_chatbot.$imagen_actual[$i]);
+          unlink($path_bp_laravel.$imagen_actual[$i]);
+          rename($path_chatbot.$filename,$path_chatbot.$imagen_actual[$i]);
+          rename($path_bp_laravel.$filename,$path_bp_laravel.$imagen_actual[$i]);
+        $i=$i+1;
+      }
+    }
+
+    //dd($request,$request->file('imagen_nueva'),$request->imagen_actual,$imagen_nueva,$path_chatbot,$path_bp_laravel,$strings,$textos_originales,$tam_array_text,$aux,$contenido);
+      
+      
+      return view('qna.message',compact('imagen_actual','tam_array_text','strings','textos_originales','tam_array_imagen','es_archivo_flow'));
     }else{
       //dd($request,$request->file('image_nueva'));
         //dd($id);
