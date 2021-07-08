@@ -24,31 +24,39 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Actualizacion exitosa</div>
+                <b><div class="card-header">Actualizacion exitosa</div></b>
+                        <form>
 
-@if($es_archivo_flow==false)   
-    @if ($message = Session::get('success'))
-        <div class="alert alert-success">
-            <p>{{ $message }}</p>
-        </div>
-    @endif
+                                        @if($es_archivo_flow==false)   
+                                                 @if ($message = Session::get('success'))
+                                                        <div class="alert alert-success">
+                                                        <p>{{ $message }}</p>
+                                                         </div>
+                                                    @endif
  
-El archivo Modificado fue 
-<p>Pregunta:{{$question->pregunta}}<p>
-<p>Respuesta:{{$answer->nombre}} </p>
-@else
-    @for($i=0;$i<$tam_array_imagen;$i++)
-        En la actualización han quedado añadido las siguientes imagenes:
-        <img src="images/bp/{{$imagen_actual[$i]}}">
-    @endfor
+                                                <p>El archivo Modificado fue<p>
+                                                    <p>Pregunta:{{$question->pregunta}}<p>
+                                                    <p>Respuesta:{{$answer->nombre}} </p>
+                                       @else
+                                            @for($i=0;$i<$tam_array_imagen;$i++)
+                                            <p>En la actualización han quedado añadido las siguientes imagenes:</p>
+                                                <p>Nombre Imagen: {{$names_imagenes[$i]}}</p>
+                                                <img src="images/bp/{{$imagen_actual[$i]}}">
+                                            @endfor
 
-    @for($i=0;$i<$tam_array_text;$i++)
-    <p>El {{$textos_originales[$i]}} fue actualizado a:<p>
-    <p>{{$strings[$i]}}.<p>
-    @endfor
-@endif
+                                            @for($i=0;$i<$tam_array_builtins_texts_unique;$i++)
+                                                    <p>El <b>"{{$textos_iniciales[$i]}}"<b>fue actualizado a:<p>
+                                                    <p><b>"{{$textos_finales[$i]}}"<b>.<p>
+                                            @endfor
+                                        @endif
 
-<!--<button class="btn btn-primary" href="/dashboard">Ir Dashboard</button>-->
+                        </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<button class="btn btn-primary" href="/dashboard">Ir Dashboard</button>
 </x-app-layout>
 
 

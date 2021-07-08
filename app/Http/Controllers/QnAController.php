@@ -574,6 +574,7 @@ if ($gestor) {
                 $i=$i+1;
         }
         fclose($leer);
+
         //dd($path_archivo,$aux,$encuentra_builtins,$builtins);
         //dd($builtins);
         $k=0;
@@ -683,13 +684,22 @@ if ($gestor) {
           }
           $j=$j+1;
           }
-        
-       //dd($aux_text,$builtins,$path_archivo,$textos,$todo,$es_archivo_flow,$tam_array_todo,$todo_ordenado,$nombre_imagen,$j,$nombres_imagenes);
+        $builtins_texts=array_unique($builtins_texts);
+        $tam_array_builtins_texts_unique=count($builtins_texts);
+
+        $i=0;
+        $builtins_texts_index_unique=array();
+        foreach($builtins_texts as $builtins_texts_unique){
+          //dd($builtins_texts_unique,$builtins_texts);
+          $builtins_texts_index_unique[$i]=$builtins_texts_unique;
+          $i=$i+1;
+        }
+       //dd($aux_text,$builtins,$builtins_texts_index_unique,$tam_array_builtins_texts_unique,$builtins_images,$path_archivo,$textos,$todo,$es_archivo_flow,$tam_array_todo,$todo_ordenado,$nombre_imagen,$j,$nombres_imagenes,$nombre_imagen);
         //}
         //dd($path_archivo,$aux,$builtins);
         }
         
-        return view('qna.edit',compact('question','answer','pos','name_image','es_archivo_flow','todo_ordenado','tam_array_todo','nombres_imagenes'));
+        return view('qna.edit',compact('question','answer','builtins_texts_index_unique','tam_array_builtins_texts_unique','pos','name_image','es_archivo_flow','todo_ordenado','tam_array_todo','nombres_imagenes','nombre_imagen'));
     }
 
     /**
@@ -710,15 +720,44 @@ if ($gestor) {
       //$imagenes_actuales=$request->file('imagenes_actual');
       $imagen_nueva=array();
       //$imagen1=$imagenes[1]->getClientOriginalName();
+      //$names_imagenes=$request->names_imagenes;
       $i=0;
+      //dd($request);
       $tam_array_imagen=count($request->file('imagen_nueva'));
       $tam_array_text=count($request->string);
+      $builtins_texts_unique=$request->builtins_texts_unique;
       $textos_originales=$request->textos_originales;
       $strings=$request->string;
+
+      /*$i=0;
+        $unique=array();
+        foreach($textos_originales_unique as $textos){
+          $textos_inicial[$i]=$textos;
+          $i=$i+1;
+        }*/
       $es_archivo_flow=$request->es_archivo_flow;
+      $textos_originales_unique=array_unique($textos_originales);
+      $tam_textos_unicos=count($textos_originales_unique);
+       $i=0;
+        $textos_initial=array();
+        foreach($textos_originales_unique as $textos){
+          $textos_initial[$i]=$textos;
+          $i=$i+1;
+        }
+        $i=0;
+        $textos_iniciales=array();
+        $reverse = array_reverse($textos_initial);
+        foreach($reverse as $index => $value)
+        {
+       $textos_iniciales[$i] = $value;
+       $i=$i+1;
+        }
+        $i=0;
+        //dd($textos_inicial);
       //dd($es_archivo_flow);
       //dd($imagen1,$request,$request->file('imagen'),$tam_array_imagen);
-      //dd($request);
+      //dd($request,$textos_iniciales);
+        $i=0;
       while($i<$tam_array_imagen){
         array_push($imagen_nueva,$imagenes_nuevas[$i]->getClientOriginalName());
         array_push($imagen_actual,$request->imagen_actual[$i]);
@@ -738,6 +777,20 @@ if ($gestor) {
         }
         fclose($leer);
         //dd($aux);
+
+     /*     $i=0;
+          $builtin_text_inicial=array();
+   while($i<$numlinea){
+          $encuentra_builtins=strpos($aux[$i],"builtin");
+          if($encuentra_builtins!=false){
+        if($encuentra_builtin_text!=false){
+                    array_push($builtins,substr($aux[$i],$encuentra_builtins,-2));
+                    array_push($builtins_texts_inicial,substr($aux[$i],$encuentra_builtin_text,-2));
+
+        }
+      }
+                $i=$i+1;
+        }*/
 
       //$data = fread($leer, filesize($path_text));
       //while($i<$tam_array_text){
@@ -777,7 +830,7 @@ if ($gestor) {
        file_put_contents(public_path("botpress12120/data/bots/icibot/content-elements/builtin_text.json"),$contenido);
        //$ruta= public_path("botpress12120/data/bots/icibot/content-elements/");
        //rename($ruta."textos.json", $ruta."builtin_text.json");
-        //dd($request,$request->file('imagen'),$request->imagen_actual,$imagen_nueva,$path_chatbot,$path_bp_laravel,$strings,$textos_originales,$tam_array_text,$aux,$contenido);
+        //dd($request,$request->file('imagen'),$request->imagen_actual,$imagenes_nuevas,$imagen_nueva,$path_chatbot,$path_bp_laravel,$strings,$textos_originales,$tam_array_text,$aux,$contenido);
         
       $i=0;
       //dd($request->hasfile('imagen_nueva'));
@@ -797,11 +850,40 @@ if ($gestor) {
         $i=$i+1;
       }
     }
+    $i=0;
+    $names_imagenes=$request->imagenes_news;
 
-    //dd($request,$request->file('imagen_nueva'),$request->imagen_actual,$imagen_nueva,$path_chatbot,$path_bp_laravel,$strings,$textos_originales,$tam_array_text,$aux,$contenido);
+    $path_text=public_path("botpress12120/data/bots/icibot/content-elements/builtin_text.json");
+    $leer=null;
+    $aux[]=null;
+          $leer = fopen($path_text, 'r+');
+      $numlinea=0;
+      while ($linea = fgets($leer)){
+        //echo $linea.'<br/>';
+            $aux[] = $linea;    
+             $numlinea++;
+        }
+        fclose($leer);
+    
+     $builtins_texts_unique=$request->builtins_texts_unique;
+     $tam_array_builtins_texts_unique=count($builtins_texts_unique);
+     //dd($builtins_texts_unique,$tam_array_builtins_texts_unique);
+    $i=0;
+    $textos_finales=array();
+      for($i=0;$i<$numlinea;$i++){
+        for($j=0;$j<$tam_array_builtins_texts_unique;$j++){
+           $encontrar_builtin_text=strpos($aux[$i],$builtins_texts_unique[$j]);
+            if($encontrar_builtin_text!=false){
+              //dd(substr($aux[$j+4],18,-3));
+              array_push($textos_finales,substr($aux[$i+4],18,-3));
+            }
+        }
+   }
+
+    //dd($request,$request->file('imagen_nueva'),$textos_iniciales,$textos_finales,$request->imagen_actual,$imagen_nueva,$names_imagenes,$path_chatbot,$path_bp_laravel,$strings,$textos_originales,$tam_array_text,$aux,$contenido,$tam_array_builtins_texts_unique);
+    
       
-      
-      return view('qna.message',compact('imagen_actual','tam_array_text','strings','textos_originales','tam_array_imagen','es_archivo_flow'));
+      return view('qna.message',compact('imagen_actual','tam_array_text','strings','textos_originales','tam_array_imagen','es_archivo_flow','tam_array_builtins_texts_unique','names_imagenes','textos_iniciales','textos_finales'));
     }else{
       //dd($request,$request->file('image_nueva'));
         //dd($id);
