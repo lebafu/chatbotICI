@@ -1,4 +1,5 @@
 <x-app-layout>
+    
           <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -16,10 +17,15 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
 
     <!-- Styles -->
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.css" rel="stylesheet">
+
+
+ <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+
+
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -31,6 +37,7 @@
                        @csrf
                        @method('PUT')
 
+                       @if($es_archivo_flow==false)
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Id') }}</label>
 
@@ -81,9 +88,34 @@
 
                         <!--<img >-->
                        @endif
+                       @else
+                           <b>Nota: El término \n representa el salto de línea en el chatbot, si lo cree necesario en la oración no lo elimine.</b>
+                            @for($i=0;$i<$tam_array_builtins_texts_unique;$i++)
+                            <input  id="builtins_texts_index_unique{{$i}}" type="hidden" class="form-control" name="builtins_texts_unique[]" value="{{$builtins_texts_index_unique[$i]}}" required>
+                            @endfor
 
+                            @for ($i=2; $i<$tam_array_todo;$i=$i+3)
+                             @if($todo_ordenado[$i-1]=="builtin_image")
+
+                            <label for="img" class="negrita">La imagen seleccionada fue:Malla {{$nombres_imagenes[$i-1]}}</label>
+                            <input  id="nombres_imagenes{{$i}}" type="hidden" class="form-control" name="imagenes_news[]" value="{{$nombres_imagenes[$i-1]}}" required>
+
+                            <img src="images/bp/{{$todo_ordenado[$i]}}">
+                            <input id="imagen_actual{{$i}}" name=imagen_actual[] type="text" value="{{$todo_ordenado[$i]}}" hidden>
+                            <label for="img" class="negrita">Cambiar la imagen:</label>
+                            <input id="imagen_nueva{{$i}}" name="imagen_nueva[]" type="file" class="form-control">
+                            @elseif($todo_ordenado[$i-1]=="builtin_text")
+                                        <input  id="string{{$i}}" type="text" class="form-control" name="string[]" value="{{$todo_ordenado[$i]}}"  onkeyup="PasarValor(5);" required>
+                                      <input  id="textos_originales{{$i}}" type="hidden" class="form-control" name="textos_originales[]" value="{{$todo_ordenado[$i]}}" required>
+                                      <input type="hidden" id="builtin_tipo{{$i-1}}" name="builtin_tipo[]" value="{{$todo_ordenado[$i-1]}}">
+                                       <input type="hidden" id="builtin_codigo{{$i-2}}" name="builtin_codigo[]" value="{{$todo_ordenado[$i-2]}}">
+
+
+                                    @endif
+                            @endfor
                          
-
+                        @endif
+                        <input type="hidden" id="es_archivo_flow" name="es_archivo_flow" value="{{$es_archivo_flow}}">
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
@@ -104,5 +136,16 @@
         </div>
     </div>
 </div>
+
 </x-app-layout>
 
+<script>
+function PasarValor($i)
+{
+    //if($i!=$j){
+document.getElementById("string11").value = document.getElementById("string5").value;
+document.getElementById("string17").value = document.getElementById("string5").value;
+document.getElementById("string23").value = document.getElementById("string5").value;
+//}
+}
+</script>

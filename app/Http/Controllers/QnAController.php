@@ -610,11 +610,14 @@ if ($gestor) {
           }
                     //dd($path_archivo,$aux,$builtins);
         }
+
         $j=$j+1;
         }
         $i=$i+1;
         }
         fclose($leer_image);
+        $cantidad_imagenes=count($links_imagenes);
+        //dd($links_imagenes,$cantidad_imagenes);
         //dd($path_archivo,$aux,$encuentra_builtins,$builtins,$builtins_images,$builtins_texts,$path_archivo_image,$aux_image,$links_imagenes,$numlinea);
             //Se procede a recorrer el archivo builtin_text linea por linea buscando mediante el codigo builtin_text-codigo el respectivo texto de ese codigo.
 
@@ -655,7 +658,7 @@ if ($gestor) {
         $i=$i+1;
         }
         fclose($leer_text);
-
+        //dd($textos);
         //Se ordena de acuerdo al builtin de acuerdo a como muestra los mensajes el chatbot, de mannera ordenada, texto imagen respectiva.
         $todo_ordenado=array();
         $tam_array_builtins=count($builtins);
@@ -684,8 +687,8 @@ if ($gestor) {
           }
           $j=$j+1;
           }
-        $builtins_texts=array_unique($builtins_texts);
-        $tam_array_builtins_texts_unique=count($builtins_texts);
+        $builtins_texts_unico=array_unique($builtins_texts);
+        $tam_array_builtins_texts_unique=count($builtins_texts_unico);
 
         $i=0;
         $builtins_texts_index_unique=array();
@@ -698,8 +701,8 @@ if ($gestor) {
         //}
         //dd($path_archivo,$aux,$builtins);
         }
-        
-        return view('qna.edit',compact('question','answer','builtins_texts_index_unique','tam_array_builtins_texts_unique','pos','name_image','es_archivo_flow','todo_ordenado','tam_array_todo','nombres_imagenes','nombre_imagen'));
+        dd($builtins_texts,$todo_ordenado);
+        return view('qna.edit',compact('question','answer','builtins_texts_index_unique','tam_array_builtins_texts_unique','pos','name_image','es_archivo_flow','todo_ordenado','tam_array_todo','nombres_imagenes','nombre_imagen','cantidad_imagenes','textos'));
     }
 
     /**
@@ -713,6 +716,7 @@ if ($gestor) {
     {
         //
         //
+      //dd($request);
       if($request->es_archivo_flow){
       //dd($request,$request->file('imagen_nueva'));
       $imagenes_nuevas=$request->file('imagen_nueva');
