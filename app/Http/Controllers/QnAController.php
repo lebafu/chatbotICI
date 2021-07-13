@@ -21,26 +21,39 @@ class QnAController extends Controller
 
      public function qna_name_index(){
       
+      //Obtengo pagino de a 7 filas el contenido de la tabla answers
       $datos=DB::table('answer')->paginate(7);
+      //Tomo toda los datos de la tabla questions
       $questions=DB::table('questions')->get();
+      //Creo un arreglo data
       $data=array();
-      $number=array();
-      $i=1;
+      //Se desea conocer el id del primer elemnto del arreglo $dato, ya que este nos dirá el primer $answer->id que corresponde a esta pagina,
+      //al encontrarlo salimos del ciclo for.
+      foreach($datos as $dato){
+        $i=$dato->id;
+        break;
+      }
+
+      //Guardamos en un arreglo llamado data el valor de $question->pregunta siempre y cuando sea igual el valor de i coincida con el de questions->id_answers, esto se debe a
       foreach($questions as $question){
       //dd($nlu_question);
         if($question->id_answers==$i){
             array_push($data,$question->pregunta);
             //array_push($number, $i)
+            /*if($i==45){
+              dd($data,$question->pregunta);
+            }*/
             $i=$i+1;
         }
       }
+      //dd($data);
       $i=0;
       foreach($datos as $dato){
         $dato->pregunta=$data[$i];
         $i=$i+1;
       }
      
-      //dd($datos);
+      //dd($datos,$dato,$data);
       return view('qna.qna_name_index',compact('datos','data'));
 
     }
@@ -518,6 +531,8 @@ if ($gestor) {
         //dd($datos,$questions,$answer,$pos,$name_image,$es_archivo_flow);
         if($es_archivo_flow==false){
            //Les paso los elementos de las consultas a la vista.
+          //dd($question,$answer);
+          //dd($es_archivo_flow);
            return view('qna.edit',compact('question','answer','pos','name_image','es_archivo_flow'));
         }else{
           //Al encontrar el enlace hacia un archivo .flow.json que a su vez contiene los builtin_text y builtin_immge respectivo sigue esta parte del codigo.Se abre el archivo .flow.json en esa ruta y se lee linea por linea almacenandolo en un arreglo
@@ -574,7 +589,16 @@ if ($gestor) {
                 $i=$i+1;
         }
         fclose($leer);
-
+        $builtins_texts_unique=array_unique($builtins_texts);
+        $builtins_texts=array();
+        $i=0;
+        foreach($builtins_texts_unique as $builtin_text)
+        {
+          $builtins_texts[$i]=$builtin_text;
+          $i=$i+1;
+        }
+        //dd($builtins_texts);
+        $i=0;
         //dd($path_archivo,$aux,$encuentra_builtins,$builtins);
         //dd($builtins);
         $k=0;
@@ -615,6 +639,7 @@ if ($gestor) {
         }
         $i=$i+1;
         }
+
         fclose($leer_image);
         $cantidad_imagenes=count($links_imagenes);
         //dd($links_imagenes,$cantidad_imagenes);
@@ -629,6 +654,7 @@ if ($gestor) {
             $aux_text[] = $linea;    
              $numlinea++;
         }
+        //dd($todo,$builtins_texts);
         $j=0;
         $tam_array=count($builtins_texts);
         $i=0;
@@ -658,12 +684,24 @@ if ($gestor) {
         $i=$i+1;
         }
         fclose($leer_text);
+
+        $builtins=array_reverse($builtins);
+          //dd($todo,$builtins);
+         $builtins_unique=array_unique($builtins);
+         $builtins=array();
+         $i=0;
+        foreach($builtins_unique as  $builtin){
+          $builtins[$i]=$builtin;
+          $i=$i+1;
+        }
+
+        //dd($todo,$builtins);
         //dd($textos);
         //Se ordena de acuerdo al builtin de acuerdo a como muestra los mensajes el chatbot, de mannera ordenada, texto imagen respectiva.
         $todo_ordenado=array();
         $tam_array_builtins=count($builtins);
         $tam_array_todo=count($todo);
-        for($i=$tam_array_builtins-1;$i>=0;$i=$i-1){
+        for($i=0;$i<$tam_array_builtins;$i=$i+1){
           //dd($todo);
           for($j=0;$j<$tam_array_todo;$j=$j+3){
             if($builtins[$i]==$todo[$j]){
@@ -701,7 +739,29 @@ if ($gestor) {
         //}
         //dd($path_archivo,$aux,$builtins);
         }
-        dd($builtins_texts,$todo_ordenado);
+        $textos_sin_repetir=array_unique($textos);
+        $tam_array_textos_unicos=count($textos_sin_repetir);
+        $i=0;
+        $textos_unicos_index_orden=array();
+        foreach($textos_sin_repetir as $textos_sin_repetir_unico){
+          //dd($builtins_texts_unique,$builtins_texts);
+          $textos_unicos_index_orden[$i]=$textos_sin_repetir_unico;
+          $i=$i+1;
+        }
+        /*$mapa=array();
+        $index_text=array();
+        for($i=0;$i<$tam_array_textos_unicos;$i++){
+            for($j=0;$j<$tam_array_todo;$j++){
+              if($todo_ordenado[$j]==$textos_unicos_index_orden[$i]){
+                 array_push($index_text,$j);
+              }
+            }
+          //dd($index_text[0]);
+           array_push($mapa,$index_text);
+           $index_text=array();
+        }*/
+        //dd($todo_ordenado,$nombres_imagenes);
+        //dd($builtins_texts,$todo_ordenado,$builtins_texts_index_unique,$textos_sin_repetir,$textos_unicos_index_orden,$mapa,$tam_array_builtins_texts_unique,$mapa[0]);
         return view('qna.edit',compact('question','answer','builtins_texts_index_unique','tam_array_builtins_texts_unique','pos','name_image','es_archivo_flow','todo_ordenado','tam_array_todo','nombres_imagenes','nombre_imagen','cantidad_imagenes','textos'));
     }
 
@@ -712,14 +772,18 @@ if ($gestor) {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$id)
+ public function update(Request $request,$id)
     {
         //
         //
-      //dd($request);
-      if($request->es_archivo_flow){
+      //$i=3;
+      //dd(!empty($request->file('imagen_nueva')[$i]));
+      //dd($request->es_archivo_flow);
+      $es_archivo_flow=$request->archivo_flow;
+      if($request->es_archivo_flow!=null){
       //dd($request,$request->file('imagen_nueva'));
       $imagenes_nuevas=$request->file('imagen_nueva');
+      //dd($request->hasfile('imagen_nueva'));
       $imagen_actual=array();
       //$imagenes_actuales=$request->file('imagenes_actual');
       $imagen_nueva=array();
@@ -763,8 +827,10 @@ if ($gestor) {
       //dd($request,$textos_iniciales);
         $i=0;
       while($i<$tam_array_imagen){
+         if((!empty($request->file('imagen_nueva')[$i]))==true){
         array_push($imagen_nueva,$imagenes_nuevas[$i]->getClientOriginalName());
         array_push($imagen_actual,$request->imagen_actual[$i]);
+      }
         $i=$i+1;
       }
       //dd($request,$request->file('imagen'),$request->imagen_actual,$imagen_nueva);
@@ -841,6 +907,7 @@ if ($gestor) {
       if(($request->hasfile('imagen_nueva'))==true){
       foreach($imagenes_nuevas as $imagen_nueva){
          //dd($imagenes_nuevas[$i]->getClientOriginalName(),$imagen_nueva);
+        if((!empty($request->file('imagen_nueva')[$i]))==true){
         $filename=time().$imagen_nueva->getClientOriginalName();
         //dd($filename);
          $imagen_nueva->move(public_path('images/bp/'),$filename);
@@ -851,8 +918,9 @@ if ($gestor) {
           unlink($path_bp_laravel.$imagen_actual[$i]);
           rename($path_chatbot.$filename,$path_chatbot.$imagen_actual[$i]);
           rename($path_bp_laravel.$filename,$path_bp_laravel.$imagen_actual[$i]);
-        $i=$i+1;
       }
+      $i=$i+1;
+    }
     }
     $i=0;
     $names_imagenes=$request->imagenes_news;
@@ -1433,9 +1501,7 @@ if ($gestor) {
     //print_r($i);
   }
   //dd($archivo_nombre_original,$archivo_nombre_nuevo);
-  
 
-  
 
   //Actualizamos la base de datos mysql con las respectivas tablas
   //dd($request);
@@ -1449,11 +1515,15 @@ if ($gestor) {
    //$answer->save();
    //$dir2->close();
    } 
+   $imagenes=DB::table('qnas_images')->where('id_answer','=',$question->id_answers)->get();
+   foreach($imagenes as $imagen);
+   //dd($imagen);
 
- return view('qna.message',compact('question','answer','datosnuevos'));
+ return view('qna.message',compact('question','answer','datosnuevos','es_archivo_flow','imagen'));
  
   
 }
+
 
 
     /**

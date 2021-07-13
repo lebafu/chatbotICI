@@ -27,7 +27,7 @@
                 <b><div class="card-header">Actualizacion exitosa</div></b>
                         <form>
 
-                                        @if($es_archivo_flow==false)   
+                                        @if($es_archivo_flow==null)   
                                                  @if ($message = Session::get('success'))
                                                         <div class="alert alert-success">
                                                         <p>{{ $message }}</p>
@@ -37,11 +37,15 @@
                                                 <p>El archivo Modificado fue<p>
                                                     <p>Pregunta:{{$question->pregunta}}<p>
                                                     <p>Respuesta:{{$answer->nombre}} </p>
+                                                    <img src="images/bp/{{$imagen->nombre_imagen_qna}}">
+
                                        @else
                                             @for($i=0;$i<$tam_array_imagen;$i++)
                                             <p>En la actualización han quedado añadido las siguientes imagenes:</p>
+                                             @if((!empty($imagen_actual[$i]))==true)
                                                 <p>Nombre Imagen: {{$names_imagenes[$i]}}</p>
                                                 <img src="images/bp/{{$imagen_actual[$i]}}">
+                                            @endif
                                             @endfor
 
                                             @for($i=0;$i<$tam_array_builtins_texts_unique;$i++)
@@ -56,7 +60,7 @@
         </div>
     </div>
 </div>
-<button class="btn btn-primary" href="/dashboard">Ir Dashboard</button>
+<a href="dashboard">Ir Dashboard</a>
 </x-app-layout>
 
 
