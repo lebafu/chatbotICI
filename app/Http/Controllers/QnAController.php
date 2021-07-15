@@ -94,8 +94,9 @@ class QnAController extends Controller
     public function store(Request $request)
     {
 
-
         $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+        $question=$request->question."\r\n";
+        //dd($question);
         $charactersLength=strlen($characters);
         $randomString = '';
     for ($i = 0; $i < 10; $i++){
@@ -240,16 +241,70 @@ class QnAController extends Controller
         $archivo_ejemplo2="C:/Users/LI/Desktop/chtbtICI/public/qna__qna_prueba.txt";
 
         $leer1 = fopen($archivo_ejemplo1, 'r+');
+        $numlinea=0;
+        while ($linea = fgets($leer1)){
+        //echo $linea.'<br/>';
+            $aux[] = $linea;    
+             $numlinea++;
+        }
+        fclose($leer1);
+      //dd($request,$aux,$numlinea);
+      $ultimas_4_lineas=array();
+        $ultimas_4_lineas[0]="    ]\r\n";
+        $j=1;
+        $i=$numlinea-3;
+      while($i<$numlinea){
+           $ultimas_4_lineas[$j]=$aux[$i];
+           $j=$j+1;
+          $i=$i+1;
+      }
+       //dd($request,$aux,$numlinea,$ultimas_4_lineas);
+      $i=0;
+      while($i<$numlinea){
+        $buscar_utterances=strpos($aux[$i],'"utterances": {');
+        $buscar_es_pregunta=strpos($aux[$i+1],'"es": []');
+         $buscar_es_llave=strpos($aux[$i+2],'},');
+         
+        if($buscar_utterances!=false and $buscar_es_pregunta!=false and $buscar_es_llave!=false){
+          //dd($buscar_utterances,$buscar_es_pregunta,$buscar_es_llave,$i);
+          $aux[$i+1]='      '.'"'.'es'.'":'." [\r\n";
+          $aux[$i+2]='        '.'"'.$request->question.'"'."\r\n";
+          $aux[$i+3]=$ultimas_4_lineas[0];
+          $aux[$i+4]=$ultimas_4_lineas[1];
+          array_push($aux,$ultimas_4_lineas[2]);
+          array_push($aux,$ultimas_4_lineas[3]);
+          //dd($aux);
+        }/*elseif($aux[$i]=='"utterances": {' and $aux[$i+1]=='"es": [' and $aux[$i+2]!='},'){
+          $aux[$i+1]='"es": [';
+          $aux[$i+2]='       "'.$request->question.'"';
+          $aux[$i+3]=']';
+        }*/
+        $i=$i+1;
+
+      }
+//dd($request,$aux,$aux[6],$numlinea,$ultimas_4_lineas);
+
+
+
+       $contenido="";
+       $i=0;
+       $tam_array_aux=count($aux);
+      while($i<$tam_array_aux){
+        $contenido .=$aux[$i];
+        $i=$i+1;
+      }
+      //dd($request,$aux,$aux[6],$numlinea,$ultimas_4_lineas,$contenido);
       //if(filesize($path_archivo) > 0){
       // Se almacena en data el contenido inicial del archivo
-         $data1 = fread($leer1, filesize($archivo_ejemplo1));
+         //$data1 = fread($leer1, filesize($archivo_ejemplo1));
         //dd($data1);
-        fclose($leer1);
+        //fclose($leer1);
         $escribir1 = fopen($path_archivo1, 'w+');
-         fwrite($escribir1, $data1);
+         //fwrite($escribir1, $data1);
+        fwrite($escribir1, $contenido);
        fclose($escribir1);
 
-      //Fila con el nombre del archivo//
+      //Fila con el nombre del archivo esccibiendo nombre del archivo//
 
       $leer1 = fopen($path_archivo1, 'r+');
       //if(filesize($path_archivo) > 0){
@@ -278,7 +333,7 @@ class QnAController extends Controller
 
 
   
-      $path_archivo11=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/intents/".$nombre_archivo);
+     /* $path_archivo11=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/intents/".$nombre_archivo);
       $leer11 = fopen($path_archivo11, 'rb');
       //dd($leer11,$path_archivo1);
       //if(filesize($path_archivo) > 0){
@@ -302,7 +357,7 @@ class QnAController extends Controller
       //dd($datosnuevos);
       //Se esccribe en el archivo
       fwrite($escribir11, $datosnuevos11);
-      fclose($escribir11);
+      fclose($escribir11); */
 
 
        //CARPETA QNA CREAR ARCHIVO
@@ -310,13 +365,81 @@ class QnAController extends Controller
 
         $path_archivo2=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/qna/".$nombre_archivo2);
         $leer2 = fopen($archivo_ejemplo2, 'r+');
+        $numlinea=0;
+         while ($linea = fgets($leer2)){
+        //echo $linea.'<br/>';
+            $aux_qna[] = $linea;    
+             $numlinea++;
+        }
+        fclose($leer2);
+      //dd($request,$aux,$numlinea);
+      $ultimas_8_lineas=array();
+        $ultimas_8_lineas[0]="    ]\r\n";
+        $j=1;
+        $i=$numlinea-8;
+      while($i<$numlinea){
+           $ultimas_8_lineas[$j]=$aux_qna[$i];
+           $j=$j+1;
+          $i=$i+1;
+      }
+       //dd($request,$aux_qna,$numlinea,$ultimas_8_lineas);
+      $i=0;
+      while($i<$numlinea){
+        $buscar_questions=strpos($aux_qna[$i],'"questions": {');
+        $buscar_answers=  strpos($aux_qna[$i],'"answers": {');
+        $buscar_es_corchete=strpos($aux_qna[$i+1],'"es": []');
+        //$buscar_es_corchete_solo=strpos($aux_qna[$i+2],']');
+         $buscar_es_llave=strpos($aux_qna[$i+2],'},');
+         if($buscar_questions!=false){
+          //dd($aux_qna,$i,'buscar_questions es distinto de false',$buscar_questions,$buscar_es_corchete,$buscar_es_llave);
+        }
+        if($buscar_answers!=false and $buscar_es_corchete!=false and $buscar_es_llave!=false){
+          //dd($buscar_utterances,$buscar_es_pregunta,$buscar_es_llave,$i);
+          $aux_qna[$i+1]='      '.'"'.'es'.'":'." [\r\n";
+          $aux_qna[$i+2]='        '.'"'.$request->answer.'"'."\r\n";
+          $aux_qna[$i+3]=$ultimas_8_lineas[0];
+          $aux_qna[$i+4]=$ultimas_8_lineas[1];
+          $aux_qna[$i+5]=$ultimas_8_lineas[2];
+          $aux_qna[$i+6]=$ultimas_8_lineas[3];
+          $aux_qna[$i+7]=$ultimas_8_lineas[4];
+          $aux_qna[$i+8]=$ultimas_8_lineas[5];
+          $aux_qna[$i+9]=$ultimas_8_lineas[6];
+          $aux_qna[$i+10]=$ultimas_8_lineas[7];
+          $aux_qna[$i+11]=$ultimas_8_lineas[8];
+          //dd($aux_qna,$ultimas_8_lineas);
+        }elseif($buscar_questions!=false and $buscar_es_corchete!=false and $buscar_es_llave!=false){
+          $aux_qna[$i+1]='      '.'"'.'es'.'":'." [\r\n";
+          $aux_qna[$i+2]='        '.'"'.$request->question.'"'."\r\n";
+          $aux_qna[$i+3]=$ultimas_8_lineas[0];
+          $aux_qna[$i+4]=$ultimas_8_lineas[4];
+          $aux_qna[$i+5]=$ultimas_8_lineas[5];
+          $aux_qna[$i+6]=$ultimas_8_lineas[6];
+          $aux_qna[$i+7]=$ultimas_8_lineas[7];
+          $aux_qna[$i+8]=$ultimas_8_lineas[8];
+          //dd($aux_qna);
+        }
+        $i=$i+1;
+
+      }
+//dd($request,$aux_qna,$aux[6],$numlinea,$ultimas_8_lineas);
+
+
+      $contenido=null;
+       $contenido="";
+       $i=0;
+       $tam_array_aux_qna=count($aux_qna);
+      while($i<$tam_array_aux_qna){
+        $contenido .=$aux_qna[$i];
+        $i=$i+1;
+      }
+      //dd($request,$aux_qna,$aux_qna[6],$numlinea,$ultimas_8_lineas,$contenido);
       //if(filesize($path_archivo) > 0){
       // Se almacena en data el contenido inicial del archivo
-         $data2 = fread($leer2, filesize($archivo_ejemplo2));
+         //$data2 = fread($leer2, filesize($archivo_ejemplo2));
         //dd($data2);
-        fclose($leer2);
+        //fclose($leer2);
         $escribir2 = fopen($path_archivo2, 'w+');
-         fwrite($escribir2, $data2);
+         fwrite($escribir2, $contenido);
        fclose($escribir2);
 
        //Fila con el nombre del archivo//
