@@ -1,4 +1,12 @@
 <x-app-layout>
+    <style>
+        .pageCenter {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1000px;
+    float: none;
+    }
+    </style>
         <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -57,7 +65,26 @@
                                 @enderror
                             </div>
                         </div>
-                       
+                       <!-- <div class="form-group row">
+                        <div class="col-md-6">
+                        <input type="checkbox" id="contexto1" name="contexto1" value="global">
+                        <label for="contexto1">Global</label><br>
+                        <input type="checkbox" id="contexto2" name="contexto2" value="regular">
+                        <label for="contexto2">Alumno Regular</label><br>
+                        <input type="checkbox" id="contexto3" name="contexto3" value="egresado">
+                        <label for="contexto3">Alumno Egresado</label><br><br>
+                         </div>
+                       </div>-->
+
+                        <div class="form-group row">
+                        <label for="cars">Seleccionar Contexto:</label>
+                            <select name="contexto" id="contexto">
+                                <option value="global">Global</option>
+                                <option value="regular">Alumno Regular</option>
+                                <option value="egresado">Alumno Egresado</option>
+                            </select>
+
+                       </div>
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
@@ -65,7 +92,7 @@
                                     {{ __('Guardar') }}
                                 </button>
 
-                                <a href="/users" class="btn">{{ __('Cancelar') }}</a>
+                                <a href="/dashboard" class="btn">{{ __('Cancelar') }}</a>
                                     
                             </div>
 

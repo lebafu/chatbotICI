@@ -94,6 +94,7 @@ class QnAController extends Controller
     public function store(Request $request)
     {
 
+        //dd($request);
         $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
         $question=$request->question."\r\n";
         //dd($question);
@@ -264,7 +265,8 @@ class QnAController extends Controller
         $buscar_utterances=strpos($aux[$i],'"utterances": {');
         $buscar_es_pregunta=strpos($aux[$i+1],'"es": []');
          $buscar_es_llave=strpos($aux[$i+2],'},');
-         
+         $global=strpos($aux[$i], "global");
+         $name_vacio=strpos($aux[$i],'"name": "",');
         if($buscar_utterances!=false and $buscar_es_pregunta!=false and $buscar_es_llave!=false){
           //dd($buscar_utterances,$buscar_es_pregunta,$buscar_es_llave,$i);
           $aux[$i+1]='      '.'"'.'es'.'":'." [\r\n";
@@ -274,11 +276,16 @@ class QnAController extends Controller
           array_push($aux,$ultimas_4_lineas[2]);
           array_push($aux,$ultimas_4_lineas[3]);
           //dd($aux);
-        }/*elseif($aux[$i]=='"utterances": {' and $aux[$i+1]=='"es": [' and $aux[$i+2]!='},'){
+        }if($global!=false){
+          $aux[$i]=str_replace("global",$request->contexto,$aux[$i]);
+        }if($name_vacio!=false){
+            $aux[$i]=str_replace('"name": "",','"name":'.' "'.$nombre_archivo.'",',$aux[$i]);
+        /*elseif($aux[$i]=='"utterances": {' and $aux[$i+1]=='"es": [' and $aux[$i+2]!='},'){
           $aux[$i+1]='"es": [';
           $aux[$i+2]='       "'.$request->question.'"';
           $aux[$i+3]=']';
         }*/
+      }
         $i=$i+1;
 
       }
@@ -388,6 +395,8 @@ class QnAController extends Controller
         $buscar_questions=strpos($aux_qna[$i],'"questions": {');
         $buscar_answers=  strpos($aux_qna[$i],'"answers": {');
         $buscar_es_corchete=strpos($aux_qna[$i+1],'"es": []');
+        $global=strpos($aux_qna[$i], "global");
+        $id_vacio=strpos($aux_qna[$i],'"id": "",');
         //$buscar_es_corchete_solo=strpos($aux_qna[$i+2],']');
          $buscar_es_llave=strpos($aux_qna[$i+2],'},');
          if($buscar_questions!=false){
@@ -417,7 +426,12 @@ class QnAController extends Controller
           $aux_qna[$i+7]=$ultimas_8_lineas[7];
           $aux_qna[$i+8]=$ultimas_8_lineas[8];
           //dd($aux_qna);
-        }
+        }if($global!=false){
+          $aux_qna[$i]=str_replace("global",$request->contexto,$aux_qna[$i]);
+        }if($name_vacio!=false){
+            $aux_qna[$i]=str_replace('"id": "",','"id":'.' "'.$nombre_archivo2.'",',$aux_qna[$i]);
+            $global=strpos($aux_qna[$i], "global");
+          }
         $i=$i+1;
 
       }
@@ -949,13 +963,13 @@ class QnAController extends Controller
           if($encuentra_coma!=false){
             //dd($encuentra_coma,(substr($aux_image[$i+3])));
           array_push($links_imagenes,substr($aux_image[$i+3],57,-3));
-          array_push($todo,$builtins_images[$j],"builtin_image",substr($aux_image[$i+3],57,-3));
+          array_push($todo,$builtins_images[$j],"builtin_image",substr($aux_image[$i+3],45,-3));
           }else{
             //dd($encuentra_coma,(substr($aux_image[$i+3])));
             array_push($links_imagenes,substr($aux_image[$i+3],57,-2));
-            array_push($todo,$builtins_images[$j],"builtin_image",substr($aux_image[$i+3],57,-2));
+            array_push($todo,$builtins_images[$j],"builtin_image",substr($aux_image[$i+3],45,-2));
           }
-                    //dd($path_archivo,$aux,$builtins);
+                    //dd($path_archivo,$aux,$builtins,$todo);
         }
 
         $j=$j+1;
@@ -1033,21 +1047,29 @@ class QnAController extends Controller
             }
           }
         }
+        //dd($todo,$todo_ordenado);
         //if($todo_ordenado[2]=="builtin_text"){
         //A pesar de  que nombre imagen posee un tamaño mucho menor que todo_ordenado, se agrandará el tamañao de $nombres_imagenes llenandolo de null, y colocando en ciertas posiciones los nobres de las imagenes para usar la misma variable en el conntador de la vista.
         $nombres_imagenes=array();
-        $j=0;
+        $j=$tam_array_todo-1;
+        //dd($j);
         $i=0;
-        while($j<$tam_array_todo){
-          if($todo_ordenado[$j]=="builtin_image"){
+        while($j>=0){
+
+          if(strpos($todo_ordenado[$j],".jpg")!=false or strpos($todo_ordenado[$j],".png")!=false){
             array_push($nombres_imagenes,$nombre_imagen[$i]);
              $i=$i+1;
           }else{
             array_push($nombres_imagenes,null);
-           
           }
-          $j=$j+1;
-          }
+          $j=$j-1;
+         /* if($j==0){
+            dd($nombres_imagenes,$tam_array_todo,$todo_ordenado);
+          }*/
+        }
+        $nombres_imagenes=array_reverse($nombres_imagenes);
+          //dd($nombres_imagenes,$tam_array_todo,$todo_ordenado);
+
         $builtins_texts_unico=array_unique($builtins_texts);
         $tam_array_builtins_texts_unique=count($builtins_texts_unico);
 
@@ -1084,7 +1106,7 @@ class QnAController extends Controller
            $index_text=array();
         }*/
         //dd($todo_ordenado,$nombres_imagenes);
-        //dd($builtins_texts,$todo_ordenado,$builtins_texts_index_unique,$textos_sin_repetir,$textos_unicos_index_orden,$mapa,$tam_array_builtins_texts_unique,$mapa[0]);
+        //dd($builtins_texts,$todo_ordenado,$builtins_texts_index_unique,$textos_sin_repetir,$textos_unicos_index_orden,$tam_array_builtins_texts_unique);
         return view('qna.edit',compact('question','answer','builtins_texts_index_unique','tam_array_builtins_texts_unique','pos','name_image','es_archivo_flow','todo_ordenado','tam_array_todo','nombres_imagenes','nombre_imagen','cantidad_imagenes','textos'));
     }
 
@@ -1100,14 +1122,16 @@ class QnAController extends Controller
         //
         //
       //$i=3;
-      //dd(!empty($request->file('imagen_nueva')[$i]));
+      //dd($request);
+      //dd($request->imagen_actual[0]);
+      //dd(($request->file('imagen_nueva')[0]));
       //dd($request->es_archivo_flow);
       $es_archivo_flow=$request->archivo_flow;
       if($request->es_archivo_flow!=null){
       //dd($request,$request->file('imagen_nueva'));
       $imagenes_nuevas=$request->file('imagen_nueva');
       //dd($request->hasfile('imagen_nueva'));
-      $imagen_actual=array();
+      $imagen_actual=$request->imagen_actual;
       //$imagenes_actuales=$request->file('imagenes_actual');
       $imagen_nueva=array();
       //$imagen1=$imagenes[1]->getClientOriginalName();
@@ -1233,13 +1257,17 @@ class QnAController extends Controller
         //dd($request,$request->file('imagen'),$request->imagen_actual,$imagenes_nuevas,$imagen_nueva,$path_chatbot,$path_bp_laravel,$strings,$textos_originales,$tam_array_text,$aux,$contenido);
         
       $i=0;
+      //dd($imagen_actual);
       //dd($request->hasfile('imagen_nueva'));
       if(($request->hasfile('imagen_nueva'))==true){
       foreach($imagenes_nuevas as $imagen_nueva){
          //dd($imagenes_nuevas[$i]->getClientOriginalName(),$imagen_nueva);
+        //dd(!empty($request->file('imagen_nueva')[1]));
         if((!empty($request->file('imagen_nueva')[$i]))==true){
+          //dd(!empty($request->file('imagen_nueva')[1]));
         $filename=time().$imagen_nueva->getClientOriginalName();
         //dd($filename);
+         $imagen_actual[$i]=$request->imagen_actual[$i];
          $imagen_nueva->move(public_path('images/bp/'),$filename);
         $fichero=public_path().'/images/bp/'.$filename;
       $nuevo_fichero=public_path().'/botpress12120/data/bots/icibot/media/'.$filename;
@@ -1250,11 +1278,13 @@ class QnAController extends Controller
           rename($path_bp_laravel.$filename,$path_bp_laravel.$imagen_actual[$i]);
       }
       $i=$i+1;
-    }
-    }
+  }
+}    
     $i=0;
     $names_imagenes=$request->imagenes_news;
-
+    $tam_array_imagen=count($imagen_actual);
+    //dd($imagen_actual,$es_archivo_flow,$tam_array_imagen,empty($imagen_actual[$i]),$names_imagenes);
+    //dd(!empty($imagen_actual[$i]));
     $path_text=public_path("botpress12120/data/bots/icibot/content-elements/builtin_text.json");
     $leer=null;
     $aux[]=null;
@@ -1847,9 +1877,9 @@ class QnAController extends Controller
    } 
    $imagenes=DB::table('qnas_images')->where('id_answer','=',$question->id_answers)->get();
    foreach($imagenes as $imagen);
-   //dd($imagen);
-
- return view('qna.message',compact('question','answer','datosnuevos','es_archivo_flow','imagen'));
+   //dd($imagen,$es_archivo_flow);
+  $tam_array_imagen=0;
+ return view('qna.message',compact('question','answer','datosnuevos','es_archivo_flow','imagen','tam_array_imagen'));
  
   
 }

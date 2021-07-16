@@ -97,15 +97,15 @@
                             @for ($i=2; $i<$tam_array_todo;$i=$i+3)
                              @if($todo_ordenado[$i-1]=="builtin_image")
 
-                            <label for="img" class="negrita">La imagen seleccionada fue:Malla {{$nombres_imagenes[$i-1]}}</label>
-                            <input  id="nombres_imagenes{{$i}}" type="hidden" class="form-control" name="imagenes_news[]" value="{{$nombres_imagenes[$i-1]}}" required>
+                            <label for="img" class="negrita">La imagen seleccionada fue:Malla {{$nombres_imagenes[$i]}}</label>
+                            <input  id="nombres_imagenes{{$i}}" type="hidden" class="form-control" name="imagenes_news[]" value="{{$nombres_imagenes[$i]}}" required>
 
                             <img src="images/bp/{{$todo_ordenado[$i]}}">
                             <input id="imagen_actual{{$i}}" name=imagen_actual[] type="text" value="{{$todo_ordenado[$i]}}" hidden>
                             <label for="img" class="negrita">Cambiar la imagen:</label>
-                            <input id="imagen_nueva{{$i}}" name="imagen_nueva[]" type="file" class="form-control">
+                            <input id="imagen_nueva{{$i}}" name="imagen_nueva[]" type="file" class="form-control" value={{$todo_ordenado[$i]}}>
                             @elseif($todo_ordenado[$i-1]=="builtin_text")
-                                        <input  id="string{{$i}}" type="text" class="form-control" name="string[]" value="{{$todo_ordenado[$i]}}"  onkeyup="PasarValor(5);" required>
+                                        <input  id="string{{$i}}" type="text" class="form-control" name="string[]" value="{{$todo_ordenado[$i]}}"  required>
                                       <input  id="textos_originales{{$i}}" type="hidden" class="form-control" name="textos_originales[]" value="{{$todo_ordenado[$i]}}" required>
                                       <input type="hidden" id="builtin_tipo{{$i-1}}" name="builtin_tipo[]" value="{{$todo_ordenado[$i-1]}}">
                                        <input type="hidden" id="builtin_codigo{{$i-2}}" name="builtin_codigo[]" value="{{$todo_ordenado[$i-2]}}">
@@ -127,7 +127,7 @@
                             </div>
 
                                 
-                            
+                             
                         </div>
                      
                     </form>
@@ -139,13 +139,32 @@
 
 </x-app-layout>
 
-<script>
-function PasarValor($i)
+<!--<script type="text/javascript">
+    
+/*function PasarValor(mapa,i,tam_array_builtins_texts_unique)
+{
+    for(j=0;j<$tam_array_builtins_texts_unique;j++){
+         $tam_array=count($mapa[j]);
+            
+        for(k=0;k<tam_array;k++){
+            if($mapa[j][k]==i){
+                for(k=0;k<tam_array;k++){
+                        document.getElementById("string"+$mapa[j][k]).value = document.getElementById("string"+i).value;
+                    }       
+            }
+    }
+}
+
+}*/
+
+function PasarValor($i,$mapa)
 {
     //if($i!=$j){
-document.getElementById("string11").value = document.getElementById("string5").value;
-document.getElementById("string17").value = document.getElementById("string5").value;
-document.getElementById("string23").value = document.getElementById("string5").value;
+//document.write('mapa:',$i,$mapa);
+document.write($json_mapa);
+document.getElementById("string"+$mapa[0][1]).value = document.getElementById("string"+$i).value;
+document.getElementById("string"+$mapa[0][2]).value = document.getElementById("string"+$i).value;
+document.getElementById("string"+$mapa[0][3]).value = document.getElementById("string"+$i).value;
 //}
 }
-</script>
+</script>-->
