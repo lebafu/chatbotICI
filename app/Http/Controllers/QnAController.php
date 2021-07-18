@@ -82,6 +82,38 @@ class QnAController extends Controller
         return view('qna.create');
     }
 
+   public function pregunta_sin_respuesta(Request $request){
+      //dd($request);
+      $text_area=$request->preguntas;
+      $pos_coma=strpos($text_area,',');
+      $strings=array();
+      $array_pos_coma=array();
+      $array_pos_coma[0]=0;
+      for($i=0;$i<strlen($text_area);$i++)
+      { 
+        if($text_area[$i]==','){
+         array_push($array_pos_coma,$i);
+        }
+      }
+      $cantidad_coma=count($array_pos_coma);
+      //dd($text_area,$array_pos_coma);
+      $i=0;
+      //dd($array_pos_coma,$cantidad_coma);
+      while($i+1<$cantidad_coma){
+      $pregunta=substr($text_area,$array_pos_coma[$i],$array_pos_coma[$i+1]);
+      $pregunta=str_replace(',',"",$pregunta);
+      //dd($pregunta);
+      array_push($strings,$pregunta);
+
+       $i=$i+1;
+      }
+      $pregunta=substr($text_area,$array_pos_coma[$i],strlen($text_area));
+      $pregunta=str_replace(',',"",$pregunta);
+      array_push($strings,$pregunta);
+      dd($text_area,$strings,$array_pos_coma,$cantidad_coma);
+      return ('HOLA');
+      }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -2096,4 +2128,6 @@ class QnAController extends Controller
       return view('qna.index',compact('datos'));
       //dd($qna);
     }
+
+
 }

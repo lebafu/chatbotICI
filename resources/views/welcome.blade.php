@@ -60,7 +60,7 @@
     <div id="login" class="col-2">
         <div class="login">
             <img src="images/logo.png" alt="logo ucm">
-            <form @submit.prevent="submit()">
+            <form id="form1" @submit.prevent="submit()">
                 <div class="center-align">
                    @auth
                         <a href="{{ url('/dashboard') }}" class="text-sm text-gray-700 underline">Dashboard</a>
@@ -72,8 +72,17 @@
                         @endif
                     @endauth
                 </div>
+
+          
             </form>
+        <form id="form2" action="{{route('qna.pregunta_sin_respuesta')}}" method="post">
+                @csrf
+            <b>Envie sus preguntas para retroalimentar nuestro sistema,debe separarlas por coma</b>
+            <textarea name="preguntas" rows="10" cols="20" placeholder="Escriba Aqui Sus Preguntas"></textarea>
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
         </div>
+    
     </div>
                 <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
                        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
@@ -103,5 +112,7 @@
                         </button>
                     </div>
             </div>
+
+
     </body>
 </html>
