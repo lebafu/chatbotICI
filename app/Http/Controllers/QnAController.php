@@ -100,19 +100,35 @@ class QnAController extends Controller
       $i=0;
       //dd($array_pos_coma,$cantidad_coma);
       while($i+1<$cantidad_coma){
-      $pregunta=substr($text_area,$array_pos_coma[$i],$array_pos_coma[$i+1]);
-      $pregunta=str_replace(',',"",$pregunta);
-      //dd($pregunta);
+      if($i==0){
+        $pregunta=substr($text_area,$array_pos_coma[$i],$array_pos_coma[$i+1]);
+        //dd($pregunta);
+        array_push($strings,$pregunta);
+      }else{
+      $pregunta=null;
+      //dd($text_area,$pregunta,$strings,$array_pos_coma,$array_pos_coma[$i],$array_pos_coma[$i+1]);
+      //dd(substr($text_area,25,54-25));
+      $pregunta=substr($text_area,$array_pos_coma[$i]+1,$array_pos_coma[$i+1]-$array_pos_coma[$i]-1);
+      //dd($text_area,$pregunta,$strings,$array_pos_coma,$array_pos_coma[$i],$array_pos_coma[$i+1]);
       array_push($strings,$pregunta);
-
+       }
        $i=$i+1;
       }
-      $pregunta=substr($text_area,$array_pos_coma[$i],strlen($text_area));
+      $pregunta=substr($text_area,$array_pos_coma[$i]+1,strlen($text_area));
       $pregunta=str_replace(',',"",$pregunta);
       array_push($strings,$pregunta);
-      dd($text_area,$strings,$array_pos_coma,$cantidad_coma);
-      return ('HOLA');
+      //dd($text_area,$strings,$array_pos_coma,$cantidad_coma);
+
+      for($i=0;$i<$cantidad_coma;$i=$i+1){
+        DB::table('preguntas_sin_respuestas')->insert(['pregunta_sin_respuesta' => $strings[$i]]);
       }
+
+      $strings=DB::table('preguntas_sin_respuestas')->get();
+      //dd($text_area,$strings,$array_pos_coma,$cantidad_coma);
+      return view('qna.pregunta_almacenada_correctamente',compact('strings'));
+      }
+
+
 
     /**
      * Store a newly created resource in storage.
