@@ -75,7 +75,18 @@ class QnAController extends Controller
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
+
+
+
      */
+
+
+    public function index_preguntas_sin_respuestas(){
+
+      $datos=DB::table('preguntas_sin_respuestas')->paginate(7);
+      return view('qna.index_preguntas_sin_respuestas',compact('datos'));
+
+    }
     public function create()
     {
         //
