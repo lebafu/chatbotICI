@@ -27,12 +27,7 @@
         </h2>
     </x-slot>
 
-   
-    <!--@if ($message = Session::get('success'))
-        <div class="alert alert-success">
-            <p>{{ $message }}</p>
-        </div>
-    @endif-->
+
    
     <table class="table table-bordered">
         <tr>
@@ -45,8 +40,7 @@
             <td>{{ $dato->id}}</td>
             <td>{{ $dato->pregunta_sin_respuesta}}</td>
             <td>
-             
-   
+                <a class="btn btn-primary btn-xs" href="{{route('qna.asignar_respuesta',$dato->id)}}"><span class="fa fa-edit fa-xs" style="color:black"></span></a>
             </td>
         </tr>
         @endforeach

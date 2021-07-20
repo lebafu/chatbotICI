@@ -87,6 +87,19 @@ class QnAController extends Controller
       return view('qna.index_preguntas_sin_respuestas',compact('datos'));
 
     }
+
+    public function asignar_preguntas_sin_respuestas($id){
+      $questions=DB::table('preguntas_sin_respuestas')->where('id','=',$id)->get();
+      $answers=DB::table('answer')->get();
+      foreach($questions as $question);
+
+      return view('qna.asignar_respuesta',compact('question','answers'));
+    }
+
+    public function update_asignar_respuesta(Request $request){
+      dd($request);
+    }
+
     public function create()
     {
         //
