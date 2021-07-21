@@ -37,22 +37,25 @@
                                                 <p>El archivo Modificado fue<p>
                                                     <p>Pregunta:{{$question->pregunta}}<p>
                                                     <p>Respuesta:{{$answer->nombre}} </p>
+                                                    @if($imagen!=null)
                                                     <img src="images/bp/{{$imagen->nombre_imagen_qna}}">
+                                                    @endif
 
                                        @else
-                                            @for($i=0;$i<$tam_array_imagen;$i++)
-                                            <p>En la actualización han quedado añadido las siguientes imagenes:</p>
-                                             @if((!empty($imagen_actual[$i]))==true)
-                                                <p>Nombre Imagen: {{$names_imagenes[$i]}}</p>
-                                                <img src="images/bp/{{$imagen_actual[$i]}}">
-                                            @endif
-                                            @endfor
-
+                                                         <!--<img src="images/bp/{{$imagen_actual[0]}}">-->
                                             @for($i=0;$i<$tam_array_builtins_texts_unique;$i++)
                                                     <p>El <b>"{{$textos_iniciales[$i]}}"<b>fue actualizado a:<p>
                                                     <p><b>"{{$textos_finales[$i]}}"<b>.<p>
                                             @endfor
                                         @endif
+
+                                         @for($i=0;$i<$tam_array_imagen;$i++)
+                                            <!--<p>En la actualización las imagenes son:</p>-->
+                                             @if((!empty($imagen_actual[$i]))==true)
+                                                <p>Malla {{$names_imagenes[$i]}}</p>
+                                                <img src="images/bp/{{$imagen_actual[$i]}}">
+                                            @endif
+                                            @endfor
 
                         </form>
                 </div>

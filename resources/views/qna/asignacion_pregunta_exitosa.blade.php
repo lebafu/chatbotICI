@@ -20,37 +20,31 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
+    <div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <form>
+                                   
 
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Preguntas Sin Respuesta') }}
-        </h2>
-    </x-slot>
+                        <b><div class="card-header">Pregunta Asignada Correctamente a Pregunta</div></b>         
 
 
-   
-    <table class="table table-bordered">
-        <tr>
-            <th>ID</th>
-            <th>Pregunta</th>
-            <th width="250px">Respuesta</th>
-        </tr>
-        @foreach ($datos as $dato)
-        <tr>
-            <td>{{ $dato->id}}</td>
-            <td>{{ $dato->pregunta_sin_respuesta}}</td>
-            <td>
-            <a class="btn btn-primary btn-xs" href="{{route('qna.asignar_respuesta',$dato->id)}}">Existente<span style="color:black"></span></a>
-            </td>
-            <td>
-            <a class="btn btn-primary btn-xs" href="{{route('qna.asignar_answer_input',$dato->id)}}">Nueva<span style="color:black"></span></a>
-            </td>
-        </tr>
-        @endforeach
-    </table>
-  
+                              <b>La pregunta:{{$pregunta}} fue asignada de manera correcta a la respuesta:
+                                @if($respuesta=="#!builtin_image-euONpC") 
+                                Mapa de Salas 
+                                @else 
+                                {{$respuesta}}
+                                @endif
+                                </b>
 
-{{$datos->links()  }}
+
+             
+                        </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<a href="dashboard">Ir Dashboard</a>
 </x-app-layout>
-
-

@@ -32,12 +32,12 @@
             <div class="card">
                 <div class="card-header">{{ __('Asignar Respuesta a Pregunta') }}</div>
 
-               <div class="card-body">
-                    <form action="{{route('qna.update_asignar_respuesta', $question->id)}}" method="POST" enctype="multipart/form-data">
-                       @csrf
+               <div class="card-body">     
+                    <form action="{{route('qna.update_asignar_input_respuesta', $question->id)}}" method="POST" enctype="multipart/form-data">
+                        @csrf
                        @method('PUT')
                         <div class="form-group row">
-                           <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Id') }}</label>
+                          <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Id') }}</label>
 
                             <div class="col-md-6">
                                 <input id="pregunta" type="text" class="form-control" name="id" value="{{ $question->id}}" required autocomplete="respuestas" autofocus readonly>
@@ -45,24 +45,14 @@
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Pregunta') }}</label>
 
                             <div class="col-md-6">
-                                <input id="pregunta" type="text" class="form-control" name="pregunta" value="{{ $question->pregunta_sin_respuesta}}" required autocomplete="respuestas" autofocus readonly>
+                                <input id="pregunta" type="text" class="form-control" name="question" value="{{ $question->pregunta_sin_respuesta}}" required autocomplete="respuestas" autofocus readonly>
 
                               </div>
-                              <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Asigne una respuesta') }}</label>
+                              <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Respuesta') }}</label>
 
 
                             <div class="col-md-6">
-                            
-                                <select name="respuesta">
-                                    @foreach($answers as $answer)
-                                     @if($answer->nombre=="#!builtin_image-euONpC")
-                                         <option value="#!builtin_image-euONpC">Mapa de Salas</option>
-                                     @else
-                                        <option value="{{$answer->nombre}}">{{$answer->nombre}}</option>
-                                     @endif
-                                    @endforeach
-                                </select>
-                           
+                                <input id="pregunta" type="text" class="form-control" name="answer" required autocomplete="respuestas" value="{{ old('answer') }}" autofocus required>
                               </div>
                               <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
@@ -74,7 +64,6 @@
                             </div>
                         </div>
                       
-                            </div>
 
                                 
                              
