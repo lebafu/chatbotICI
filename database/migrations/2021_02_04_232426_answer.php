@@ -16,7 +16,9 @@ class Answer extends Migration
         //
         Schema::create('answer', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre')->unique();
+            $table->text('nombre');
+            $table->string('vence')->default('No');
+            $table->datetime('fecha_caducacion')->nullable();
             $table->foreignId('id_archivo')->references('id')->on('archivo_qna');
             $table->integer('habilitada');
         });
