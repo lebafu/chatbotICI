@@ -1930,6 +1930,7 @@ class QnAController extends Controller
     {
         //
          $datos=DB::table('answer')->join('questions','answer.id','=','questions.id_answers')->select('questions.*', 'answer.nombre')->select('questions.*','answer.nombre')->where('answer.id','=',$id)->get();
+         //dd($datos);
 
         //Selecciono el elemento de la tabla questions que editaremos
         $questions=DB::table('questions')->where('questions.id',$id)->get();
@@ -2227,7 +2228,19 @@ class QnAController extends Controller
       //dd($request);
       //dd($request->imagen_actual[0]);
       //dd(($request->file('imagen_nueva')[0]));
+      $questions=DB::table('questions')->where('id','=',$id)->get();
+      foreach($questions as $question);
+      $answers=DB::table('answer')->where('id','=',$question->id_answers)->get();
+      foreach($answers as $answer);
+      $archivos_qnas=DB::table('archivo_qna')->where('id','=',$answer->id_archivo)->get();
+
+
+
+      foreach($archivos_qnas as $archivo_qna);
+      foreach($answers as $answer);
       //dd($request->es_archivo_flow);
+      //dd($request,$id,$question,$answer,$archivo_qna->nombre,$datos);
+      //dd($question);
       $es_archivo_flow=$request->archivo_flow;
       if($request->es_archivo_flow!=null){
       //dd($request,$request->file('imagen_nueva'));
@@ -2419,6 +2432,100 @@ class QnAController extends Controller
       
       return view('qna.message',compact('imagen_actual','tam_array_text','strings','textos_originales','tam_array_imagen','es_archivo_flow','tam_array_builtins_texts_unique','names_imagenes','textos_iniciales','textos_finales'));
     }else{
+
+      //La ruta del directorio dentro de la carpeta public, que como se dijo anteriormente irá dentro de directorio1
+
+      $directorio1="botpress12120/data/bots/icibot/intents";
+      
+      //Se creaa arreglo para guadar direccion de archivos de carpeta
+      $res = array();
+
+  // Agregamos la barra invertida al final en caso de que no exista
+  if(substr($directorio1, -1) != "/") $directorio1 .= "/";
+
+  // Creamos un puntero al directorio y obtenemos el listado de archivos
+  $dir1 = @dir($directorio1) or die("getFileList: Error abriendo el directorio $directorio1 para leerlo");
+  while(($archivo1 = $dir1->read()) !== false) {
+      // Obviamos los archivos ocultos
+      if($archivo1[0] == ".") continue;
+      if(is_dir($directorio1 . $archivo1)) {
+          $res[] = array(
+            "Nombre" => $directorio1 . $archivo1 . '"/"',
+            "Tamaño" => 0,
+            "Modificado" => filemtime($directorio1 . $archivo1)
+          );
+      } else if (is_readable($directorio1 . $archivo1)) {
+          $res[] = array(
+            "Nombre" => $directorio1 . $archivo1,
+            "Tamaño" => filesize($directorio1 . $archivo1),
+            "Modificado" => filemtime($directorio1 . $archivo1)
+          );
+      }
+  }
+
+$tam=count($res);
+  //dd($tam);
+  $i=0;
+  $pos=strpos($res[$i]["Nombre"],$archivo_qna->nombre);
+  if($pos!=false){
+
+  }else{
+  while($pos==false){
+    //dd(1);
+      $i=$i+1;
+      $pos=strpos($res[$i]["Nombre"],$archivo_qna->nombre);
+     
+
+  }
+   //dd($request,$id,$question,$answer,$archivo_qna->nombre,$datos,$res[$i]["Nombre"]);
+}
+
+       $directorio2="botpress12120/data/bots/icibot/qna";
+  $res2 = array();
+
+  // Agregamos la barra invertida al final en caso de que no exista
+
+
+  if(substr($directorio2, -1) != "/") $directorio2 .= "/";
+
+  // Creamos un puntero al directorio y obtenemos el listado de archivos
+  $dir2 = @dir($directorio2) or die("getFileList: Error abriendo el directorio $directorio2 para leerlo");
+  while(($archivo2 = $dir2->read()) !== false) {
+      // Obviamos los archivos ocultos
+      if($archivo2[0] == ".") continue;
+      if(is_dir($directorio2 . $archivo2)) {
+          $res2[] = array(
+            "Nombre" => $directorio2 . $archivo2 . "/",
+            "Tamaño" => 0,
+            "Modificado" => filemtime($directorio2 . $archivo2)
+          );
+      } else if (is_readable($directorio2 . $archivo2)) {
+          $res2[] = array(
+            "Nombre" => $directorio2.$archivo2,
+            "Tamaño" => filesize($directorio2.$archivo2),
+            "Modificado" => filemtime($directorio2.$archivo2)
+          );
+      }
+  }
+
+  $tam=count($res2);
+  //dd($tam);
+  $j=0;
+  $pos=strpos($res2[$j]["Nombre"],$archivo_qna->nombre);
+  //dd($pos); dd($question);
+  if($pos!=false){
+
+  }else{
+      while($pos==false){
+          $j=$j+1;
+          $pos=strpos($res2[$j]["Nombre"],$archivo_qna->nombre);
+      //dd($request,$id,$question,$answer,$archivo_qna->nombre,$datos,$res2[$j]["Nombre"]);
+
+  }
+  //dd($request,$id,$question,$answer,$archivo_qna->nombre,$datos,$res[$i]["Nombre"],$res2[$j]["Nombre"]);
+}
+  dd($request,$id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"]);
+
       //dd($request,$request->file('image_nueva'));
         //dd($id);
         //dd($request);
@@ -2606,7 +2713,7 @@ class QnAController extends Controller
         $cadena_final_actual
         );
 
-        //dd($cadena_final_actual);
+        dd($cadena_final_actual);
     }
     //dd($cadena_final);
       //rename ("/folder/file.ext", "/folder/newfile.ext");
@@ -2868,7 +2975,7 @@ class QnAController extends Controller
 
         //RUTA DE LA CARPETA PUBLIC + RUTA DE DIRECTORIO HASTA CARPETA QNA DONDE RECORRERA CADA UNO DE LOS NOMBRES DE LOS ARCHIVOS QUE TIENE ALMACENADO EN LA VARIABLE RES2
     $find=strpos($res2[$i]["Nombre"],$cadena_final_actual);
-     //dd($res[$i]["Nombre"]);
+     dd($res);
     //dd($find);
     if($find==false){
     $path_archivo=("C:/Users/LI/Desktop/chtbtICI/public/".$res2[$i]["Nombre"]);
@@ -2888,7 +2995,7 @@ class QnAController extends Controller
       //se cierra la lectura del archivo
       fclose($leer);
     //SI EN EL ARCHIVO ENCUENTRA $patron entonces lo cambiará por $sustitucion y copiará lo demas del archivo data en la variable $datosnuevos
-      $datosnuevos = str_replace($patron, $sustitucion, $data); //REEMPLAZA LO QUE CONTINE EL ARCHIVO VIEJO POR EL ARCHIVO NUEVO
+      $datosnuevos = str_replace($patron,$sustitucion,$data); //REEMPLAZA LO QUE CONTINE EL ARCHIVO VIEJO POR EL ARCHIVO NUEVO
       //SE ABRE EL ARCHIVO APRA ESCRITURA
       $escribir = fopen($path_archivo, 'w');
      //Se escribe en $datosnuevos los en el aarchivo que corresponda a esta iteracion
@@ -2965,13 +3072,7 @@ class QnAController extends Controller
   //dd($archivo_nombre_original,$archivo_nombre_nuevo);
 
 
-  //Actualizamos la base de datos mysql con las respectivas tablas
-  //dd($request);
-   DB::table('questions')->where('id', $id)->update(['pregunta' => $request->pregunta]);
-   //$question->pregunta=$request->pregunta;
-   //$question->save();
-   //dd($request);
-    DB::table('answer')->where('id','=',$question->id_answers)->update(['nombre'=>$request->respuesta]);
+  
 
    //$answer->nombre=$request->nombre;
    //$answer->save();
@@ -2980,6 +3081,13 @@ class QnAController extends Controller
    $imagenes=DB::table('qnas_images')->where('id_answer','=',$question->id_answers)->get();
    foreach($imagenes as $imagen);
    //dd($imagen,$es_archivo_flow);
+   //Actualizamos la base de datos mysql con las respectivas tablas
+  //dd($request);
+   DB::table('questions')->where('id', $id)->update(['pregunta' => $request->pregunta]);
+   //$question->pregunta=$request->pregunta;
+   //$question->save();
+   //dd($request);
+    DB::table('answer')->where('id','=',$question->id_answers)->update(['nombre'=>$request->respuesta,'vence'=>$request->vence,'fecha_caducacion'=>date('Y-m-d',strtotime($request->fecha_vencimiento))]);
   $tam_array_imagen=0;
  return view('qna.message',compact('question','answer','datosnuevos','es_archivo_flow','imagen','tam_array_imagen'));
  
