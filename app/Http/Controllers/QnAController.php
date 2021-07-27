@@ -2524,8 +2524,90 @@ $tam=count($res);
   }
   //dd($request,$id,$question,$answer,$archivo_qna->nombre,$datos,$res[$i]["Nombre"],$res2[$j]["Nombre"]);
 }
-  dd($request,$id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"]);
+  //dd($request,$id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"],public_path());
+  $nombre_archivo_intents=$res[$i]["Nombre"];
+  $nombre_archivo_qna=$res2[$j]["Nombre"];
+  $path_archivo_intents=public_path("/".$nombre_archivo_intents);
 
+  $leer1 = fopen($path_archivo_intents, 'r+');
+        $numlinea=0;
+        while ($linea = fgets($leer1)){
+        //echo $linea.'<br/>';
+            $aux_intents[] = $linea;    
+             $numlinea++;
+        }
+        fclose($leer1);
+
+        $i=0;
+        //dd(substr($aux_intents[8],7,-3));
+        $pos=strpos(substr($aux_intents[$i],7,-3),$question->pregunta);
+       //dd($pos,$aux_intents[8],substr($aux_intents[8],7,-3),$question->pregunta);
+        $tam_archivo_intents=count($aux_intents);
+        while($i<$tam_archivo_intents){
+          //dd($pos,$aux_intents[8],substr($aux_intents[8],7,-3),$question->pregunta,$request->pregunta);
+          if(substr($aux_intents[$i],7,-3)==$question->pregunta){
+            $aux_intents[$i]=str_replace($question->pregunta,$request->pregunta,$aux_intents[$i]);
+          }
+        $i=$i+1;
+        }
+        //dd($aux_intents);
+  $path_archivo_qna=public_path("/".$nombre_archivo_qna);
+  $leer2 = fopen($path_archivo_qna, 'r+');
+   $numlinea=0;
+        while ($linea = fgets($leer2)){
+        //echo $linea.'<br/>';
+            $aux_qna[] = $linea;    
+             $numlinea++;
+        }
+        fclose($leer2);
+
+        $i=0;
+        $pos1=strpos($aux_qna[$i],$question->pregunta);
+        $pos2=strpos($aux_qna[$i],$question->pregunta);
+        $tam_archivo_qna=count($aux_qna);
+        while($i<$tam_archivo_qna){
+          //dd($aux_qna,substr($aux_qna[10],9,-2));
+          if(substr($aux_qna[$i],9,-3)==$question->pregunta){
+            $aux_qna[$i]=str_replace($question->pregunta,$request->pregunta,$aux_qna[$i]);
+          }
+          if(substr($aux_qna[$i],9,-2)==$answer->nombre){
+            $aux_qna[$i]=str_replace($answer->nombre,$request->respuesta,$aux_qna[$i]);
+          }
+          $i=$i+1;
+        }
+  //dd($request,$id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"],public_path(),$path_archivo_intents,$path_archivo_qna,$aux_intents,$aux_qna);
+
+     unlink($path_archivo_intents);
+     unlink($path_archivo_qna);
+
+      $contenido1="";
+       $i=0;
+       $tam_array_aux_intents=count($aux_intents);
+      while($i<$tam_array_aux_intents){
+        $contenido1 .=$aux_intents[$i];
+        $i=$i+1;
+      }
+
+        $escribir1 = fopen($path_archivo_intents, 'w+');
+         //fwrite($escribir1, $data1);
+        fwrite($escribir1, $contenido1);
+       fclose($escribir1);
+
+      $contenido2="";
+       $i=0;
+       $tam_array_aux_qna=count($aux_qna);
+      while($i<$tam_array_aux_qna){
+        $contenido2.=$aux_qna[$i];
+        $i=$i+1;
+      }
+
+        $escribir2 = fopen($path_archivo_qna, 'w+');
+         //fwrite($escribir1, $data1);
+        fwrite($escribir2, $contenido2);
+       fclose($escribir2);
+
+       
+        //break;
       //dd($request,$request->file('image_nueva'));
         //dd($id);
         //dd($request);
@@ -2713,7 +2795,7 @@ $tam=count($res);
         $cadena_final_actual
         );
 
-        dd($cadena_final_actual);
+        //dd($cadena_final_actual);
     }
     //dd($cadena_final);
       //rename ("/folder/file.ext", "/folder/newfile.ext");
@@ -2975,7 +3057,7 @@ $tam=count($res);
 
         //RUTA DE LA CARPETA PUBLIC + RUTA DE DIRECTORIO HASTA CARPETA QNA DONDE RECORRERA CADA UNO DE LOS NOMBRES DE LOS ARCHIVOS QUE TIENE ALMACENADO EN LA VARIABLE RES2
     $find=strpos($res2[$i]["Nombre"],$cadena_final_actual);
-     dd($res);
+     //dd($res);
     //dd($find);
     if($find==false){
     $path_archivo=("C:/Users/LI/Desktop/chtbtICI/public/".$res2[$i]["Nombre"]);
