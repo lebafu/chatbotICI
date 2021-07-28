@@ -1944,6 +1944,25 @@ class QnAController extends Controller
         //Como tenemos 2 consultas question y answer lo mejor es recorrer con un foreach estas variables e imprimirlas de manera directa en la vista
         foreach($answers as $answer);
          $nombre=$answer->nombre;
+         $archivos=DB::table('archivo_qna')->where('id','=',$answer->id_archivo)->get();
+         foreach($archivos as $archivo);
+         //dd($archivo->nombre);
+         
+        $path_archivo=public_path("botpress12120/data/bots/icibot/qna/".$archivo->nombre.".json");
+        //dd($path_archivo);
+          $leer = fopen($path_archivo, 'r+');
+      $numlinea=0;
+      while ($linea = fgets($leer)){
+        //echo $linea.'<br/>';
+           if($numlinea==5){
+            //dd($linea);
+              $contexto=substr($linea,7,-2);
+           }    
+             $numlinea++;
+        }
+
+        //dd($contexto);
+
         $pos=strpos($nombre,"builtin_image");
         //dd($pos);
         if($pos==false){
@@ -1973,7 +1992,8 @@ class QnAController extends Controller
            //Les paso los elementos de las consultas a la vista.
           //dd($question,$answer);
           //dd($es_archivo_flow);
-           return view('qna.edit',compact('question','answer','pos','name_image','es_archivo_flow'));
+          //dd($question,$answer,$pos,$name_image,$es_archivo_flow,$id_archivo);
+           return view('qna.edit',compact('question','answer','pos','name_image','es_archivo_flow','contexto'));
         }else{
           //Al encontrar el enlace hacia un archivo .flow.json que a su vez contiene los builtin_text y builtin_immge respectivo sigue esta parte del codigo.Se abre el archivo .flow.json en esa ruta y se lee linea por linea almacenandolo en un arreglo
           $path_archivo=public_path("botpress12120/data/bots/icibot/flows/".$answer->nombre);
@@ -2210,7 +2230,7 @@ class QnAController extends Controller
         }*/
         //dd($todo_ordenado,$nombres_imagenes);
         //dd($builtins_texts,$todo_ordenado,$builtins_texts_index_unique,$textos_sin_repetir,$textos_unicos_index_orden,$tam_array_builtins_texts_unique);
-        return view('qna.edit',compact('question','answer','builtins_texts_index_unique','tam_array_builtins_texts_unique','pos','name_image','es_archivo_flow','todo_ordenado','tam_array_todo','nombres_imagenes','nombre_imagen','cantidad_imagenes','textos'));
+        return view('qna.edit',compact('question','answer','builtins_texts_index_unique','tam_array_builtins_texts_unique','pos','name_image','es_archivo_flow','todo_ordenado','tam_array_todo','nombres_imagenes','nombre_imagen','cantidad_imagenes','textos','contexto'));
     }
 
     /**
@@ -2394,10 +2414,11 @@ class QnAController extends Controller
       }
       $i=$i+1;
   }
+  $tam_array_imagen=count($imagen_actual);
 }    
     $i=0;
     $names_imagenes=$request->imagenes_news;
-    $tam_array_imagen=count($imagen_actual);
+    //$tam_array_imagen=count($imagen_actual);
     //dd($imagen_actual,$es_archivo_flow,$tam_array_imagen,empty($imagen_actual[$i]),$names_imagenes);
     //dd(!empty($imagen_actual[$i]));
     $path_text=public_path("botpress12120/data/bots/icibot/content-elements/builtin_text.json");
@@ -2426,6 +2447,175 @@ class QnAController extends Controller
             }
         }
    }
+
+
+    $directorio1="botpress12120/data/bots/icibot/intents";
+      
+      //Se creaa arreglo para guadar direccion de archivos de carpeta
+      $res = array();
+
+  // Agregamos la barra invertida al final en caso de que no exista
+  if(substr($directorio1, -1) != "/") $directorio1 .= "/";
+
+  // Creamos un puntero al directorio y obtenemos el listado de archivos
+  $dir1 = @dir($directorio1) or die("getFileList: Error abriendo el directorio $directorio1 para leerlo");
+  while(($archivo1 = $dir1->read()) !== false) {
+      // Obviamos los archivos ocultos
+      if($archivo1[0] == ".") continue;
+      if(is_dir($directorio1 . $archivo1)) {
+          $res[] = array(
+            "Nombre" => $directorio1 . $archivo1 . '"/"',
+            "Tamaño" => 0,
+            "Modificado" => filemtime($directorio1 . $archivo1)
+          );
+      } else if (is_readable($directorio1 . $archivo1)) {
+          $res[] = array(
+            "Nombre" => $directorio1 . $archivo1,
+            "Tamaño" => filesize($directorio1 . $archivo1),
+            "Modificado" => filemtime($directorio1 . $archivo1)
+          );
+      }
+  }
+
+$tam=count($res);
+  //dd($tam);
+  $i=0;
+  $pos=strpos($res[$i]["Nombre"],$archivo_qna->nombre);
+  if($pos!=false){
+
+  }else{
+  while($pos==false){
+    //dd(1);
+      $i=$i+1;
+      $pos=strpos($res[$i]["Nombre"],$archivo_qna->nombre);
+     
+
+  }
+   //dd($request,$id,$question,$answer,$archivo_qna->nombre,$datos,$res[$i]["Nombre"]);
+}
+
+       $directorio2="botpress12120/data/bots/icibot/qna";
+  $res2 = array();
+
+  // Agregamos la barra invertida al final en caso de que no exista
+
+
+  if(substr($directorio2, -1) != "/") $directorio2 .= "/";
+
+  // Creamos un puntero al directorio y obtenemos el listado de archivos
+  $dir2 = @dir($directorio2) or die("getFileList: Error abriendo el directorio $directorio2 para leerlo");
+  while(($archivo2 = $dir2->read()) !== false) {
+      // Obviamos los archivos ocultos
+      if($archivo2[0] == ".") continue;
+      if(is_dir($directorio2 . $archivo2)) {
+          $res2[] = array(
+            "Nombre" => $directorio2 . $archivo2 . "/",
+            "Tamaño" => 0,
+            "Modificado" => filemtime($directorio2 . $archivo2)
+          );
+      } else if (is_readable($directorio2 . $archivo2)) {
+          $res2[] = array(
+            "Nombre" => $directorio2.$archivo2,
+            "Tamaño" => filesize($directorio2.$archivo2),
+            "Modificado" => filemtime($directorio2.$archivo2)
+          );
+      }
+  }
+
+  $tam=count($res2);
+  //dd($tam);
+  $j=0;
+  $pos=strpos($res2[$j]["Nombre"],$archivo_qna->nombre);
+  //dd($pos); dd($question);
+  if($pos!=false){
+
+  }else{
+      while($pos==false){
+          $j=$j+1;
+          $pos=strpos($res2[$j]["Nombre"],$archivo_qna->nombre);
+      //dd($request,$id,$question,$answer,$archivo_qna->nombre,$datos,$res2[$j]["Nombre"]);
+
+  }
+  //dd($request,$id,$question,$answer,$archivo_qna->nombre,$datos,$res[$i]["Nombre"],$res2[$j]["Nombre"]);
+}
+  //dd($request,$id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"],public_path());
+  $nombre_archivo_intents=$res[$i]["Nombre"];
+  $nombre_archivo_qna=$res2[$j]["Nombre"];
+  $path_archivo_intents=public_path("/".$nombre_archivo_intents);
+
+  $leer1 = fopen($path_archivo_intents, 'r+');
+        $numlinea=0;
+        while ($linea = fgets($leer1)){
+        //echo $linea.'<br/>';
+            $aux_intents[] = $linea;    
+             $numlinea++;
+        }
+        fclose($leer1);
+
+        $i=0;
+        //dd($aux_intents);
+        //dd(substr($aux_intents[8],7,-3));
+        //$pos=strpos(substr($aux_intents[$i],7,-3),$question->pregunta);
+       //dd($pos,$aux_intents[8],substr($aux_intents[8],7,-3),$question->pregunta);
+        $tam_archivo_intents=count($aux_intents);
+        while($i<$tam_archivo_intents){
+          $pos=substr($aux_intents[$i],5,-2);
+          //dd(substr($aux_intents[3],5,-2));
+          if(substr($aux_intents[$i],5,-2)=="global" or substr($aux_intents[$i],5,-2)=="regular" or substr($aux_intents[$i],5,-2)=="egresado"){
+            $aux_intents[$i]=str_replace(substr($aux_intents[$i],5,-2),$request->contexto,$aux_intents[$i]);
+          }
+        $i=$i+1;
+        }
+        //dd($aux_intents);
+  $path_archivo_qna=public_path("/".$nombre_archivo_qna);
+  $leer2 = fopen($path_archivo_qna, 'r+');
+   $numlinea=0;
+        while ($linea = fgets($leer2)){
+        //echo $linea.'<br/>';
+            $aux_qna[] = $linea;    
+             $numlinea++;
+        }
+        fclose($leer2);
+        //dd($aux_qna,$aux_intents);
+        $i=0;
+        $tam_archivo_qna=count($aux_qna);
+         while($i<$tam_archivo_qna){
+          if(substr($aux_qna[$i],7,-2)=="global" or substr($aux_qna[$i],7,-2)=="regular" or substr($aux_qna[$i],7,-2)=="egresado"){
+            $aux_qna[$i]=str_replace(substr($aux_qna[$i],7,-2),$request->contexto,$aux_qna[$i]);
+          }
+        $i=$i+1;
+        }
+  //dd($request,$id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"],public_path(),$path_archivo_intents,$path_archivo_qna,$aux_intents,$aux_qna);
+
+     unlink($path_archivo_intents);
+     unlink($path_archivo_qna);
+
+      $contenido1="";
+       $i=0;
+       $tam_array_aux_intents=count($aux_intents);
+      while($i<$tam_array_aux_intents){
+        $contenido1 .=$aux_intents[$i];
+        $i=$i+1;
+      }
+
+        $escribir1 = fopen($path_archivo_intents, 'w+');
+         //fwrite($escribir1, $data1);
+        fwrite($escribir1, $contenido1);
+       fclose($escribir1);
+
+      $contenido2="";
+       $i=0;
+       $tam_array_aux_qna=count($aux_qna);
+      while($i<$tam_array_aux_qna){
+        $contenido2.=$aux_qna[$i];
+        $i=$i+1;
+      }
+
+        $escribir2 = fopen($path_archivo_qna, 'w+');
+         //fwrite($escribir1, $data1);
+        fwrite($escribir2, $contenido2);
+       fclose($escribir2);
+       
 
     //dd($request,$request->file('imagen_nueva'),$textos_iniciales,$textos_finales,$request->imagen_actual,$imagen_nueva,$names_imagenes,$path_chatbot,$path_bp_laravel,$strings,$textos_originales,$tam_array_text,$aux,$contenido,$tam_array_builtins_texts_unique);
     //dd($textos_iniciales,$textos_finales);
@@ -2539,6 +2729,7 @@ $tam=count($res);
         fclose($leer1);
 
         $i=0;
+        //dd($aux_intents);
         //dd(substr($aux_intents[8],7,-3));
         $pos=strpos(substr($aux_intents[$i],7,-3),$question->pregunta);
        //dd($pos,$aux_intents[8],substr($aux_intents[8],7,-3),$question->pregunta);
@@ -2560,7 +2751,7 @@ $tam=count($res);
              $numlinea++;
         }
         fclose($leer2);
-
+        //dd($aux_qna);
         $i=0;
         $pos1=strpos($aux_qna[$i],$question->pregunta);
         $pos2=strpos($aux_qna[$i],$question->pregunta);

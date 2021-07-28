@@ -24,7 +24,13 @@
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script src="bootstrap/js/bootstrap.min.js"></script>
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
 
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.es.min.js"></script>
 
 <div class="container">
     <div class="row justify-content-center">
@@ -65,6 +71,45 @@
                                 <input id="respuesta" type="text" class="form-control" name="respuesta" value="{{$answer->nombre}}" required autocomplete="nombre">
                             </div>
                         </div>
+
+                         <div class="form-group row">
+                        <label for="contexto" class="col-md-4 col-form-label text-md-right">Seleccionar Contexto:</label>
+                        <div class="col-md-6">
+                            <select name="contexto" id="contexto">
+                                <option value="{{$contexto}}">{{$contexto}}</option>
+                                <option value="global">global</option>
+                                <option value="regular">regular</option>
+                                <option value="egresado">egresado</option>
+                            </select>
+                        </div>
+                      </div>
+              
+
+                             <div class="form-group row">
+                        <label for="vence" class="col-md-4 col-form-label text-md-right">Vence:</label>
+                        <div class="col-md-6">
+                            <select name="vence" id="vence" name="vence" onclick="showInp()">
+                                <option value="{{$answer->vence}}">{{$answer->vence}}</option>
+                                <option value="No">No</option>
+                                <option value="Si">Si</option>
+                           </select>
+                        </div>
+                    </div>
+
+                    <div id="fecha_caducacion">
+                        <div class="form-group row">
+                            <label for="fecha" class="col-md-4 col-form-label text-md-right" >{{ __('Fecha Caducacion') }}</label>
+
+                            <div class="col-md-6">
+                                <div class='input-group date'>
+                                    <input type='text' class="date form-control" id='fecha_vencimiento' name='fecha_vencimiento'                 value="{{$answer->fecha_caducacion}}"/>
+                                        <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                          @elseif($pos==1)
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Respuesta') }}</label>
@@ -74,10 +119,11 @@
                             </div>
                         </div>
 
+
                         <div>
                             <label for="img" class="negrita">La imagen seleccionada fue:</label>
                             <input name="imagen" type=text class="form-control" value="{{$name_image}}" readonly="readonly" hidden="hidden">
-                            <img src="images/bp/{{ $name_image }}">
+                            <img src="images/bp/{{$name_image}}">
                         </div>
                        
                         <div>
@@ -86,9 +132,46 @@
                         <div class='text-danger'>{{$errors->first('image_nueva')}}</div>
                         </div>
 
+
+
+                    <div class="form-group row">
+                        <label for="vence" class="col-md-4 col-form-label text-md-right">Vence:</label>
+                        <div class="col-md-6">
+                            <select name="vence" id="vence" name="vence" onclick="showInp()">
+                                <option value="No">No</option>
+                                <option value="Si">Si</option>
+                           </select>
+                        </div>
+                    </div>
+
+                    <div id="fecha_caducacion">
+                        <div class="form-group row">
+                            <label for="fecha" class="col-md-4 col-form-label text-md-right" >{{ __('Fecha Caducacion') }}</label>
+
+                            <div class="col-md-6">
+                                <div class='input-group date'>
+                                    <input type='text' class="date form-control" id='fecha_vencimiento' name='fecha_vencimiento'/>
+                                        <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                         <!--<img >-->
                        @endif
                        @else
+                    <div class="form-group row">
+                        <label for="contexto" class="col-md-4 col-form-label text-md-right">Seleccionar Contexto:</label>
+                        <div class="col-md-6">
+                            <select name="contexto" id="contexto">
+                                <option value="{{$contexto}}">{{$contexto}}</option>
+                                <option value="global">global</option>
+                                <option value="regular">regular</option>
+                                <option value="egresado">egresado</option>
+                            </select>
+                        </div>
+                      </div>
                            <b>Nota: El término \n representa el salto de línea en el chatbot, si lo cree necesario en la oración no lo elimine.</b>
                             @for($i=0;$i<$tam_array_builtins_texts_unique;$i++)
                             <input  id="builtins_texts_index_unique{{$i}}" type="hidden" class="form-control" name="builtins_texts_unique[]" value="{{$builtins_texts_index_unique[$i]}}" required>
@@ -138,6 +221,31 @@
 </div>
 
 </x-app-layout>
+<script type="text/javascript">
+    $(function() {
+           $('#fecha_vencimiento').datepicker({
+            format:'dd-mm-yyyy',
+            language: 'es',
+           });
+        }); 
+function showInp(){
+    vence =document.getElementById("vence").value;
+    if(vence=="Si"){
+       document.getElementById("fecha_caducacion").style.display="block";
+    }
+    if(vence=="No"){
+        document.getElementById("fecha_caducacion").style.display="none";
+    }
+    if(vence==""){
+        document.getElementById("fecha_caducacion").style.display="none";
+    }
+}
+
+  
+
+</script>
+
+
 
 <!--<script type="text/javascript">
     

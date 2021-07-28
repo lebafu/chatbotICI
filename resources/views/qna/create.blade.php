@@ -95,9 +95,9 @@
                         <label for="contexto" class="col-md-4 col-form-label text-md-right">Seleccionar Contexto:</label>
                         <div class="col-md-6">
                             <select name="contexto" id="contexto">
-                                <option value="global">Global</option>
-                                <option value="regular">Alumno Regular</option>
-                                <option value="egresado">Alumno Egresado</option>
+                                <option value="global">global</option>
+                                <option value="regular">regular</option>
+                                <option value="egresado">egresado</option>
                             </select>
                         </div>
                       </div>
@@ -126,7 +126,7 @@
                             </div>
                         </div>
                     </div>
-
+                </div>
                      
 
 
