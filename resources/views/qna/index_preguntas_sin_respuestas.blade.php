@@ -45,6 +45,13 @@
             <td>
             <a class="btn btn-primary btn-xs" href="{{route('qna.asignar_answer_input',$dato->id)}}">Nueva<span style="color:black"></span></a>
             </td>
+            <td>
+            <form action="{{ route('qna.eliminar_pregunta_sin_respuesta', $dato->id)}}" method="POST">
+          <button type="submit" class="btn btn-danger"><span class="fas fa-trash"></span>
+           {{ method_field('DELETE') }}
+           {{ csrf_field() }}
+           </form>
+       </td>
         </tr>
         @endforeach
     </table>

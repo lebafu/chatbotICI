@@ -52,3 +52,4 @@ Route::get('/index_preguntas_sin_respuestas','QnaController@index_preguntas_sin_
 Route::put('/actualizar_asignar_respuesta{request}','QnAController@update_asignar_respuesta')->name('qna.update_asignar_respuesta');                                                                                       
 Route::put('/answer_input{request}','QnAController@update_asignar_input_respuesta')->name('qna.update_asignar_input_respuesta');
 Route::get('/qna_pregunta_asignada_correctamente','QnaController@update_asignar_respuesta')->name('qna.asignacion_pregunta_exitosa');
+Route::delete('/eliminarpreguntas_sin_respuestas{tesis}','QnaController@eliminar_pregunta_sin_respuesta')->name('qna.eliminar_pregunta_sin_respuesta');
