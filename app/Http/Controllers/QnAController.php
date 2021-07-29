@@ -1179,7 +1179,16 @@ class QnAController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-   
+   public function eliminar_pregunta_sin_respuesta($id){
+         
+      //dd($id);
+      $preguntas=DB::table('preguntas_sin_respuestas')->where('id','=',$id)->get();
+      foreach($preguntas as $pregunta);
+      DB::table('preguntas_sin_respuestas')->where('id','=',$id)->delete();
+
+      return view('qna.mensaje_eliminar_pregunta_sin_respuesta',compact('pregunta'));
+
+   }
 
     public function store(Request $request)
     {
