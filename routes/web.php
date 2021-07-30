@@ -33,6 +33,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
 Route::get('/modify_despedida','IntentsController@modify_despedida')->name('intents.modify_despedida');
 Route::post('/pregunta_sin_respuesta','QnAController@pregunta_sin_respuesta')->name('qna.pregunta_sin_respuesta');
+Route::post('almacenado_comentario_sugerencia','QnAController@store_comentarios_y_sugerencias')->name('qna.store_comentarios_y_sugerencias');
 Route::get('/nlu_name_index','IntentsController@nlu_name_index')->name('intents.nlu_name_index');
 Route::get('/qna_name_index','QnaController@qna_name_index')->name('qna.qna_name_index');
 Route::get('/nlu_index{id}','IntentsController@nlu_index')->name('intents.nlu_index');

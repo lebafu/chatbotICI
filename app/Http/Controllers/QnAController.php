@@ -3590,4 +3590,9 @@ $tam=count($res);
     }
 
 
+   public function store_comentarios_y_sugerenncias(Request $request){
+
+      DB::table('comentarios_y_sugerencias')->insert(['nombre'=>$request->nombre,'email'=>$request->email,'comentarios_y_sugerencias'=>$request->comentarios]);
+   }
+
 }
