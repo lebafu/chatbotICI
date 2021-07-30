@@ -1162,12 +1162,12 @@ class QnAController extends Controller
       //dd($text_area,$strings,$array_pos_coma,$cantidad_coma);
 
       for($i=0;$i<$cantidad_coma;$i=$i+1){
-        DB::table('preguntas_sin_respuestas')->insert(['pregunta_sin_respuesta' => $strings[$i]]);
+        DB::table('preguntas_sin_respuestas')->insert(['pregunta_sin_respuesta' => $strings[$i],'nombre'=> $request->nombre,'email'=>$request->email]);
       }
 
       $strings=DB::table('preguntas_sin_respuestas')->get();
       //dd($text_area,$strings,$array_pos_coma,$cantidad_coma);
-      return view('qna.pregunta_almacenada_correctamente',compact('strings'));
+      return view('qna.pregunta_almacenada_correctamente');
       }
 
 
@@ -1185,10 +1185,20 @@ class QnAController extends Controller
       $preguntas=DB::table('preguntas_sin_respuestas')->where('id','=',$id)->get();
       foreach($preguntas as $pregunta);
       DB::table('preguntas_sin_respuestas')->where('id','=',$id)->delete();
-
+     //dd($pregunta);
       return view('qna.mensaje_eliminar_pregunta_sin_respuesta',compact('pregunta'));
 
    }
+
+
+    public function show_pregunta_sin_respuesta($id)
+        {
+        //$tesis=DB::table('tesis')->where('id', $id)->first();
+
+        $pregunta=DB::table('preguntas_sin_respuestas')->where('id','=',$id)->first();
+        //dd($pregunta);
+        return view('qna.show_pregunta_sin_respuesta',compact('pregunta'));
+        }
 
     public function store(Request $request)
     {
@@ -3590,9 +3600,43 @@ $tam=count($res);
     }
 
 
-   public function store_comentarios_y_sugerenncias(Request $request){
 
+   public function index_comentarios(){
+
+      $datos=DB::table('comentarios_y_sugerencias')->paginate(7);
+      return view('qna.index_comentarios',compact('datos'));
+
+    }
+   public function store_comentarios_y_sugerencias(Request $request){
+
+      //dd($request);
       DB::table('comentarios_y_sugerencias')->insert(['nombre'=>$request->nombre,'email'=>$request->email,'comentarios_y_sugerencias'=>$request->comentarios]);
+      
+      return view('qna.comentario_almacenado_correctamente');
    }
+
+
+    public function show_comentario($id)
+        {
+        //$tesis=DB::table('tesis')->where('id', $id)->first();
+
+        $comentario=DB::table('comentarios_y_sugerencias')->where('id','=',$id)->first();
+        //dd($comentario);
+        return view('qna.show_comentario',compact('comentario'));
+        }
+
+
+    public function eliminar_comentario($id){
+         
+      //dd($id);
+      $comentarios=DB::table('comentarios_y_sugerencias')->where('id','=',$id)->get();
+      foreach($comentarios as $comentario);
+      DB::table('comentarios_y_sugerencias')->where('id','=',$id)->delete();
+
+      return view('qna.mensaje_eliminar_comentario',compact('comentario'));
+
+   }
+
+  
 
 }

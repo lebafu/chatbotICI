@@ -29,7 +29,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Las Preguntas han sido almacenadas correctamente en la base de datos') }}</div>
+                <div class="card-header">{{ __('Comentario ha sido almacenado correctamente en la base de datos') }}</div>
                         <table class="table table-bordered">
 
                 <div class="card-body">

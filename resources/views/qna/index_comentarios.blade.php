@@ -23,38 +23,35 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Preguntas Sin Respuesta') }}
+            {{ __('Comentarios') }}
         </h2>
     </x-slot>
 
 
-    <table class="table table-bordered center" >
+   
+    <table class="table table-bordered">
         <tr>
             <th>ID</th>
-            <th>Pregunta</th>
-            <th>Acción</th>
+            <th>Nombre</th>
+            <th width="250px">Comentario</th>
         </tr>
         @foreach ($datos as $dato)
         <tr>
-            <td>{{ $dato->id}}</td>
-            <td>{{ $dato->pregunta_sin_respuesta}}</td>
+            <td>{{$dato->id}}</td>
+            <td>{{$dato->nombre}}</td>
+            <td>{{$dato->comentarios_y_sugerencias}}</td>
             <td>
-            <div class="row">
-            <a class="btn btn-primary btn-xs" href="{{route('qna.asignar_respuesta',$dato->id)}}">Existente<span style="color:black"></span></a>
-            <a class="btn btn-primary btn-xs" href="{{route('qna.asignar_answer_input',$dato->id)}}">Nueva<span style="color:black"></span></a>
-             <a class="btn btn-primary btn-xs" href="{{route('qna.show_pregunta_sin_respuesta',$dato->id)}}"><span class="far fa-eye" style="color:black"></span></a>  
-            <form action="{{ route('qna.eliminar_pregunta_sin_respuesta', $dato->id)}}" method="POST">
-          <button type="submit" class="btn btn-danger"><span class="fas fa-trash" style="color:black"></span>
+            <a class="btn btn-primary btn-xs" href="{{route('qna.show_comentario',$dato->id)}}"><span class="far fa-eye"style="color:black"></span></a>  
+            <form action="{{ route('qna.eliminar_comentario', $dato->id)}}" method="POST">
+          <button type="submit" class="btn btn-danger btn-xs"><span class="fas fa-trash" style="color:black"></span>
            {{ method_field('DELETE') }}
            {{ csrf_field() }}
-            </button>
-        </form>
-           </div>
-           </td>
+           </form>
+       </td>
         </tr>
         @endforeach
     </table>
-
+  
 
 {{$datos->links()  }}
 </x-app-layout>

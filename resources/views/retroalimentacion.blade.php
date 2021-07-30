@@ -68,11 +68,11 @@
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
                                               <label for="Nombre"><b>Nombre:</b></label>
-                                              <input type="text" class="form-control" id="Nombre" placeholder="Ingrese su nombre">
+                                              <input type="text" class="form-control" id="Nombre" name="nombre" placeholder="Ingrese su nombre">
                                             </div>
                                             <div class="form-group col-md-6">
                                               <label for="Email"><b>Correo institucional:</b></label>
-                                              <input type="text" class="form-control" id="Email" placeholder="Ingrese su correo institucional">
+                                              <input type="text" class="form-control" id="Email" name="email" placeholder="Ingrese su correo institucional">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -87,16 +87,16 @@
                             </div>
                             <div class="tab-pane" id="tab2">
                                 <p>
-                                    <form id="form2" action="{{}}" method="post">
+                                    <form id="form2" action="{{route('qna.store_comentarios_y_sugerencias')}}" method="post">
                                         @csrf
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
                                               <label for="Nombre"><b>Nombre:</b></label>
-                                              <input type="text" class="form-control" id="Nombre" placeholder="Ingrese su nombre">
+                                              <input type="text" class="form-control" id="Nombre" name="nombre" placeholder="Ingrese su nombre">
                                             </div>
                                             <div class="form-group col-md-6">
                                               <label for="Email"><b>Correo institucional:</b></label>
-                                              <input type="text" class="form-control" id="Email" placeholder="Ingrese su correo institucional">
+                                              <input type="text" class="form-control" id="Email" name="email" placeholder="Ingrese su correo institucional">
                                             </div>
                                         </div>
                                         <div class="form-group">
