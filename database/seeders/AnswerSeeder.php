@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use DB;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AnswerSeeder extends Seeder
 {
@@ -98,8 +100,8 @@ class AnswerSeeder extends Seeder
         	//dd(substr($aux[10],-1));
         	$nombre=substr($aux[10],9,-2);
         	//dd($nombre);
-        	$archivos_qnas=DB::table('archivo_qna')->where('nombre','=',$res_nombres[$i])->get();
-        	foreach($archivos_qnas as $archivo_qna);
+        	//$archivos_qnas=DB::table('archivo_qna')->where('nombre','=',$res_nombres[$i])->get();
+        	//foreach($archivos_qnas as $archivo_qna);
         	$pos2=strpos($aux[7],'true');
         	 if($pos2==false)
         {
@@ -114,8 +116,8 @@ class AnswerSeeder extends Seeder
          //}
         	//dd(substr($nombre,14,-6));
          //dd($archivos_qnas);
-        	$archivos_qnas=DB::table('archivo_qna')->where('nombre','=',$res_nombres[$i])->get();
-        	foreach($archivos_qnas as $archivo_qna);
+        	//$archivos_qnas=DB::table('archivo_qna')->where('nombre','=',$res_nombres[$i])->get();
+        	//foreach($archivos_qnas as $archivo_qna);
         	$pos2=strpos($aux[7],'true');
         	 if($pos2==false)
         {
@@ -129,11 +131,13 @@ class AnswerSeeder extends Seeder
           //dd(substr($aux[$numlinea-4],21,-3));
           $nombre=substr($aux[$numlinea-4],21,-3);
          }		
-     		DB::table('answer')->insert(['nombre'=>$nombre,'id_archivo'=> $archivo_qna->id,'habilitada'=> $habilitada]);
+     		DB::table('answer')->insert(['nombre'=>$nombre,'archivo_qna'=>$res_nombres[$i] ,'habilitada'=> $habilitada]);
     
     	//DB::table('answer')->insert(['nombre'=>$res_nombres[$i]]);
      		fclose($leer);
     	$i=$i+1;
     }
+
+    Schema::dropIfExists('archivo_qna');
 }
 }

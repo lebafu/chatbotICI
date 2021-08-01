@@ -64,7 +64,7 @@ class QnAController extends Controller
     {
         //
         //Envio en la variable datos la información de las atblas questions y answer mediante el join.
-         $datos=DB::table('answer')->join('questions','answer.id','=','questions.id_answers')->select('questions.*', 'answer.nombre','answer.habilitada')->where('questions.id_answers','=',$id)->paginate(7);
+         $datos=DB::table('answer')->join('questions','answer.id','=','questions.id_answers')->select('questions.*', 'answer.nombre','answer.habilitada','answer.archivo_qna')->where('questions.id_answers','=',$id)->paginate(7);
     //dd($datos);
          if(Auth::id()==null){
         return Redirect::to('dashboard');
@@ -535,17 +535,18 @@ class QnAController extends Controller
       fwrite($escribir2_question, $datosnuevos2_question);
       fclose($escribir2_question);
       
-      $archivo_qna=new Archivo_qna();
+      /*$archivo_qna=new Archivo_qna();
       //dd($randomString.$cadena_final);
       $archivo_qna->nombre=$randomString.$cadena_final;
       $archivo_qna->save();
       $ids_archivos=DB::table('archivo_qna')->where('nombre','=',$randomString.$cadena_final)->select('id')->get();
-      foreach($ids_archivos as $id_archivo);
+      foreach($ids_archivos as $id_archivo);*/
       //dd($id_archivo);
       $respuesta=new Answers();
         $respuesta->nombre=$request->answer;
         //dd($id_archivo);
-        $respuesta->id_archivo=$id_archivo->id;
+        //$respuesta->id_archivo=$id_archivo->id;
+        $respuesta->archivo_qna=$randomString.$cadena_final;
         $respuesta->habilitada=1;
         $respuesta->save();
         $answers=DB::table('answer')->where('nombre','=',$request->answer)->get();
@@ -929,18 +930,19 @@ class QnAController extends Controller
       fwrite($escribir2_question, $datosnuevos2_question);
       fclose($escribir2_question);
       
-      $archivo_qna=new Archivo_qna();
+      /*$archivo_qna=new Archivo_qna();
       //dd($randomString.$cadena_final);
       $archivo_qna->nombre=$randomString.$cadena_final;
       $archivo_qna->save();
       $ids_archivos=DB::table('archivo_qna')->where('nombre','=',$randomString.$cadena_final)->select('id')->get();
-      foreach($ids_archivos as $id_archivo);
+      foreach($ids_archivos as $id_archivo);*/
       //dd($id_archivo);
       $respuesta=new Answers();
         $respuesta->nombre=$request->answer;
         //dd($id_archivo);
-        $respuesta->id_archivo=$id_archivo->id;
+        //$respuesta->id_archivo=$id_archivo->id;
         $respuesta->habilitada=1;
+        $respuesta->archivo_qna=$randomString.$cadena_final;
         $respuesta->save();
         $answers=DB::table('answer')->where('nombre','=',$request->answer)->get();
         foreach($answers as $answer);
@@ -981,12 +983,12 @@ class QnAController extends Controller
       $answers=DB::table('answer')->where('nombre','=',$request->respuesta)->get();
       foreach($answers as $answer);
       //dd($answers,$answer);
-      $archivos=DB::table('archivo_qna')->where('id','=',$answer->id_archivo)->get();
+      $archivos=DB::table('answer')->where('id','=',$answer->id)->get();
       //$archivo->nombre=
       foreach($archivos as $archivo);
       //dd($archivo->nombre);
-      $path_archivo1=public_path("botpress12120/data/bots/icibot/qna/".$archivo->nombre.".json");
-      $path_archivo2=public_path("botpress12120/data/bots/icibot/intents/"."__qna__".$archivo->nombre.".json");
+      $path_archivo1=public_path("botpress12120/data/bots/icibot/qna/".$archivo->archivo_qna.".json");
+      $path_archivo2=public_path("botpress12120/data/bots/icibot/intents/"."__qna__".$archivo->archivo_qna.".json");
       $leer1 = fopen($path_archivo1, 'r+');
         $numlinea=0;
         while ($linea = fgets($leer1)){
@@ -1629,17 +1631,18 @@ class QnAController extends Controller
       fwrite($escribir2_question, $datosnuevos2_question);
       fclose($escribir2_question);
       
-      $archivo_qna=new Archivo_qna();
+      /*$archivo_qna=new Archivo_qna();
       //dd($randomString.$cadena_final);
       $archivo_qna->nombre=$randomString.$cadena_final;
       $archivo_qna->save();
-      $ids_archivos=DB::table('archivo_qna')->where('nombre','=',$randomString.$cadena_final)->select('id')->get();
-      foreach($ids_archivos as $id_archivo);
+      $ids_archivos=DB::table('answer')->where('archivo_qna','=',$randomString.$cadena_final)->select('id')->get();
+      foreach($ids_archivos as $id_archivo);*/
       //dd($id_archivo);
       $respuesta=new Answers();
         $respuesta->nombre=$request->answer;
         //dd($id_archivo);
-        $respuesta->id_archivo=$id_archivo->id;
+        //$respuesta->id_archivo=DB::table('answer')->max('id');
+        $respuesta->archivo_qna=$randomString.$cadena_final;
         $respuesta->vence=$request->vence;
         if($request->vence=='No'){
           $respuesta->fecha_caducacion=null;
@@ -1883,17 +1886,18 @@ class QnAController extends Controller
       fwrite($escribir2_question, $datosnuevos2_question);
       fclose($escribir2_question);
       
-      $archivo_qna=new Archivo_qna();
+      /*$archivo_qna=new Archivo_qna();
       //dd($randomString.$cadena_final);
       $archivo_qna->nombre=$randomString.$cadena_final;
       $archivo_qna->save();
       $ids_archivos=DB::table('archivo_qna')->where('nombre','=',$randomString.$cadena_final)->select('id')->get();
-      foreach($ids_archivos as $id_archivo);
+      foreach($ids_archivos as $id_archivo);*/
       //dd($id_archivo);
       $respuesta=new Answers();
         $respuesta->nombre=$request->answer;
         //dd($id_archivo);
-        $respuesta->id_archivo=$id_archivo->id;
+        //$respuesta->id_archivo=DB::table('answer')->max('id');
+        $respuesta->archivo_qna=$randomString.$cadena_final;
         $respuesta->vence=$request->vence;
         if($request->vence="No"){
           $repuesta->fecha_caducacion=null;
@@ -1963,11 +1967,11 @@ class QnAController extends Controller
         //Como tenemos 2 consultas question y answer lo mejor es recorrer con un foreach estas variables e imprimirlas de manera directa en la vista
         foreach($answers as $answer);
          $nombre=$answer->nombre;
-         $archivos=DB::table('archivo_qna')->where('id','=',$answer->id_archivo)->get();
+         $archivos=DB::table('answer')->where('id','=',$answer->id)->get();
          foreach($archivos as $archivo);
          //dd($archivo->nombre);
          
-        $path_archivo=public_path("botpress12120/data/bots/icibot/qna/".$archivo->nombre.".json");
+        $path_archivo=public_path("botpress12120/data/bots/icibot/qna/".$archivo->archivo_qna.".json");
         //dd($path_archivo);
           $leer = fopen($path_archivo, 'r+');
       $numlinea=0;
@@ -2271,7 +2275,7 @@ class QnAController extends Controller
       foreach($questions as $question);
       $answers=DB::table('answer')->where('id','=',$question->id_answers)->get();
       foreach($answers as $answer);
-      $archivos_qnas=DB::table('archivo_qna')->where('id','=',$answer->id_archivo)->get();
+      $archivos_qnas=DB::table('answer')->where('id','=',$answer->id)->get();
 
 
 
@@ -2499,14 +2503,15 @@ class QnAController extends Controller
 $tam=count($res);
   //dd($tam);
   $i=0;
-  $pos=strpos($res[$i]["Nombre"],$archivo_qna->nombre);
+  $pos=strpos($res[$i]["Nombre"],$archivo_qna->archivo_qna);
+  //dd($pos);
   if($pos!=false){
 
   }else{
   while($pos==false){
     //dd(1);
       $i=$i+1;
-      $pos=strpos($res[$i]["Nombre"],$archivo_qna->nombre);
+      $pos=strpos($res[$i]["Nombre"],$archivo_qna->archivo_qna);
      
 
   }
@@ -2544,14 +2549,14 @@ $tam=count($res);
   $tam=count($res2);
   //dd($tam);
   $j=0;
-  $pos=strpos($res2[$j]["Nombre"],$archivo_qna->nombre);
+  $pos=strpos($res2[$j]["Nombre"],$archivo_qna->archivo_qna);
   //dd($pos); dd($question);
   if($pos!=false){
 
   }else{
       while($pos==false){
           $j=$j+1;
-          $pos=strpos($res2[$j]["Nombre"],$archivo_qna->nombre);
+          $pos=strpos($res2[$j]["Nombre"],$archivo_qna->arrchivo_qna);
       //dd($request,$id,$question,$answer,$archivo_qna->nombre,$datos,$res2[$j]["Nombre"]);
 
   }
@@ -2587,6 +2592,7 @@ $tam=count($res);
         }
         //dd($aux_intents);
   $path_archivo_qna=public_path("/".$nombre_archivo_qna);
+ // dd($path_archivo_qna);
   $leer2 = fopen($path_archivo_qna, 'r+');
    $numlinea=0;
         while ($linea = fgets($leer2)){
@@ -2595,7 +2601,7 @@ $tam=count($res);
              $numlinea++;
         }
         fclose($leer2);
-        //dd($aux_qna,$aux_intents);
+        //dd(substr($aux_qna[5],7,-2));
         $i=0;
         $tam_archivo_qna=count($aux_qna);
          while($i<$tam_archivo_qna){
@@ -2675,14 +2681,18 @@ $tam=count($res);
 $tam=count($res);
   //dd($tam);
   $i=0;
-  $pos=strpos($res[$i]["Nombre"],$archivo_qna->nombre);
+  $pos=strpos($res[$i]["Nombre"],$archivo_qna->archivo_qna);
+  //dd($pos);
   if($pos!=false){
 
   }else{
   while($pos==false){
-    //dd(1);
+    //dd($pos);
+    if($i==2){
+      dd($i,$pos,$res[$i]["Nombre"],$archivo_qna->archivo_qna);
+    }
       $i=$i+1;
-      $pos=strpos($res[$i]["Nombre"],$archivo_qna->nombre);
+      $pos=strpos($res[$i]["Nombre"],$archivo_qna->archivo_qna);
      
 
   }
@@ -2720,14 +2730,14 @@ $tam=count($res);
   $tam=count($res2);
   //dd($tam);
   $j=0;
-  $pos=strpos($res2[$j]["Nombre"],$archivo_qna->nombre);
+  $pos=strpos($res2[$j]["Nombre"],$archivo_qna->archivo_qna);
   //dd($pos); dd($question);
   if($pos!=false){
 
   }else{
       while($pos==false){
           $j=$j+1;
-          $pos=strpos($res2[$j]["Nombre"],$archivo_qna->nombre);
+          $pos=strpos($res2[$j]["Nombre"],$archivo_qna->archivo_qna);
       //dd($request,$id,$question,$answer,$archivo_qna->nombre,$datos,$res2[$j]["Nombre"]);
 
   }
@@ -2758,6 +2768,9 @@ $tam=count($res);
           if(substr($aux_intents[$i],7,-3)==$question->pregunta){
             $aux_intents[$i]=str_replace($question->pregunta,$request->pregunta,$aux_intents[$i]);
           }
+           if(substr($aux_intents[$i],5,-2)=="global" or substr($aux_intents[$i],5,-2)=="regular" or substr($aux_intents[$i],5,-2)=="egresado"){
+            $aux_intents[$i]=str_replace(substr($aux_intents[$i],5,-2),$request->contexto,$aux_intents[$i]);
+          }
         $i=$i+1;
         }
         //dd($aux_intents);
@@ -2782,6 +2795,9 @@ $tam=count($res);
           }
           if(substr($aux_qna[$i],9,-2)==$answer->nombre){
             $aux_qna[$i]=str_replace($answer->nombre,$request->respuesta,$aux_qna[$i]);
+          }
+          if(substr($aux_qna[$i],7,-2)=="global" or substr($aux_qna[$i],7,-2)=="regular" or substr($aux_qna[$i],7,-2)=="egresado"){
+            $aux_qna[$i]=str_replace(substr($aux_qna[$i],7,-2),$request->contexto,$aux_qna[$i]);
           }
           $i=$i+1;
         }
