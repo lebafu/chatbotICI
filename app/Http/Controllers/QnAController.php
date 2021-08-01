@@ -65,7 +65,13 @@ class QnAController extends Controller
         //
         //Envio en la variable datos la información de las atblas questions y answer mediante el join.
          $datos=DB::table('answer')->join('questions','answer.id','=','questions.id_answers')->select('questions.*', 'answer.nombre','answer.habilitada','answer.archivo_qna')->where('questions.id_answers','=',$id)->paginate(7);
-    //dd($datos);
+         //Se desea conocer el id del primer elemnto del arreglo $dato, ya que este nos dirá el primer $answer->id que corresponde a esta pagina,
+      //al encontrarlo salimos del ciclo for.
+      /*foreach($datos as $dato){
+        $i=$dato->id;
+        break;
+      }*/
+    //dd($datos,$i);
          if(Auth::id()==null){
         return Redirect::to('dashboard');
       }
@@ -1952,20 +1958,34 @@ class QnAController extends Controller
     public function edit($id)
     {
         //
+
+       $datos_questions=DB::table('questions')->where('id','=',$id)->get();
+      //Tomo toda los datos de la tabla questions
+      foreach($datos_questions as $dato_question);
+      //dd($dato_question);
+      $datos_questions_primero=DB::table('questions')->where('id_answers','=',$dato_question->id_answers)->get();
+       foreach($datos_questions_primero as $dato_question_primero){
+        $id_primero=$dato_question_primero->id;
+        break;
+      }
+       //dd($dato_question,$id_primero);
+
+
          $datos=DB::table('answer')->join('questions','answer.id','=','questions.id_answers')->select('questions.*', 'answer.nombre')->select('questions.*','answer.nombre')->where('answer.id','=',$id)->get();
          //dd($datos);
-
         //Selecciono el elemento de la tabla questions que editaremos
         $questions=DB::table('questions')->where('questions.id',$id)->get();
         //Como tenemos 2 consultas question y answer lo mejor es recorrer con un foreach estas variables e imprimirlas de manera directa en la vista
-        foreach($questions as $question)
+        foreach($questions as $question);
 
         //dd($nlu_question->nlu_name_id);
 
         //Selecciono el elemento answer que editaremos conectandolo con su fk de la tabla question
         $answers=DB::table('answer')->where('answer.id','=',$question->id_answers)->get();
+       //dd($answers);
         //Como tenemos 2 consultas question y answer lo mejor es recorrer con un foreach estas variables e imprimirlas de manera directa en la vista
         foreach($answers as $answer);
+        //dd($answer);
          $nombre=$answer->nombre;
          $archivos=DB::table('answer')->where('id','=',$answer->id)->get();
          foreach($archivos as $archivo);
@@ -2015,8 +2035,8 @@ class QnAController extends Controller
            //Les paso los elementos de las consultas a la vista.
           //dd($question,$answer);
           //dd($es_archivo_flow);
-          //dd($question,$answer,$pos,$name_image,$es_archivo_flow,$id_archivo);
-           return view('qna.edit',compact('question','answer','pos','name_image','es_archivo_flow','contexto'));
+          //dd($question,$answer,$pos,$name_image,$es_archivo_flow,$id_primero);
+           return view('qna.edit',compact('question','answer','pos','name_image','es_archivo_flow','contexto','id_primero'));
         }else{
           //Al encontrar el enlace hacia un archivo .flow.json que a su vez contiene los builtin_text y builtin_immge respectivo sigue esta parte del codigo.Se abre el archivo .flow.json en esa ruta y se lee linea por linea almacenandolo en un arreglo
           $path_archivo=public_path("botpress12120/data/bots/icibot/flows/".$answer->nombre);
@@ -2689,7 +2709,7 @@ $tam=count($res);
   while($pos==false){
     //dd($pos);
     if($i==2){
-      dd($i,$pos,$res[$i]["Nombre"],$archivo_qna->archivo_qna);
+      //dd($i,$pos,$res[$i]["Nombre"],$archivo_qna->archivo_qna);
     }
       $i=$i+1;
       $pos=strpos($res[$i]["Nombre"],$archivo_qna->archivo_qna);

@@ -54,6 +54,19 @@
                             </div>
                         </div>
 
+
+                        @if($id_primero==$question->id)
+                        <div class="form-group row">
+                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Pregunta') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="pregunta" type="text" class="form-control" name="pregunta" value="{{ $question->pregunta}}" required autocomplete="respuestas" autofocus disabled>
+
+                              
+                            </div>
+                        </div>
+
+                        @else
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Pregunta') }}</label>
 
@@ -63,6 +76,7 @@
                               
                             </div>
                         </div>
+                        @endif
 
                         @if($pos==0)
                         <div class="form-group row">
