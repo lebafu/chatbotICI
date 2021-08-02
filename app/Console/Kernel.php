@@ -13,9 +13,15 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        // 
+        Commands\Deshabilitar_Fecha_Vencida::class,
+        Commands\TestTask::class
     ];
 
+
+    protected function scheduleTimezone(){
+        return 'America/Santiago';
+    }
     /**
      * Define the application's command schedule.
      *
@@ -24,7 +30,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('deshabilitar:fecha_vencida')->everyminute();
+        //$schedule->command('test:task')->everyminute();
+
     }
 
     /**
