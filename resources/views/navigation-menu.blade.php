@@ -13,7 +13,7 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                <div class="hidden space-x-2 sm:-my-px sm:ml-12 sm:flex">
                     <x-jet-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-jet-nav-link>
@@ -23,6 +23,12 @@
                     <x-jet-nav-link href="{{ route('qna.qna_name_index') }}" :active="request()->routeIs('qna.qna_name_index')">
                         {{ __('QnA') }}
                     </x-jet-nav-link>
+                    <x-jet-nav-link href="{{ route('qna.index_preguntas_sin_respuestas') }}" :active="request()->routeIs('qna.index_preguntas_sin_respuestas')">
+                        {{ __('Q_sin_A') }}
+                    </x-jet-nav-link>
+                    <x-jet-nav-link href="{{ route('qna.index_comentarios') }}" :active="request()->routeIs('qna.index_comentarios')">
+                        {{ __('Comentarios') }}
+                    </x-jet-nav-link>     
                 </div>
             </div>
 
@@ -222,3 +228,4 @@
         </div>
     </div>
 </nav>
+
