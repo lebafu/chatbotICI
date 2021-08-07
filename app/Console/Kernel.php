@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         // 
         Commands\Deshabilitar_Fecha_Vencida::class,
-        Commands\TestTask::class
+    //    Commands\TestTask::class
     ];
 
 
