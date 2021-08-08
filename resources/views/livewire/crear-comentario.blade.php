@@ -1,22 +1,34 @@
 <div>
-  <form id="form2" action="{{route('qna.store_comentarios_y_sugerencias')}}" method="post">
-    @csrf
+  <div class="panel-body">
     <div class="form-row">
       <div class="form-group col-md-6">
-            <label for="Nombre"><b>Nombre:</b></label>
-            <input type="text" class="form-control" id="Nombre" name="nombre" placeholder="Ingrese su nombre">
+            <label for="Nombre"><b>Nombre (requerido):</b></label>
+            <input wire:model="nombre" type="text" class="form-control" placeholder="Ingrese su nombre">
           </div>
           <div class="form-group col-md-6">
-            <label for="Email"><b>Correo institucional:</b></label>
-            <input type="text" class="form-control" id="Email" name="email" placeholder="Ingrese su correo institucional">
-          </div>
-      </div>
-      <div class="form-group">
-          <label for="comentarios"><b>Ingrese sus comentarios o sugerencias:</b></label>
-          <textarea type="text" rows="4" class="form-control" name="comentarios"></textarea>
-        </div>    
-      <button type="submit" class="btn btn-primary center">
-          Enviar
-      </button>
-  </form>
+            <label for="Email"><b>Correo institucional (requerido):</b></label>
+            <input wire:model="email" type="email" class="form-control" placeholder="Ingrese su correo institucional">
+            @error('email')
+              <p class="text-danger">{{ $message }}</p>
+          @enderror
+          </div>   
+    </div>
+    <div class="form-group">
+          <label for="comentarios"><b>Comentarios o sugerencias (mínimo 5 caracteres):</b></label>
+          <textarea wire:model="comentarios_y_sugerencias" type="text" rows="4" class="form-control" name="comentarios" placeholder="Ingrese su comentario o sugerencia"></textarea>
+          <p class="text-right">{{ strlen($comentarios_y_sugerencias) }} / 250 </p>
+          @error('comentarios_y_sugerencias')
+              <p class="text-danger">{{ $message }}</p>
+          @enderror
+    </div>
+    <div class="form-row justify-content-center">
+          @if(strlen($nombre) > 0 && strlen($email) > 0 && strlen($comentarios_y_sugerencias) >= 5)
+              <button wire:click="store()" class="btn btn-success center">Guardar</button>
+          @else
+              <button wire:click="store()" class="btn btn-success center" disabled>Guardar</button>
+          @endif
+    </div>  
+  </div>
 </div>
+
+

@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
         <title>Retroalimentación Chatbot</title>
+        @livewireStyles
 
         <div class="container-fluid">
             <div style="background-color:#050566" class="row">
@@ -76,6 +77,9 @@
                 </div>
             </div>
         </div>
+
+        @stack('modals')
+        @livewireScripts
 
     </body>
 </html>
