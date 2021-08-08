@@ -4,7 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\comentarios_y_sugerencias as Comentarios;
-//use App\comentarios_y_sugerencias as Comentarios;
+
 
 class CrearComentario extends Component
 {
@@ -35,5 +35,6 @@ class CrearComentario extends Component
             'comentarios_y_sugerencias' => $this->comentarios_y_sugerencias,
         ]);
         $this->resetInput();
+        session()->flash('message', 'Su comentario ha sido enviado exitosamente');
     }
 }

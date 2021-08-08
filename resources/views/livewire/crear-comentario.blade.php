@@ -1,5 +1,14 @@
 <div>
   <div class="panel-body">
+
+    <div>
+        @if (session()->has('message'))
+            <div class="alert alert-success">
+                {{ session('message') }}
+            </div>
+        @endif
+    </div>
+
     <div class="form-row">
       <div class="form-group col-md-6">
             <label for="Nombre"><b>Nombre (requerido):</b></label>
@@ -20,9 +29,13 @@
           @error('comentarios_y_sugerencias')
               <p class="text-danger">{{ $message }}</p>
           @enderror
+          @if(strlen($comentarios_y_sugerencias) > 250)
+              <p class="text-danger">No puedes exceder de 250 caracteres</p>
+          @endif
+
     </div>
     <div class="form-row justify-content-center">
-          @if(strlen($nombre) > 0 && strlen($email) > 0 && strlen($comentarios_y_sugerencias) >= 5)
+          @if(strlen($nombre) > 0 && strlen($email) > 0 && strlen($comentarios_y_sugerencias) >= 5 && strlen($comentarios_y_sugerencias) <= 250)
               <button wire:click="store()" class="btn btn-success center">Guardar</button>
           @else
               <button wire:click="store()" class="btn btn-success center" disabled>Guardar</button>
