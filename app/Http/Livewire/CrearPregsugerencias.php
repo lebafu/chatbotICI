@@ -25,6 +25,11 @@ class CrearPregsugerencias extends Component
         array_push($this->inputs ,$i);
     }
 
+    public function max()
+    {
+        session()->flash('warning', 'Has alcanzado el limite de preguntas');
+    }
+
     public function resetInput()
     {
         $this->nombre = null;
@@ -35,14 +40,20 @@ class CrearPregsugerencias extends Component
     public function store()
     {
         $this->validate([
-            'nombre.0' => 'required|min:2',
-            'email.0' => 'required|email:rfc,dns',
+            'nombre' => 'required|min:2',
+            'email' => 'required|email:rfc,dns',
             'pregunta_sin_respuesta.0' => 'required|min:0|max:100',
             'pregunta_sin_respuesta.*' => 'required|min:0|max:100',
+        ],
+        [
+            'email.email' => 'Debes ingresar un email válido',
+            'pregunta_sin_respuesta.0.required' => 'No puedes ingresar preguntas en blanco',
+            'pregunta_sin_respuesta.*.required' => 'No puedes ingresar preguntas en blanco'
+
         ]);
 
         foreach ($this->pregunta_sin_respuesta as $key => $value) {
-            Preguntas::create(['nombre' => $this->nombre[0], 'email' => $this->email[0], 'pregunta_sin_respuesta' => $this->pregunta_sin_respuesta[$key]]);
+            Preguntas::create(['nombre' => $this->nombre, 'email' => $this->email, 'pregunta_sin_respuesta' => $this->pregunta_sin_respuesta[$key]]);
         }
 
         $this->inputs = [];

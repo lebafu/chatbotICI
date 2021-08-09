@@ -28,6 +28,9 @@ class CrearComentario extends Component
             'nombre' => 'required|min:2',
             'email' => 'required|email:rfc,dns',
             'comentarios_y_sugerencias' => 'required|min:5|max:250'
+        ],
+        [
+            'email.email' => 'Debes ingresar un email válido',
         ]);
         Comentarios::create([
             'nombre' => $this->nombre,
