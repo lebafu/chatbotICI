@@ -25,6 +25,11 @@ class CrearPregsugerencias extends Component
         array_push($this->inputs ,$i);
     }
 
+    public function remove($i)
+    {
+        unset($this->inputs[$i]);
+    }
+
     public function max()
     {
         session()->flash('warning', 'Has alcanzado el limite de preguntas');

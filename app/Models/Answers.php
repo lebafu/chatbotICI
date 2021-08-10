@@ -13,8 +13,11 @@ class Answers extends Model
     protected $primarykey = 'id';
     protected $fillable = [
         'nombre',
+        'vence',
+        'fecha_caducacion',
+        'archivo_qna',
         'habilitada'
     ];
 
-    public $timestamps = false;
+    public $timestamps = true;
 }

@@ -51,7 +51,7 @@
                       
                   </div>
                   <div class="form-group col-md-1">
-                      <button class="btn btn-danger btn-sm">X</button>
+                      <button class="btn btn-danger btn-sm" wire:click="remove({{$key}})">X</button>
                   </div>
                 </div>
     @endforeach

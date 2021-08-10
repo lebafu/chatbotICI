@@ -22,6 +22,7 @@ class Answer extends Migration
             //$table->foreignId('id_archivo')->references('id')->on('archivo_qna');
             $table->string('archivo_qna');
             $table->integer('habilitada');
+            $table->timestamps();
         });
     }
 

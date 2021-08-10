@@ -19,6 +19,7 @@ class PreguntasSinRespuestas extends Migration
             $table->string('nombre');
             $table->string('email');
             $table->text('pregunta_sin_respuesta');
+            $table->timestamps();
         });
 
     }
