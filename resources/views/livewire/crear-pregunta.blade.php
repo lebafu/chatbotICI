@@ -34,14 +34,14 @@
 
 
     <div class="form-group col-md-4">
-        <label for="Email"><b>Correo institucional (requerido):</b></label>
-            <input wire:model="email" type="email" class="form-control" placeholder="Ingrese su correo institucional">
+        <label for="Email"><b>Respuesta (requerido):</b></label>
+            <input wire:model="nombre" type="text" class="form-control" placeholder="Respuesta:">
         </div>   
     </div>
     
 
     <div class="form-row justify-content-center">
-        @if(strlen($nombre) > 0 && strlen($email) > 0)
+        @if(strlen($nombre) > 0)
             <button wire:click="store()" class="btn btn-success center">Guardar</button>
         @else
             <button wire:click="store()" class="btn btn-success center" disabled>Guardar</button>
