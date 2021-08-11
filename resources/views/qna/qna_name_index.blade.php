@@ -32,29 +32,7 @@
                 </div>
               </div>
             </div>
-        </div>
-
-        <div class="col-md-10">
-            <table class="table table-bordered">
-                <tr>
-                    <th>ID</th>
-                    <th>Preguntas</th>
-                    <th>Respuesta</th>
-                    <th width="250px">Action</th>
-                </tr>
-                @foreach ($datos as $dato)
-                <tr>
-                    <td>{{ $dato->id}}</td>
-                    <td>{{ $dato->pregunta}}</td>
-                    <td>{{ $dato->nombre}}</td>
-                    <td>
-                        <a class="btn btn-primary" href="{{ route('qna.index',$dato->id) }}"><span  class="fas fa-eye fa-xs" style="color:black"></span></a>
-                    </td>
-                </tr>
-                @endforeach
-            </table>
-
-            {{$datos->links()  }}
+        </div>      
         </div>
     </div>
 

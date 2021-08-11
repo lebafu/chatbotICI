@@ -4,12 +4,13 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Answers as ArchivoPregunta;
+use App\Models\Question as Preguntas;
 use App\Http\Livewire\Field;
 use Illuminate\Http\Request;
 
 class CrearPregunta extends Component
 {
-	public $nombre, $vence, $fecha_caducacion, $archivo_qna, $habilitada;
+	public $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea;
     public $inputs = [];
     public $i = 1;
 
@@ -32,24 +33,37 @@ class CrearPregunta extends Component
 
     public function resetInput()
     {
-        $this->nombre = null;
+        $this->resp = null;
         $this->vence = null;
         $this->fecha_caducacion = null;
         $this->archivo_qna = null;
         $this->habilitada = null;
+        $this->pregunta = null;
+        $this->id_foranea = null;
     }
 
     public function store()
     {
         $this->validate([
-            'nombre' => 'required|min:2',
+            'resp' => 'required|min:2',
+            'pregunta.0' => 'required|min:1|max:100',
+            'pregunta.*' => 'required|min:1|max:100',
         ],
         [
-            'nombre.required' => 'Debes ingresar una respuesta',
-
+            'resp.required' => 'Debes ingresar una respuesta',
+            'pregunta.0.required' => 'No puedes ingresar preguntas en blanco',
+            'pregunta.*.required' => 'No puedes ingresar preguntas en blanco'
         ]);
 
-        ArchivoPregunta::create(['nombre' => $this->nombre, 'vence' => 'no', 'fecha_caducacion' => null, 'archivo_qna' => 'blabla', 'habilitada' => 1 ]);
+        if ($this->vence != 1){
+            $this->vence = 0;
+        }
+
+        $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'archivo_qna' => 'blabla', 'habilitada' => 1 ]);
+
+        foreach ($this->pregunta as $key => $value) {
+            Preguntas::create(['pregunta' => $this->pregunta[$key], 'id_answers' => $registro->id ]);
+        }
 
         $this->inputs = [];
         $this->resetInput();
