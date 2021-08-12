@@ -32,7 +32,8 @@
                 </div>
               </div>
             </div>
-        </div>      
+        </div> 
+        @livewire('index-preguntas')   
     </div>
 </div>
 
