@@ -17,5 +17,5 @@ class comentarios_y_sugerencias extends Model
         'comentarios_y_sugerencias'
     ];
 
-    public $timestamps = false;    
+    public $timestamps = true;    
 }

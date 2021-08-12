@@ -26,7 +26,7 @@
                   <input wire:model="pregunta.{{ $value }}" type="text" rows="4" class="form-control" name="preguntas"></input>
               </div>
               <div class="form-group col-md-1">
-                  <button class="btn btn-danger btn-sm">X</button>
+                  <button class="btn btn-danger btn-sm" wire:click="remove({{$key}})">X</button>
               </div>
             </div>
           @endforeach

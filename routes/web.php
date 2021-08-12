@@ -24,6 +24,7 @@ Route::get('/home', function () {
 //Rutas livewire
 Route::view('/retroalimentacion','retroalimentacion')->name('retroalimentacion');
 Route::view('/qna_index','qna.qna_name_index')->name('qna_index');
+Route::view('/index_comentarios','comentarios.index')->name('index_comentarios');
 
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
@@ -46,14 +47,10 @@ Route::get('/qna_habilitada{id}', 'QnAController@habilitada')->name('qna.habilit
 Route::put('/actualizarnlu{nlu_question}','IntentsController@nlu_update')->name('intents.nlu_update');
 Route::put('/actualizarqna{nlu_question}','QnAController@update')->name('qna.update');
 Route::post('/qna','QnAController@store')->name('qna.store');
-Route::get('/qna_pregunta_almacenada_correctamente','QnaController@pregunta_sin_respuesta')->name('qna.pregunta_almacenada_correctamente');
-Route::get('/qna_comentario_almacenado_correctamente','QnaController@store_comentarios_y_sugerencias')->name('qna.comentario_almacenado_correctamente');
 Route::get('/index_preguntas_sin_respuestas','QnaController@index_preguntas_sin_respuestas')->name('qna.index_preguntas_sin_respuestas');
-Route::get('/index_comentarios','QnaController@index_comentarios')->name('qna.index_comentarios');
+
 Route::put('/actualizar_asignar_respuesta{request}','QnAController@update_asignar_respuesta')->name('qna.update_asignar_respuesta');                                                                                       
 Route::put('/answer_input{request}','QnAController@update_asignar_input_respuesta')->name('qna.update_asignar_input_respuesta');
 Route::get('/qna_pregunta_asignada_correctamente','QnaController@update_asignar_respuesta')->name('qna.asignacion_pregunta_exitosa');
 Route::get('/show_mostrar_detalle_pregunta_sin_respuesta/{id}', 'QnaController@show_pregunta_sin_respuesta')->name('qna.show_pregunta_sin_respuesta');
-Route::get('/show_comentario{id}', 'QnaController@show_comentario')->name('qna.show_comentario');
 Route::delete('/eliminarpreguntas_sin_respuestas{tesis}','QnaController@eliminar_pregunta_sin_respuesta')->name('qna.eliminar_pregunta_sin_respuesta');
-Route::delete('/eliminar_comentario{comentario}','QnaController@eliminar_comentario')->name('qna.eliminar_comentario');
