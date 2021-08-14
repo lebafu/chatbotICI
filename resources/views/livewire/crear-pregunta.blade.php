@@ -12,6 +12,15 @@
     <div class="form-row">
       <div class="form-group col-md-7">
           <div class="row">
+                        <label for="contexto">Seleccionar Contexto:</label>
+                        <div class="col-md-6">
+                            <select wire:model="contexto" name="contexto">
+                                <option value="global">global</option>
+                                <option value="regular">regular</option>
+                                <option value="egresado">egresado</option>
+                            </select>
+                        </div>
+                      </div>
             <div class="form-group col-md-10">
                   <label for="preguntas"><b>Preguntas que desee agregar (requerido):</b></label>
                   <input wire:model="pregunta.0" type="text" class="form-control" name="preguntas"></input>
