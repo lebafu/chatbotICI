@@ -8,6 +8,13 @@
     @endif
     </div>
     
+    <table class="table table-bordered">
+        <tr>
+            <th>Preguntas</th>
+            <th>Respuesta</th>
+            <th width="250px">Action</th>
+        </tr>
+      </table>
   <div id="accordion">
     @foreach ($archivoPregs as $archivoPreg)
       <div class="card">
@@ -17,7 +24,11 @@
              {{$archivoPreg->nombre}}
             </button>
             <div class="float-right">
-              <button class="btn btn-danger btn-sm" wire:click="delete({{ $archivoPreg->id }})">X</button>
+              @if($archivoPreg->habilitada==0)
+                <button class="btn btn-danger btn-sm" wire:click="habilitada({{ $archivoPreg->id }})">Deshabilitada</button>
+              @else
+              <button class="btn btn-success btn-sm" wire:click="habilitada({{ $archivoPreg->id}})">Habilitada</button>
+            @endif
             </div>
           </h5>
         </div>
