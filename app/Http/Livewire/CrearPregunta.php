@@ -137,8 +137,9 @@ class CrearPregunta extends Component
           //dd($pos_inicial);
           //dd($pos_final);
           //dd($largo_cadena,$cadena,$init_interrogacion,$cerrar_interrogacion);
+
         if(($init_interrogacion==0 and $cerrar_interrogacion==0)){
-            //dd($request);
+                //dd($request);
           $cadena_final=$cadena;
            $cadena_final = str_replace(array(' '),array('_'),$cadena_final);
            $cadena_final =strtolower($cadena_final);
@@ -176,38 +177,12 @@ class CrearPregunta extends Component
           );
       }
   }
-  $tam=sizeof($res);
+    $tam=sizeof($res);
   $vector_substring=array();
   //dd($vector_substring);
-        $i=0;
-  //Si el valor de i es menor a la cantidad de archivos entonces saldrá del ciclo while
-   while($i<$tam){
-    
-    //Se van abriendo cada uno de los archivos de la carpeta hasta que abre todos los archivos de la carpeta
-    $path_archivo=public_path($res[$i]["Nombre"]);
-    $pos = strpos($path_archivo, $cadena_final);
-    //dd($pos);
-    array_push($vector_substring,$pos);
-    //$vector_substring=array($i=>$pos);
-    //dd($vector_substring);
-    //dd($path_archivo);
-    //print_r($res2[$i]["Nombre"]);
-    //El texto que se desea modificar en el archivo de texto
-    //dd($pos);
-    if($pos==true){
-        //print_r($path_archivo);
-        //return('ARCHIVO YA HA SIDO CREADO Y PREGUNTA(QUESTION) REALIZADA');
-        //dd($pos);
-        $i=$tam;
-    }
 
-      //dd($datosnuevos);
-      //Se le suma uno a $i y se abre el siguiente archivo siempre y cuando $i< la cantidad de archivos en esta carpeta
-    $i=$i+1;
-    //print_r($i);
-   //}
-  }
-    $archivo_ejemplo1="C:/Users/LI/Desktop/chtbtICI/public/__qna__intents_prueba.txt";
+
+   $archivo_ejemplo1="C:/Users/LI/Desktop/chtbtICI/public/__qna__intents_prueba.txt";
         $archivo_ejemplo2="C:/Users/LI/Desktop/chtbtICI/public/qna__qna_prueba.txt";
 
         $leer1 = fopen($archivo_ejemplo1, 'r+');
@@ -219,7 +194,7 @@ class CrearPregunta extends Component
         }
         fclose($leer1);
       //dd($this,$aux,$numlinea);
-      $ultimas_4_lineas=array();
+        $ultimas_4_lineas=array();
         $ultimas_4_lineas[0]="    ]\r\n";
         $j=1;
         $i=$numlinea-3;
@@ -231,7 +206,7 @@ class CrearPregunta extends Component
        //dd($this,$aux,$numlinea,$ultimas_4_lineas);
       $i=0;
       $a=0;
-      while($i<$numlinea){
+       while($i<$numlinea){
         $buscar_utterances=strpos($aux[$i],'"utterances": {');
         $buscar_es_pregunta=strpos($aux[$i+1],'"es": []');
          $buscar_es_llave=strpos($aux[$i+2],'},');
@@ -270,7 +245,7 @@ class CrearPregunta extends Component
           $aux[$i+1+$c]=$ultimas_4_lineas[1];
           array_push($aux,$ultimas_4_lineas[2]);
           array_push($aux,$ultimas_4_lineas[3]);
-          //dd($aux,$cantidad_preguntas,$this->pregunta);
+          //dd($aux,$cantidad_preguntas,$this->pregunta,$path_archivo1);
         }
     }if($global!=false){
           $aux[$i]=str_replace("global",$this->contexto,$aux[$i]);
@@ -287,10 +262,7 @@ class CrearPregunta extends Component
 
        $i=$i+1;         
     }
-
-    //dd($aux);
-
-       $contenido="";
+     $contenido="";
        $i=0;
        $tam_array_aux=count($aux);
       while($i<$tam_array_aux){
@@ -299,7 +271,7 @@ class CrearPregunta extends Component
       }
       //unlink($path_archivo);
 
-       $escribir = fopen($path_archivo, 'w+');
+       $escribir = fopen($path_archivo1, 'w+');
          fwrite($escribir, $contenido);
        fclose($escribir);
       //dd($request,$aux,$aux[6],$numlinea,$ultimas_4_lineas,$contenido);
@@ -335,7 +307,7 @@ class CrearPregunta extends Component
       $a=0;
       $b=0;
       $c=0;
-      while($i<$numlinea){
+     while($i<$numlinea){
         $buscar_questions=strpos($aux_qna[$i],'"questions": {');
         $buscar_answers=  strpos($aux_qna[$i],'"answers": {');
         $buscar_es_corchete=strpos($aux_qna[$i+1],'"es": []');
@@ -365,33 +337,35 @@ class CrearPregunta extends Component
           if($cantidad_preguntas==1){
           $aux_qnaa[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
           }else{
-            $b=0;
+           $b=0;
            $c=2;
-           while($b-1<$cantidad_preguntas){
+           while($b<$cantidad_preguntas){
             if(isset($this->pregunta[$a])==true){
-              if($b<$cantidad_preguntas){
+              if($b+1<$cantidad_preguntas){
            $aux_qna[$i+$c]='        '.'"'.$this->pregunta[$a].'",'."\r\n";
             }else{
+                //dd($aux,$b);
                 $aux_qna[$i+$c]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
-                //dd($aux_qna);
             }
+
+            $b=$b+1;
             }else{
                 //dd($a,$c);
              $c=$c-1;
             }
+           //dd($aux,$this->pregunta,$a,$b,$c);
            $a=$a+1;
-           $b=$b+1;
            $c=$c+1;
 
             }
           //$aux_qna[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
-          $aux_qna[$i+1+$c]=$ultimas_8_lineas[0];
+          $aux_qna[$i+$c]=$ultimas_8_lineas[0];
           $aux_qna[$i+2+$c]=$ultimas_8_lineas[4];
           $aux_qna[$i+3+$c]=$ultimas_8_lineas[5];
           $aux_qna[$i+4+$c]=$ultimas_8_lineas[6];
           $aux_qna[$i+5+$c]=$ultimas_8_lineas[7];
           $aux_qna[$i+6+$c]=$ultimas_8_lineas[8];
-          //dd($aux_qna);
+          //dd($aux_qna,$this->pregunta,$a,$c);
         }
         }if($global!=false){
           $aux_qna[$i]=str_replace("global",$this->contexto,$aux_qna[$i]);
@@ -402,6 +376,7 @@ class CrearPregunta extends Component
         $i=$i+1;
 
       }
+
 
 
     //dd($aux_qna);
@@ -422,9 +397,21 @@ class CrearPregunta extends Component
        $escribir2 = fopen($path_archivo2, 'w+');
          fwrite($escribir2, $contenido);
        fclose($escribir2);
-       ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence , 'fecha_caducacion' => $this->fecha_caducacion, 'archivo_qna'=> $nombre_archivo2,'habilitada' => 1]);
+       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
 
 
+
+
+        foreach ($this->pregunta as $key => $value) {
+            Preguntas::create(['pregunta' => $this->pregunta[$key], 'id_answers' => $registro->id ]);
+        }
+        
+        $this->inputs = [];
+        $this->resetInput();
+        session()->flash('message', 'Se ha añadido la pregunta y su respuesta al sistema');
+  
+
+        //dd($aux_qna,$aux);
     }elseif($init_interrogacion==1 and $cerrar_interrogacion==1){
         $cadenaf1 = str_replace("¿", "", $cadena);
         $cadenaf2 = str_replace("?","",$cadenaf1);
@@ -434,8 +421,8 @@ class CrearPregunta extends Component
         //dd($request,$nombre_archivo);
         $nombre_archivo='__qna__'.$randomString.'_'.$cadena_final.'.json';
         $nombre_archivo2=$randomString.'_'.$cadena_final.'.json';
-        $id_qna=$randomString.'_'.$cadena_final;
         $name_qna='__qna__'.$randomString.$cadena_final;
+        $id_qna=$randomString.'_'.$cadena_final;
 
         $path_archivo1=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/intents/".$nombre_archivo);
         //dd($path_archivo1);
@@ -472,7 +459,7 @@ class CrearPregunta extends Component
   //dd($vector_substring);
         $i=0;
   //Si el valor de i es menor a la cantidad de archivos entonces saldrá del ciclo while
-   while($i<$tam){
+   /*while($i<$tam){
     
     //Se van abriendo cada uno de los archivos de la carpeta hasta que abre todos los archivos de la carpeta
     $path_archivo=public_path($res[$i]["Nombre"]);
@@ -496,7 +483,7 @@ class CrearPregunta extends Component
     $i=$i+1;
     //print_r($i);
    //}
-  }
+  }*/
   $archivo_ejemplo1="C:/Users/LI/Desktop/chtbtICI/public/__qna__intents_prueba.txt";
         $archivo_ejemplo2="C:/Users/LI/Desktop/chtbtICI/public/qna__qna_prueba.txt";
 
@@ -584,7 +571,7 @@ class CrearPregunta extends Component
        $i=$i+1;         
     }
 
-    //dd($aux,1);
+    //dd($aux,$nombre_archivo);
 
        $contenido="";
        $i=0;
@@ -595,7 +582,7 @@ class CrearPregunta extends Component
       }
       //unlink($path_archivo);
 
-       $escribir = fopen($path_archivo, 'w+');
+       $escribir = fopen($path_archivo1, 'w+');
          fwrite($escribir, $contenido);
        fclose($escribir);
       //dd($this,$aux,$aux[6],$numlinea,$ultimas_4_lineas,$contenido);
@@ -662,34 +649,35 @@ class CrearPregunta extends Component
           if($cantidad_preguntas==1){
           $aux_qnaa[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
           }else{
-            //dd($aux_qna,$this);
            $b=0;
            $c=2;
-           while($b-1<$cantidad_preguntas){
+           while($b<$cantidad_preguntas){
             if(isset($this->pregunta[$a])==true){
-              if($b<$cantidad_preguntas){
+              if($b+1<$cantidad_preguntas){
            $aux_qna[$i+$c]='        '.'"'.$this->pregunta[$a].'",'."\r\n";
             }else{
+                //dd($aux,$b);
                 $aux_qna[$i+$c]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
-                //dd($aux_qna);
             }
+
+            $b=$b+1;
             }else{
                 //dd($a,$c);
              $c=$c-1;
             }
+           //dd($aux,$this->pregunta,$a,$b,$c);
            $a=$a+1;
-           $b=$b+1;
            $c=$c+1;
 
             }
           //$aux_qna[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
-          $aux_qna[$i+1+$c]=$ultimas_8_lineas[0];
+          $aux_qna[$i+$c]=$ultimas_8_lineas[0];
           $aux_qna[$i+2+$c]=$ultimas_8_lineas[4];
           $aux_qna[$i+3+$c]=$ultimas_8_lineas[5];
           $aux_qna[$i+4+$c]=$ultimas_8_lineas[6];
           $aux_qna[$i+5+$c]=$ultimas_8_lineas[7];
           $aux_qna[$i+6+$c]=$ultimas_8_lineas[8];
-          //dd($aux_qna);
+          //dd($aux_qna,$this->pregunta,$a,$c);
         }
         }if($global!=false){
           $aux_qna[$i]=str_replace("global",$this->contexto,$aux_qna[$i]);
@@ -720,12 +708,11 @@ class CrearPregunta extends Component
        $escribir2 = fopen($path_archivo2, 'w+');
          fwrite($escribir2, $contenido);
        fclose($escribir2);
-  //dd($vector_substring);
 
-//dd($this,$aux_qna,$aux,$numlinea,$ultimas_8_lineas);
+       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
 
 
-        $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
+
 
         foreach ($this->pregunta as $key => $value) {
             Preguntas::create(['pregunta' => $this->pregunta[$key], 'id_answers' => $registro->id ]);
@@ -734,6 +721,16 @@ class CrearPregunta extends Component
         $this->inputs = [];
         $this->resetInput();
         session()->flash('message', 'Se ha añadido la pregunta y su respuesta al sistema');
-    }
+  //dd($vector_substring);
+
+//dd($this,$aux_qna,$aux,$numlinea,$ultimas_8_lineas);
+}else{
+    $this->inputs = [];
+    $this->resetInput();
+    //dd('AQUI DEBE ENTRAR');
+    session()->flash('problema_con_parentesis', 'Los signos de pregunta no estan parejos');
+}
+         
+        
   }
 }
