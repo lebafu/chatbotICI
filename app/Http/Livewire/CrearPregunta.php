@@ -60,11 +60,15 @@ class CrearPregunta extends Component
             $this->vence = 0;
         }
 
-        $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'archivo_qna' => 'blabla', 'habilitada' => 1 ]);
 
         $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
-        //dd($this);
-        $question=$this->pregunta[0]."\r\n";
+         $a=0;
+         $cantidad_preguntas=count($this->pregunta);
+        //dd($this,$a,$cantidad_preguntas,isset($this->pregunta[1]));
+ 
+              
+
+        $question=$this->pregunta[$a]."\r\n";
         //dd($question);
         $charactersLength=strlen($characters);
         $randomString = '';
@@ -83,7 +87,7 @@ class CrearPregunta extends Component
      //Reemplazamos la A y a
         //dd(strlen($this->pregunta));dd($request,$nombre_archivo);
      //dd($request);
-        $cadena=$this->pregunta[0];
+        $cadena=$this->pregunta[$a];
         //dd($cadena);
         $cadena = str_replace(
         array('Á', 'À', 'Â', 'Ä', 'á', 'à', 'ä', 'â', 'ª'),
@@ -132,7 +136,7 @@ class CrearPregunta extends Component
           ///dd($cadena);
           //dd($pos_inicial);
           //dd($pos_final);
-          //dd($largo_cadena);
+          //dd($largo_cadena,$cadena,$init_interrogacion,$cerrar_interrogacion);
         if(($init_interrogacion==0 and $cerrar_interrogacion==0)){
             //dd($request);
           $cadena_final=$cadena;
@@ -140,6 +144,7 @@ class CrearPregunta extends Component
            $cadena_final =strtolower($cadena_final);
            $nombre_archivo='__qna__'.$randomString.'_'.$cadena_final.'.json';
         $nombre_archivo2=$randomString.'_'.$cadena_final.'.json';
+        $name_qna='__qna__'.$randomString.$cadena_final;
         $id_qna=$randomString.'_'.$cadena_final;
            //dd($cadena_final,$nombre_archivo,$nombre_archivo2);
             $path_archivo1=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/intents/".$nombre_archivo);
@@ -171,7 +176,6 @@ class CrearPregunta extends Component
           );
       }
   }
-
   $tam=sizeof($res);
   $vector_substring=array();
   //dd($vector_substring);
@@ -180,7 +184,7 @@ class CrearPregunta extends Component
    while($i<$tam){
     
     //Se van abriendo cada uno de los archivos de la carpeta hasta que abre todos los archivos de la carpeta
-    $path_archivo=("C:/Users/LI/Desktop/chtbtICI/public/".$res[$i]["Nombre"]);
+    $path_archivo=public_path($res[$i]["Nombre"]);
     $pos = strpos($path_archivo, $cadena_final);
     //dd($pos);
     array_push($vector_substring,$pos);
@@ -203,10 +207,7 @@ class CrearPregunta extends Component
     //print_r($i);
    //}
   }
-  //dd($vector_substring);
-        
-        
-        $archivo_ejemplo1="C:/Users/LI/Desktop/chtbtICI/public/__qna__intents_prueba.txt";
+    $archivo_ejemplo1="C:/Users/LI/Desktop/chtbtICI/public/__qna__intents_prueba.txt";
         $archivo_ejemplo2="C:/Users/LI/Desktop/chtbtICI/public/qna__qna_prueba.txt";
 
         $leer1 = fopen($archivo_ejemplo1, 'r+');
@@ -217,7 +218,7 @@ class CrearPregunta extends Component
              $numlinea++;
         }
         fclose($leer1);
-      //dd($request,$aux,$numlinea);
+      //dd($this,$aux,$numlinea);
       $ultimas_4_lineas=array();
         $ultimas_4_lineas[0]="    ]\r\n";
         $j=1;
@@ -227,8 +228,9 @@ class CrearPregunta extends Component
            $j=$j+1;
           $i=$i+1;
       }
-       //dd($request,$aux,$numlinea,$ultimas_4_lineas);
+       //dd($this,$aux,$numlinea,$ultimas_4_lineas);
       $i=0;
+      $a=0;
       while($i<$numlinea){
         $buscar_utterances=strpos($aux[$i],'"utterances": {');
         $buscar_es_pregunta=strpos($aux[$i+1],'"es": []');
@@ -236,30 +238,54 @@ class CrearPregunta extends Component
          $global=strpos($aux[$i], "global");
          $name_vacio=strpos($aux[$i],'"name": "",');
         if($buscar_utterances!=false and $buscar_es_pregunta!=false and $buscar_es_llave!=false){
-          //dd($buscar_utterances,$buscar_es_pregunta,$buscar_es_llave,$i);
+          //dd($buscar_utterances,$buscar_es_pregunta,$buscar_es_llave,$i,$this,$aux);
           $aux[$i+1]='      '.'"'.'es'.'":'." [\r\n";
-          $aux[$i+2]='        '.'"'.$this->pregunta[0].'"'."\r\n";
-          $aux[$i+3]=$ultimas_4_lineas[0];
-          $aux[$i+4]=$ultimas_4_lineas[1];
+          //dd($aux);
+          if($cantidad_preguntas==1){
+                $aux[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
+                dd($aux);
+          }else{
+           $b=0;
+           $c=2;
+           while($b-1<$cantidad_preguntas){
+            if(isset($this->pregunta[$a])==true){
+              if($b<$cantidad_preguntas){
+           $aux[$i+$c]='        '.'"'.$this->pregunta[$a].'",'."\r\n";
+            }else{
+                $aux[$i+$c]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
+            }
+            }else{
+                //dd($a,$c);
+             $c=$c-1;
+            }
+           $a=$a+1;
+           $b=$b+1;
+           $c=$c+1;
+
+            }
+          $aux[$i+$c]=$ultimas_4_lineas[0];
+          $aux[$i+1+$c]=$ultimas_4_lineas[1];
           array_push($aux,$ultimas_4_lineas[2]);
           array_push($aux,$ultimas_4_lineas[3]);
           //dd($aux);
-        }if($global!=false){
+        }
+    }if($global!=false){
           $aux[$i]=str_replace("global",$this->contexto,$aux[$i]);
         }if($name_vacio!=false){
-            $aux[$i]=str_replace('"name": "",','"name":'.' "'.$nombre_archivo.'",',$aux[$i]);
+            $aux[$i]=str_replace('"name": "",','"name":'.' "'.'__qna__'.$randomString.'_'.$cadena_final.'",',$aux[$i]);
         /*elseif($aux[$i]=='"utterances": {' and $aux[$i+1]=='"es": [' and $aux[$i+2]!='},'){
           $aux[$i+1]='"es": [';
           $aux[$i+2]='       "'.$this->pregunta.'"';
           $aux[$i+3]=']';
         }*/
+        //dd($aux);
       }
-        $i=$i+1;
+       
 
-      }
-//dd($request,$aux,$aux[6],$numlinea,$ultimas_4_lineas);
+       $i=$i+1;         
+    }
 
-
+    dd($aux);
 
        $contenido="";
        $i=0;
@@ -268,73 +294,17 @@ class CrearPregunta extends Component
         $contenido .=$aux[$i];
         $i=$i+1;
       }
+      //unlink($path_archivo);
+
+       $escribir = fopen($path_archivo, 'w+');
+         fwrite($escribir, $contenido);
+       fclose($escribir);
       //dd($request,$aux,$aux[6],$numlinea,$ultimas_4_lineas,$contenido);
       //if(filesize($path_archivo) > 0){
       // Se almacena en data el contenido inicial del archivo
          //$data1 = fread($leer1, filesize($archivo_ejemplo1));
         //dd($data1);
-        //fclose($leer1);
-        $escribir1 = fopen($path_archivo1, 'w+');
-         //fwrite($escribir1, $data1);
-        fwrite($escribir1, $contenido);
-       fclose($escribir1);
-
-      //Fila con el nombre del archivo esccibiendo nombre del archivo//
-
-      $leer1 = fopen($path_archivo1, 'r+');
-      //if(filesize($path_archivo) > 0){
-      // Se almacena en data el contenido inicial del archivo
-      //dd(filesize($path_archivo1));
-      $data1 = fread($leer1, filesize($path_archivo1));
-      //dd($data1);
-      //Se cierra el archivo
-      fclose($leer1);
-
-       //Dejando formato adecuado a archivo __qna__ en carpeta intents
-       $patron1=     '"'.'name'.'":'.' ""'.',';
-       //dd($patron);
-       $sustitucion1='"'.'name'.'":'.' "'.$nombre_archivo.'"'.',';
-       //dd($patron1,$sustitucion1);
-       //dd($data1);
-       $datosnuevos1 = str_replace($patron1, $sustitucion1, $data1);
-
-       //dd($datosnuevos11);
-        //Se abre el archivo para reescribirlo
-      $escribir1 = fopen($path_archivo1, 'w');
-      //dd($datosnuevos);
-      //Se esccribe en el archivo
-      fwrite($escribir1, $datosnuevos1);
-      fclose($escribir1);
-
-
-  
-     /* $path_archivo11=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/intents/".$nombre_archivo);
-      $leer11 = fopen($path_archivo11, 'rb');
-      //dd($leer11,$path_archivo1);
-      //if(filesize($path_archivo) > 0){
-      // Se almacena en data el contenido inicial del archivo
-      //NO TOMA TODOS LOS CARACTERES DE MANERA CORRECTA   
-      //                      AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII REVISAAR
-      //dd(filesize($path_archivo11));
-      $data11 = fread($leer11, 2*filesize($path_archivo11));  //Filesize no me entrega el tamaño actual del archivo, no se bien por que, pero al multiplicarlo por 2, consigo tomar todos los caracteres del archivo, y no solo hasta utterances.
-      //dd($data11);
-      //Se cierra el archivo
-      //dd($data11);
-      fclose($leer11);
-
-      //dd($data1);
-      $patron2=     '"es":'.' ['.']';
-       //dd($patron1);
-       $sustitucion2='"es":'.' ["'.$this->pregunta.'"]';
-       //dd(filesize($path_archivo1),filesize($path_archivo11),$data11,$patron2,$sustitucion2);
-       $datosnuevos11 = str_replace($patron2, $sustitucion2, $data11);
-        $escribir11 = fopen($path_archivo1, 'w+');
-      //dd($datosnuevos);
-      //Se esccribe en el archivo
-      fwrite($escribir11, $datosnuevos11);
-      fclose($escribir11); */
-
-
+      
        //CARPETA QNA CREAR ARCHIVO
 
 
@@ -347,7 +317,7 @@ class CrearPregunta extends Component
              $numlinea++;
         }
         fclose($leer2);
-      //dd($request,$aux,$numlinea);
+      //dd($this,$aux,$numlinea);
       $ultimas_8_lineas=array();
         $ultimas_8_lineas[0]="    ]\r\n";
         $j=1;
@@ -359,6 +329,9 @@ class CrearPregunta extends Component
       }
        //dd($request,$aux_qna,$numlinea,$ultimas_8_lineas);
       $i=0;
+      $a=0;
+      $b=0;
+      $c=0;
       while($i<$numlinea){
         $buscar_questions=strpos($aux_qna[$i],'"questions": {');
         $buscar_answers=  strpos($aux_qna[$i],'"answers": {');
@@ -386,154 +359,81 @@ class CrearPregunta extends Component
           //dd($aux_qna,$ultimas_8_lineas);
         }elseif($buscar_questions!=false and $buscar_es_corchete!=false and $buscar_es_llave!=false){
           $aux_qna[$i+1]='      '.'"'.'es'.'":'." [\r\n";
-          $aux_qna[$i+2]='        '.'"'.$this->pregunta[0].'"'."\r\n";
-          $aux_qna[$i+3]=$ultimas_8_lineas[0];
-          $aux_qna[$i+4]=$ultimas_8_lineas[4];
-          $aux_qna[$i+5]=$ultimas_8_lineas[5];
-          $aux_qna[$i+6]=$ultimas_8_lineas[6];
-          $aux_qna[$i+7]=$ultimas_8_lineas[7];
-          $aux_qna[$i+8]=$ultimas_8_lineas[8];
+          if($cantidad_preguntas==1){
+          $aux_qnaa[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
+          }else{
+            //dd($aux_qna,$this);
+           $b=0;
+           $c=2;
+           while($b-1<$cantidad_preguntas){
+            if(isset($this->pregunta[$a])==true){
+              if($b<$cantidad_preguntas){
+           $aux_qna[$i+$c]='        '.'"'.$this->pregunta[$a].'",'."\r\n";
+            }else{
+                $aux_qna[$i+$c]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
+                //dd($aux_qna);
+            }
+            }else{
+                //dd($a,$c);
+             $c=$c-1;
+            }
+           $a=$a+1;
+           $b=$b+1;
+           $c=$c+1;
+
+            }
+          //$aux_qna[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
+          $aux_qna[$i+1+$c]=$ultimas_8_lineas[0];
+          $aux_qna[$i+2+$c]=$ultimas_8_lineas[4];
+          $aux_qna[$i+3+$c]=$ultimas_8_lineas[5];
+          $aux_qna[$i+4+$c]=$ultimas_8_lineas[6];
+          $aux_qna[$i+5+$c]=$ultimas_8_lineas[7];
+          $aux_qna[$i+6+$c]=$ultimas_8_lineas[8];
           //dd($aux_qna);
+        }
         }if($global!=false){
           $aux_qna[$i]=str_replace("global",$this->contexto,$aux_qna[$i]);
-        }if($name_vacio!=false){
-            $aux_qna[$i]=str_replace('"id": "",','"id":'.' "'.$nombre_archivo2.'",',$aux_qna[$i]);
+        }if($id_vacio!=false){
+            $aux_qna[$i]=str_replace('"id": "",','"id":'.' "'.$id_qna.'",',$aux_qna[$i]);
             $global=strpos($aux_qna[$i], "global");
           }
         $i=$i+1;
 
       }
-//dd($request,$aux_qna,$aux[6],$numlinea,$ultimas_8_lineas);
 
+
+    //dd($aux_qna);
 
       $contenido=null;
        $contenido="";
        $i=0;
        $tam_array_aux_qna=count($aux_qna);
+       //dd($tam_array_aux_qna,$aux_qna);
       while($i<$tam_array_aux_qna){
-        $contenido .=$aux_qna[$i];
-        $i=$i+1;
+        if(isset($aux_qna[$i])==true){
+                $contenido .=$aux_qna[$i];
+        }
+                $i=$i+1;
       }
-      //dd($request,$aux_qna,$aux_qna[6],$numlinea,$ultimas_8_lineas,$contenido);
-      //if(filesize($path_archivo) > 0){
-      // Se almacena en data el contenido inicial del archivo
-         //$data2 = fread($leer2, filesize($archivo_ejemplo2));
-        //dd($data2);
-        //fclose($leer2);
-        $escribir2 = fopen($path_archivo2, 'w+');
+      //unlink($path_archivo2);
+
+       $escribir2 = fopen($path_archivo2, 'w+');
          fwrite($escribir2, $contenido);
        fclose($escribir2);
+       ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence , 'fecha_caducacion' => $this->fecha_caducacion, 'archivo_qna'=> $nombre_archivo2,'habilitada' => 1]);
 
-       //Fila con el nombre del archivo//
 
-      $leer2 = fopen($path_archivo2, 'rb');
-      //if(filesize($path_archivo) > 0){
-      // Se almacena en data el contenido inicial del archivo
-      //dd(filesize($path_archivo1));
-      $data2_id = fread($leer2, filesize($path_archivo2));
-      //dd($data1);
-      //Se cierra el archivo
-      fclose($leer2);
-
-      $datosnuevos2=null;
-       //Dejando formato adecuado a archivo __qna__ en carpeta intents
-       $patron_id=     '"'.'id'.'":'.' ""';
-       //dd($patron2);
-       $sustitucion_id='"'.'id'.'":'.' "'.$id_qna.'"';
-       //dd($patron1,$sustitucion1);
-       //dd($data1);
-       $datosnuevos2_id = str_replace($patron_id, $sustitucion_id, $data2_id);
-
-       //dd($datosnuevos2_id);
-        //Se abre el archivo para reescribirlo
-      $escribir2_id = fopen($path_archivo2, 'w');
-      //dd($datosnuevos);
-      //Se esccribe en el archivo
-      fwrite($escribir2_id, $datosnuevos2_id);
-      fclose($escribir2_id);
-        //rewind($path_archivo2);
-        $leer2_answer = fopen($path_archivo2, 'r+');
-      //if(filesize($path_archivo) > 0){
-      // Se almacena en data el contenido inicial del archivo
-      //dd(filesize($path_archivo1));
-      $data2_answer = fread($leer2_answer, 2*filesize($path_archivo2));
-      //dd($data1);
-      //Se cierra el archivo
-      fclose($leer2_answer);
-
-       $patron2_answer=  '"es": []';   
-       //dd($patron1);
-       $sustitucion2_answer='"es": ["'.$this->resp.'"]';  
-       //dd(filesize($path_archivo1),filesize($path_archivo11),$data11,$patron2,$sustitucion2);
-       $datosnuevos2_answer = str_replace($patron2_answer, $sustitucion2_answer, $data2_answer);
-        $escribir2_answer = fopen($path_archivo2, 'w+');
-      //dd($datosnuevos);
-      //Se esccribe en el archivo
-      fwrite($escribir2_answer, $datosnuevos2_answer);
-      fclose($escribir2_answer);
-
-      $leer2_question = fopen($path_archivo2, 'rb');
-        $data2_question = fread($leer2_question, 2*filesize($path_archivo2));
-    fclose($leer2_question);
-        //dd($data2_question);
-       $patron2_question='"es":[]';   
-       //dd($patron1);
-       $sustitucion2_question='"es":["'.$this->pregunta[0].'" ]';  
-       //dd(2*filesize($path_archivo2),$data2_question,$patron2_question,$sustitucion2_question);
-       $datosnuevos2_question = str_replace($patron2_question, $sustitucion2_question, $data2_question);
-       //dd($data2_question,$patron2_question,$sustitucion2_question,$datosnuevos2_question);
-        $escribir2_question = fopen($path_archivo2, 'w+');
-      //dd($datosnuevos2_question);
-      //Se esccribe en el archivo
-      fwrite($escribir2_question, $datosnuevos2_question);
-      fclose($escribir2_question);
-      
-      /*$archivo_qna=new Archivo_qna();
-      //dd($randomString.$cadena_final);
-      $archivo_qna->nombre=$randomString.$cadena_final;
-      $archivo_qna->save();
-      $ids_archivos=DB::table('answer')->where('archivo_qna','=',$randomString.$cadena_final)->select('id')->get();
-      foreach($ids_archivos as $id_archivo);*/
-      //dd($id_archivo);
-       //dd($this->habilitada);
-            ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'archivo_qna'=> $nombre_archivo2,'habilitada' => 1]);
-        
-      //$respuesta=new Answers();
-        //$respuesta->nombre=$this->resp;
-        //dd($id_archivo);
-        //$respuesta->id_archivo=DB::table('answer')->max('id');
-       /* $respuesta->archivo_qna=$randomString.$cadena_final;
-        $respuesta->vence=$this->vence;
-        if($request->vence=='No'){
-          $respuesta->fecha_caducacion=null;
-        }elseif($respuesta->vence=='Si'){
-          $respuesta->fecha_caducacion=date('Y-m-d',strtotime($this->fecha_vencimiento));
-        }
-        $respuesta->habilitada=1;
-        $respuesta->save();
-        $answers=DB::table('answer')->where('nombre','=',$this->resp)->get();
-        foreach($answers as $answer);
-        $pregunta=new Question();
-        $pregunta->id_answers=$answer->id;
-        $pregunta->pregunta=$this->pregunta;
-        //$pregunta->habilitada=1;
-        $pregunta->save();*/
-
-      //Se cierra el archivo
-      
-      //return view('qna.archivos_creados',compact('nombre_archivo','nombre_archivo2'));
-
-        }elseif($init_interrogacion==1 and $cerrar_interrogacion==1){
+    }elseif($init_interrogacion==1 and $cerrar_interrogacion==1){
         $cadenaf1 = str_replace("¿", "", $cadena);
         $cadenaf2 = str_replace("?","",$cadenaf1);
         $cadena_final=strtolower($cadenaf2);
          $cadena_final = str_replace(array(' '),array('_'),$cadena_final);
-         //dd($request,$cadena_final);
+         //dd($this,$cadena_final);
         //dd($request,$nombre_archivo);
         $nombre_archivo='__qna__'.$randomString.'_'.$cadena_final.'.json';
         $nombre_archivo2=$randomString.'_'.$cadena_final.'.json';
         $id_qna=$randomString.'_'.$cadena_final;
-        
+        $name_qna='__qna__'.$randomString.$cadena_final;
 
         $path_archivo1=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/intents/".$nombre_archivo);
         //dd($path_archivo1);
@@ -573,7 +473,7 @@ class CrearPregunta extends Component
    while($i<$tam){
     
     //Se van abriendo cada uno de los archivos de la carpeta hasta que abre todos los archivos de la carpeta
-    $path_archivo=("C:/Users/LI/Desktop/chtbtICI/public/".$res[$i]["Nombre"]);
+    $path_archivo=public_path($res[$i]["Nombre"]);
     $pos = strpos($path_archivo, $cadena_final);
     //dd($pos);
     array_push($vector_substring,$pos);
@@ -589,163 +489,234 @@ class CrearPregunta extends Component
         //dd($pos);
         $i=$tam;
     }
-
       //dd($datosnuevos);
       //Se le suma uno a $i y se abre el siguiente archivo siempre y cuando $i< la cantidad de archivos en esta carpeta
     $i=$i+1;
     //print_r($i);
    //}
   }
-  //dd($vector_substring);
-        
-        
-        $archivo_ejemplo1="C:/Users/LI/Desktop/chtbtICI/public/__qna__intents_prueba.txt";
+  $archivo_ejemplo1="C:/Users/LI/Desktop/chtbtICI/public/__qna__intents_prueba.txt";
         $archivo_ejemplo2="C:/Users/LI/Desktop/chtbtICI/public/qna__qna_prueba.txt";
 
         $leer1 = fopen($archivo_ejemplo1, 'r+');
-      //if(filesize($path_archivo) > 0){
-      // Se almacena en data el contenido inicial del archivo
-         $data1 = fread($leer1, filesize($archivo_ejemplo1));
-        //dd($data1);
+        $numlinea=0;
+        while ($linea = fgets($leer1)){
+        //echo $linea.'<br/>';
+            $aux[] = $linea;    
+             $numlinea++;
+        }
         fclose($leer1);
-        $escribir1 = fopen($path_archivo1, 'w+');
-         fwrite($escribir1, $data1);
-       fclose($escribir1);
+      //dd($this,$aux,$numlinea);
+      $ultimas_4_lineas=array();
+        $ultimas_4_lineas[0]="    ]\r\n";
+        $j=1;
+        $i=$numlinea-3;
+      while($i<$numlinea){
+           $ultimas_4_lineas[$j]=$aux[$i];
+           $j=$j+1;
+          $i=$i+1;
+      }
+       //dd($this,$aux,$numlinea,$ultimas_4_lineas);
+      $i=0;
+      $a=0;
+      while($i<$numlinea){
+        $buscar_utterances=strpos($aux[$i],'"utterances": {');
+        $buscar_es_pregunta=strpos($aux[$i+1],'"es": []');
+         $buscar_es_llave=strpos($aux[$i+2],'},');
+         $global=strpos($aux[$i], "global");
+         $name_vacio=strpos($aux[$i],'"name": "",');
+        if($buscar_utterances!=false and $buscar_es_pregunta!=false and $buscar_es_llave!=false){
+          //dd($buscar_utterances,$buscar_es_pregunta,$buscar_es_llave,$i,$this,$aux);
+          $aux[$i+1]='      '.'"'.'es'.'":'." [\r\n";
+          //dd($aux);
+          if($cantidad_preguntas==1){
+                $aux[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
+                dd($aux);
+          }else{
+           $b=0;
+           $c=2;
+           while($b-1<$cantidad_preguntas){
+            if(isset($this->pregunta[$a])==true){
+              if($b<$cantidad_preguntas){
+           $aux[$i+$c]='        '.'"'.$this->pregunta[$a].'",'."\r\n";
+            }else{
+                $aux[$i+$c]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
+            }
+            $a=$a+1;
+            $b=$b+1;
+            }else{
+                //dd($a,$c);
+             $c=$c-1;
+            }
+           
+           
+           $c=$c+1;
 
-      //Fila con el nombre del archivo//
+            }
+          $aux[$i+$c]=$ultimas_4_lineas[0];
+          $aux[$i+1+$c]=$ultimas_4_lineas[1];
+          array_push($aux,$ultimas_4_lineas[2]);
+          array_push($aux,$ultimas_4_lineas[3]);
+          dd($aux,$cantidad_preguntas,$this->pregunta);
+        }
+    }if($global!=false){
+          $aux[$i]=str_replace("global",$this->contexto,$aux[$i]);
+        }if($name_vacio!=false){
+            $aux[$i]=str_replace('"name": "",','"name":'.' "'.$name_qna.'",',$aux[$i]);
+        /*elseif($aux[$i]=='"utterances": {' and $aux[$i+1]=='"es": [' and $aux[$i+2]!='},'){
+          $aux[$i+1]='"es": [';
+          $aux[$i+2]='       "'.$this->pregunta.'"';
+          $aux[$i+3]=']';
+        }*/
+        //dd($aux);
+      }
+       
 
-      $leer1 = fopen($path_archivo1, 'r+');
+       $i=$i+1;         
+    }
+
+    dd($aux,1);
+
+       $contenido="";
+       $i=0;
+       $tam_array_aux=count($aux);
+      while($i<$tam_array_aux){
+        $contenido .=$aux[$i];
+        $i=$i+1;
+      }
+      //unlink($path_archivo);
+
+       $escribir = fopen($path_archivo, 'w+');
+         fwrite($escribir, $contenido);
+       fclose($escribir);
+      //dd($this,$aux,$aux[6],$numlinea,$ultimas_4_lineas,$contenido);
       //if(filesize($path_archivo) > 0){
       // Se almacena en data el contenido inicial del archivo
-      //dd(filesize($path_archivo1));
-      $data1 = fread($leer1, filesize($path_archivo1));
-      //dd($data1);
-      //Se cierra el archivo
-      fclose($leer1);
-
-       //Dejando formato adecuado a archivo __qna__ en carpeta intents
-       $patron1=     '"'.'name'.'":'.' ""'.',';
-       //dd($patron);
-       $sustitucion1='"'.'name'.'":'.' "'.$nombre_archivo.'"'.',';
-       //dd($patron1,$sustitucion1);
-       //dd($data1);
-       $datosnuevos1 = str_replace($patron1, $sustitucion1, $data1);
-
-       //dd($datosnuevos11);
-        //Se abre el archivo para reescribirlo
-      $escribir1 = fopen($path_archivo1, 'w');
-      //dd($datosnuevos);
-      //Se esccribe en el archivo
-      fwrite($escribir1, $datosnuevos1);
-      fclose($escribir1);
-
-
-  
-      $path_archivo11=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/intents/".$nombre_archivo);
-      $leer11 = fopen($path_archivo11, 'rb');
-      //dd($leer11,$path_archivo1);
-      //if(filesize($path_archivo) > 0){
-      // Se almacena en data el contenido inicial del archivo
-      //NO TOMA TODOS LOS CARACTERES DE MANERA CORRECTA   
-      //                      AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII REVISAAR
-      //dd(filesize($path_archivo11));
-      $data11 = fread($leer11, 2*filesize($path_archivo11));  //Filesize no me entrega el tamaño actual del archivo, no se bien por que, pero al multiplicarlo por 2, consigo tomar todos los caracteres del archivo, y no solo hasta utterances.
-      //dd($data11);
-      //Se cierra el archivo
-      //dd($data11);
-      fclose($leer11);
-
-      //dd($data1);
-      $patron2=     '"es":'.' ['.']';
-       //dd($patron1);
-       $sustitucion2='"es":'.' ["'.$this->pregunta.'"]';
-       //dd(filesize($path_archivo1),filesize($path_archivo11),$data11,$patron2,$sustitucion2);
-       $datosnuevos11 = str_replace($patron2, $sustitucion2, $data11);
-        $escribir11 = fopen($path_archivo1, 'w+');
-      //dd($datosnuevos);
-      //Se esccribe en el archivo
-      fwrite($escribir11, $datosnuevos11);
-      fclose($escribir11);
-
-
+         //$data1 = fread($leer1, filesize($archivo_ejemplo1));
+        //dd($data1);
+      
        //CARPETA QNA CREAR ARCHIVO
 
 
         $path_archivo2=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/qna/".$nombre_archivo2);
         $leer2 = fopen($archivo_ejemplo2, 'r+');
-      //if(filesize($path_archivo) > 0){
-      // Se almacena en data el contenido inicial del archivo
-         $data2 = fread($leer2, filesize($archivo_ejemplo2));
-        //dd($data2);
+        $numlinea=0;
+         while ($linea = fgets($leer2)){
+        //echo $linea.'<br/>';
+            $aux_qna[] = $linea;    
+             $numlinea++;
+        }
         fclose($leer2);
-        $escribir2 = fopen($path_archivo2, 'w+');
-         fwrite($escribir2, $data2);
-       fclose($escribir2);
-
-       //Fila con el nombre del archivo//
-
-      $leer2 = fopen($path_archivo2, 'rb');
-      //if(filesize($path_archivo) > 0){
-      // Se almacena en data el contenido inicial del archivo
-      //dd(filesize($path_archivo1));
-      $data2_id = fread($leer2, filesize($path_archivo2));
-      //dd($data1);
-      //Se cierra el archivo
-      fclose($leer2);
-
-      $datosnuevos2=null;
-       //Dejando formato adecuado a archivo __qna__ en carpeta intents
-       $patron_id=     '"'.'id'.'":'.' ""';
-       //dd($patron2);
-       $sustitucion_id='"'.'id'.'":'.' "'.$id_qna.'"';
-       //dd($patron1,$sustitucion1);
-       //dd($data1);
-       $datosnuevos2_id = str_replace($patron_id, $sustitucion_id, $data2_id);
-
-       //dd($datosnuevos2_id);
-        //Se abre el archivo para reescribirlo
-      $escribir2_id = fopen($path_archivo2, 'w');
-      //dd($datosnuevos);
-      //Se esccribe en el archivo
-      fwrite($escribir2_id, $datosnuevos2_id);
-      fclose($escribir2_id);
-        //rewind($path_archivo2);
-        $leer2_answer = fopen($path_archivo2, 'r+');
-      //if(filesize($path_archivo) > 0){
-      // Se almacena en data el contenido inicial del archivo
-      //dd(filesize($path_archivo1));
-      $data2_answer = fread($leer2_answer, 2*filesize($path_archivo2));
-      //dd($data1);
-      //Se cierra el archivo
-      fclose($leer2_answer);
-
-       $patron2_answer=  '"es": []';   
-       //dd($patron1);
-       $sustitucion2_answer='"es": ["'.$this->resp.'"]';  
-       //dd(filesize($path_archivo1),filesize($path_archivo11),$data11,$patron2,$sustitucion2);
-       $datosnuevos2_answer = str_replace($patron2_answer, $sustitucion2_answer, $data2_answer);
-        $escribir2_answer = fopen($path_archivo2, 'w+');
-      //dd($datosnuevos);
-      //Se esccribe en el archivo
-      fwrite($escribir2_answer, $datosnuevos2_answer);
-      fclose($escribir2_answer);
-
-      $leer2_question = fopen($path_archivo2, 'rb');
-        $data2_question = fread($leer2_question, 2*filesize($path_archivo2));
-    fclose($leer2_question);
-        //dd($data2_question);
-       $patron2_question='"es":[]';   
-       //dd($patron1);
-       $sustitucion2_question='"es":["'.$this->pregunta.'" ]';  
-       //dd(2*filesize($path_archivo2),$data2_question,$patron2_question,$sustitucion2_question);
-       $datosnuevos2_question = str_replace($patron2_question, $sustitucion2_question, $data2_question);
-       //dd($data2_question,$patron2_question,$sustitucion2_question,$datosnuevos2_question);
-        $escribir2_question = fopen($path_archivo2, 'w+');
-      //dd($datosnuevos2_question);
-      //Se esccribe en el archivo
-      fwrite($escribir2_question, $datosnuevos2_question);
-      fclose($escribir2_question);
+      //dd($this,$aux,$numlinea);
+      $ultimas_8_lineas=array();
+        $ultimas_8_lineas[0]="    ]\r\n";
+        $j=1;
+        $i=$numlinea-8;
+      while($i<$numlinea){
+           $ultimas_8_lineas[$j]=$aux_qna[$i];
+           $j=$j+1;
+          $i=$i+1;
       }
+       //dd($request,$aux_qna,$numlinea,$ultimas_8_lineas);
+      $i=0;
+      $a=0;
+      $b=0;
+      $c=0;
+      while($i<$numlinea){
+        $buscar_questions=strpos($aux_qna[$i],'"questions": {');
+        $buscar_answers=  strpos($aux_qna[$i],'"answers": {');
+        $buscar_es_corchete=strpos($aux_qna[$i+1],'"es": []');
+        $global=strpos($aux_qna[$i], "global");
+        $id_vacio=strpos($aux_qna[$i],'"id": "",');
+
+        //$buscar_es_corchete_solo=strpos($aux_qna[$i+2],']');
+         $buscar_es_llave=strpos($aux_qna[$i+2],'},');
+         if($buscar_questions!=false){
+          //dd($aux_qna,$i,'buscar_questions es distinto de false',$buscar_questions,$buscar_es_corchete,$buscar_es_llave);
+        }
+        if($buscar_answers!=false and $buscar_es_corchete!=false and $buscar_es_llave!=false){
+          //dd($buscar_utterances,$buscar_es_pregunta,$buscar_es_llave,$i);
+          $aux_qna[$i+1]='      '.'"'.'es'.'":'." [\r\n";
+          $aux_qna[$i+2]='        '.'"'.$this->resp.'"'."\r\n";
+          $aux_qna[$i+3]=$ultimas_8_lineas[0];
+          $aux_qna[$i+4]=$ultimas_8_lineas[1];
+          $aux_qna[$i+5]=$ultimas_8_lineas[2];
+          $aux_qna[$i+6]=$ultimas_8_lineas[3];
+          $aux_qna[$i+7]=$ultimas_8_lineas[4];
+          $aux_qna[$i+8]=$ultimas_8_lineas[5];
+          $aux_qna[$i+9]=$ultimas_8_lineas[6];
+          $aux_qna[$i+10]=$ultimas_8_lineas[7];
+          $aux_qna[$i+11]=$ultimas_8_lineas[8];
+          //dd($aux_qna,$ultimas_8_lineas);
+        }elseif($buscar_questions!=false and $buscar_es_corchete!=false and $buscar_es_llave!=false){
+          $aux_qna[$i+1]='      '.'"'.'es'.'":'." [\r\n";
+          if($cantidad_preguntas==1){
+          $aux_qnaa[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
+          }else{
+            //dd($aux_qna,$this);
+           $b=0;
+           $c=2;
+           while($b-1<$cantidad_preguntas){
+            if(isset($this->pregunta[$a])==true){
+              if($b<$cantidad_preguntas){
+           $aux_qna[$i+$c]='        '.'"'.$this->pregunta[$a].'",'."\r\n";
+            }else{
+                $aux_qna[$i+$c]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
+                //dd($aux_qna);
+            }
+            }else{
+                //dd($a,$c);
+             $c=$c-1;
+            }
+           $a=$a+1;
+           $b=$b+1;
+           $c=$c+1;
+
+            }
+          //$aux_qna[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
+          $aux_qna[$i+1+$c]=$ultimas_8_lineas[0];
+          $aux_qna[$i+2+$c]=$ultimas_8_lineas[4];
+          $aux_qna[$i+3+$c]=$ultimas_8_lineas[5];
+          $aux_qna[$i+4+$c]=$ultimas_8_lineas[6];
+          $aux_qna[$i+5+$c]=$ultimas_8_lineas[7];
+          $aux_qna[$i+6+$c]=$ultimas_8_lineas[8];
+          //dd($aux_qna);
+        }
+        }if($global!=false){
+          $aux_qna[$i]=str_replace("global",$this->contexto,$aux_qna[$i]);
+        }if($id_vacio!=false){
+            $aux_qna[$i]=str_replace('"id": "",','"id":'.' "'.$id_qna.'",',$aux_qna[$i]);
+            $global=strpos($aux_qna[$i], "global");
+          }
+        $i=$i+1;
+
+      }
+
+
+    //dd($aux_qna);
+
+      $contenido=null;
+       $contenido="";
+       $i=0;
+       $tam_array_aux_qna=count($aux_qna);
+       //dd($tam_array_aux_qna,$aux_qna);
+      while($i<$tam_array_aux_qna){
+        if(isset($aux_qna[$i])==true){
+                $contenido .=$aux_qna[$i];
+        }
+                $i=$i+1;
+      }
+      //unlink($path_archivo2);
+
+       $escribir2 = fopen($path_archivo2, 'w+');
+         fwrite($escribir2, $contenido);
+       fclose($escribir2);
+  //dd($vector_substring);
+
+//dd($this,$aux_qna,$aux,$numlinea,$ultimas_8_lineas);
+
+
+        $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
 
         foreach ($this->pregunta as $key => $value) {
             Preguntas::create(['pregunta' => $this->pregunta[$key], 'id_answers' => $registro->id ]);
@@ -755,4 +726,5 @@ class CrearPregunta extends Component
         $this->resetInput();
         session()->flash('message', 'Se ha añadido la pregunta y su respuesta al sistema');
     }
+  }
 }
