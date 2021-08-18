@@ -9,7 +9,7 @@
     </div>
 
   <div class="float-right">
-    <button class="btn btn-danger btn-sm" wire:click="vista_des()">Ver deshabilitadas</button>
+    <button class="btn btn-danger btn-sm" wire:click="vista_hab()">Ver habilitadas</button>
   </div>
     
   <div id="accordion">
@@ -21,7 +21,7 @@
              {{$archivoPreg->nombre}}
             </button>
             <div class="float-right">
-              <button class="btn btn-danger btn-sm" wire:click="habilitada({{ $archivoPreg->id}})">Deshabilitar</button>
+              <button class="btn btn-success btn-sm" wire:click="habilitada({{ $archivoPreg->id }})">Habilitar</button>
             </div>
           </h5>
         </div>

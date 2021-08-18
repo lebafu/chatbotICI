@@ -10,13 +10,29 @@ use Livewire\WithPagination;
 
 class IndexPreguntas extends Component
 {
-	use WithPagination;
+	 use WithPagination;
+   public $hab=1;
 
     public function render()
     {
+      if ($this->hab == 1){
         return view('livewire.index-preguntas', [
-            'archivoPregs' => ArchivoPregunta::orderBy('updated_at', 'desc')->paginate(10),
+            'archivoPregs' => ArchivoPregunta::where('habilitada', 1)->orderBy('updated_at', 'desc')->paginate(10),
         ]);
+      }
+      else{
+        return view('livewire.index-preguntasdeshab', [
+            'archivoPregs' => ArchivoPregunta::where('habilitada', 0)->orderBy('updated_at', 'desc')->paginate(5),
+        ]);
+      } 
+    }
+
+    public function vista_hab(){
+      $this->hab = 1;
+    }
+
+    public function vista_des(){
+      $this->hab = 0;
     }
 
     public function habilitada($id)
