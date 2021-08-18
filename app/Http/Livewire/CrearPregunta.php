@@ -243,31 +243,34 @@ class CrearPregunta extends Component
           //dd($aux);
           if($cantidad_preguntas==1){
                 $aux[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
-                dd($aux);
+                //dd($aux);
           }else{
+             //dd($aux);
            $b=0;
            $c=2;
-           while($b-1<$cantidad_preguntas){
+           while($b<$cantidad_preguntas){
             if(isset($this->pregunta[$a])==true){
-              if($b<$cantidad_preguntas){
+              if($b+1<$cantidad_preguntas){
            $aux[$i+$c]='        '.'"'.$this->pregunta[$a].'",'."\r\n";
             }else{
+                //dd($aux,$b);
                 $aux[$i+$c]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
             }
+
+            $b=$b+1;
             }else{
                 //dd($a,$c);
              $c=$c-1;
             }
+           //dd($aux,$this->pregunta,$a,$b,$c);
            $a=$a+1;
-           $b=$b+1;
            $c=$c+1;
-
             }
           $aux[$i+$c]=$ultimas_4_lineas[0];
           $aux[$i+1+$c]=$ultimas_4_lineas[1];
           array_push($aux,$ultimas_4_lineas[2]);
           array_push($aux,$ultimas_4_lineas[3]);
-          //dd($aux);
+          //dd($aux,$cantidad_preguntas,$this->pregunta);
         }
     }if($global!=false){
           $aux[$i]=str_replace("global",$this->contexto,$aux[$i]);
@@ -285,7 +288,7 @@ class CrearPregunta extends Component
        $i=$i+1;         
     }
 
-    dd($aux);
+    //dd($aux);
 
        $contenido="";
        $i=0;
@@ -362,8 +365,7 @@ class CrearPregunta extends Component
           if($cantidad_preguntas==1){
           $aux_qnaa[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
           }else{
-            //dd($aux_qna,$this);
-           $b=0;
+            $b=0;
            $c=2;
            while($b-1<$cantidad_preguntas){
             if(isset($this->pregunta[$a])==true){
@@ -531,33 +533,40 @@ class CrearPregunta extends Component
           //dd($aux);
           if($cantidad_preguntas==1){
                 $aux[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
-                dd($aux);
+                //dd($aux);
           }else{
+            //dd($aux);
            $b=0;
            $c=2;
-           while($b-1<$cantidad_preguntas){
+           while($b<$cantidad_preguntas){
             if(isset($this->pregunta[$a])==true){
-              if($b<$cantidad_preguntas){
+              if($b+1<$cantidad_preguntas){
            $aux[$i+$c]='        '.'"'.$this->pregunta[$a].'",'."\r\n";
             }else{
+                //dd($aux,$b);
                 $aux[$i+$c]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
             }
-            $a=$a+1;
+
             $b=$b+1;
             }else{
                 //dd($a,$c);
              $c=$c-1;
             }
-           
-           
+           //dd($aux,$this->pregunta,$a,$b,$c);
+           $a=$a+1;
            $c=$c+1;
-
+               /* if($a==6){
+            dd($aux,$this->pregunta,$a,$b,$c,$cantidad_preguntas);
+        }*/
+        /*if($b==$cantidad_preguntas){
+                    dd($b,$cantidad_preguntas,$aux,$i,$c);
+                }*/
             }
           $aux[$i+$c]=$ultimas_4_lineas[0];
           $aux[$i+1+$c]=$ultimas_4_lineas[1];
           array_push($aux,$ultimas_4_lineas[2]);
           array_push($aux,$ultimas_4_lineas[3]);
-          dd($aux,$cantidad_preguntas,$this->pregunta);
+          //dd($aux,$cantidad_preguntas,$this->pregunta);
         }
     }if($global!=false){
           $aux[$i]=str_replace("global",$this->contexto,$aux[$i]);
@@ -575,7 +584,7 @@ class CrearPregunta extends Component
        $i=$i+1;         
     }
 
-    dd($aux,1);
+    //dd($aux,1);
 
        $contenido="";
        $i=0;
