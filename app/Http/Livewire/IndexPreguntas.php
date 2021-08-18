@@ -228,9 +228,9 @@ class IndexPreguntas extends Component
 
 
       //Envio en la variable datos la información de las atblas questions y answer mediante el join.
-         $datos=DB::table('answer')->join('questions','answer.id','=','questions.id_answers')->select('questions.*', 'answer.nombre','answer.habilitada')->paginate(7);
+     //    $datos=DB::table('answer')->join('questions','answer.id','=','questions.id_answers')->select('questions.*', 'answer.nombre','answer.habilitada')->paginate(7);
     //dd($datos);
-      return view('qna.index',compact('datos'));
+    //  return view('qna.index',compact('datos'));
       //dd($qna);
     }
 }
