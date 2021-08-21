@@ -23,7 +23,7 @@
                     <x-jet-nav-link href="{{ route('qna_index') }}" :active="request()->routeIs('qna_index')">
                         {{ __('QnA') }}
                     </x-jet-nav-link>
-                    <x-jet-nav-link href="{{ route('qna.index_preguntas_sin_respuestas') }}" :active="request()->routeIs('qna.index_preguntas_sin_respuestas')">
+                    <x-jet-nav-link href="{{ route('index_preguntas_sugeridas') }}" :active="request()->routeIs('index_preguntas_sugeridas')">
                         {{ __('Q_sin_A') }}
                     </x-jet-nav-link>
                     <x-jet-nav-link href="{{ route('index_comentarios') }}" :active="request()->routeIs('index_comentarios')">

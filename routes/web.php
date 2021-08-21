@@ -25,7 +25,7 @@ Route::get('/home', function () {
 Route::view('/retroalimentacion','retroalimentacion')->name('retroalimentacion');
 Route::view('/qna_index','qna.qna_name_index')->name('qna_index');
 Route::view('/index_comentarios','comentarios.index')->name('index_comentarios');
-
+Route::view('/index_preguntas_sugeridas','qna.index_preguntas_sin_respuestas')->name('index_preguntas_sugeridas');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
@@ -47,10 +47,3 @@ Route::get('/qna_habilitada{id}', 'QnAController@habilitada')->name('qna.habilit
 Route::put('/actualizarnlu{nlu_question}','IntentsController@nlu_update')->name('intents.nlu_update');
 Route::put('/actualizarqna{nlu_question}','QnAController@update')->name('qna.update');
 Route::post('/qna','QnAController@store')->name('qna.store');
-Route::get('/index_preguntas_sin_respuestas','QnaController@index_preguntas_sin_respuestas')->name('qna.index_preguntas_sin_respuestas');
-
-Route::put('/actualizar_asignar_respuesta{request}','QnAController@update_asignar_respuesta')->name('qna.update_asignar_respuesta');                                                                                       
-Route::put('/answer_input{request}','QnAController@update_asignar_input_respuesta')->name('qna.update_asignar_input_respuesta');
-Route::get('/qna_pregunta_asignada_correctamente','QnaController@update_asignar_respuesta')->name('qna.asignacion_pregunta_exitosa');
-Route::get('/show_mostrar_detalle_pregunta_sin_respuesta/{id}', 'QnaController@show_pregunta_sin_respuesta')->name('qna.show_pregunta_sin_respuesta');
-Route::delete('/eliminarpreguntas_sin_respuestas{tesis}','QnaController@eliminar_pregunta_sin_respuesta')->name('qna.eliminar_pregunta_sin_respuesta');

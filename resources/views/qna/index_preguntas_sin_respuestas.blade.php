@@ -1,62 +1,33 @@
 <x-app-layout>
-         <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+   <style>
+        input[type="text"] {
+           border:none; /* Get rid of the browser's styling */
+           border-bottom:1px solid black; /* Add your own border */
+           padding-bottom: 0px;
+        }
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="http://localhost:3000/assets/modules/channel-web/inject.js"></script>
+        .row-bottom-margin {margin-bottom: -15px;  }
 
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-
-    <!-- Styles -->
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-
+    </style>
 
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Preguntas Sin Respuesta') }}
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
+            {{ __('Preguntas sugeridas por los estudiantes') }}
         </h2>
     </x-slot>
+   
+    @if ($message = Session::get('success'))
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
 
 
-    <table class="table table-bordered center" >
-        <tr>
-            <th>ID</th>
-            <th>Pregunta</th>
-            <th>Acción</th>
-        </tr>
-        @foreach ($datos as $dato)
-        <tr>
-            <td>{{ $dato->id}}</td>
-            <td>{{ $dato->pregunta_sin_respuesta}}</td>
-            <td>
-            <div class="row">
-            <a class="btn btn-primary btn-xs" href="{{route('qna.asignar_respuesta',$dato->id)}}">Existente<span style="color:black"></span></a>
-            <a class="btn btn-primary btn-xs" href="{{route('qna.asignar_answer_input',$dato->id)}}">Nueva<span style="color:black"></span></a>
-             <a class="btn btn-primary btn-xs" href="{{route('qna.show_pregunta_sin_respuesta',$dato->id)}}"><span class="far fa-eye" style="color:black"></span></a>  
-            <form action="{{ route('qna.eliminar_pregunta_sin_respuesta', $dato->id)}}" method="POST">
-          <button type="submit" class="btn btn-danger"><span class="fas fa-trash" style="color:black"></span>
-           {{ method_field('DELETE') }}
-           {{ csrf_field() }}
-            </button>
-        </form>
-           </div>
-           </td>
-        </tr>
-        @endforeach
-    </table>
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            @livewire('index-preg-sugeridas')   
+        </div>
+    </div>
 
-
-{{$datos->links()  }}
 </x-app-layout>
-
-

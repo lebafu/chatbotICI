@@ -16,17 +16,7 @@
 
     <div class="form-row">
       <div class="form-group col-md-7">
-          <div class="row">
-               <div class="form-group col-md-10">
-                        <b><label for="contexto">Seleccionar Contexto:</label></b>
-                            <br>
-                            <select wire:model="contexto" name="contexto">
-                                <option value="global">global</option>
-                                <option value="regular">regular</option>
-                                <option value="egresado">egresado</option>
-                            </select>
-                          </br>
-                      </div>
+          <div class="row row-bottom-margin">
             <div class="form-group col-md-10">
                   <label for="preguntas"><b>Preguntas que desee agregar (requerido):</b></label>
                   <input wire:model="pregunta.0" type="text" class="form-control" name="preguntas"></input>
@@ -36,9 +26,9 @@
             </div>
           </div>
           @foreach($inputs as $key => $value)
-            <div class="row">
+            <div class="row row-bottom-margin">
               <div class="form-group col-md-10">
-                  <input wire:model="pregunta.{{ $value }}" type="text" rows="4" class="form-control" name="preguntas"></input>
+                  <input wire:model="pregunta.{{ $value }}" type="text" class="form-control" name="preguntas"></input>
               </div>
               <div class="form-group col-md-1">
                   <button class="btn btn-danger btn-sm" wire:click="remove({{$key}})">X</button>
@@ -54,7 +44,17 @@
       <div class="row">
         <div class="form-group col-md-12">
           <label for="Respuesta"><b>Respuesta (requerido):</b></label>
-          <input wire:model="resp" type="text" class="form-control" placeholder="Respuesta:">
+          <textarea wire:model="resp" type="text" rows="4" class="form-control" placeholder="Respuesta:"></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label for="contexto"><b>Contexto:</b></label>              
+            <select wire:model="contexto" name="contexto">
+              <option value="global">Global: para todos los usuarios</option>
+              <option value="regular">Regular: Solo alumnos en estado regular</option>
+              <option value="egresado">Egresado: Solo alumnos egresados</option>
+            </select>
         </div>
       </div>
       <div class="row">
