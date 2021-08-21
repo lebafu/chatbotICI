@@ -11,7 +11,7 @@
   <div class="float-right">
     <button class="btn btn-danger btn-sm" wire:click="vista_des()">Ver deshabilitadas</button>
   </div>
-    
+
   <div id="accordion">
     @foreach ($archivoPregs as $archivoPreg)
       <div class="card">

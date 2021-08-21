@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class CrearPregunta extends Component
 {
-  public $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea,$contexto;
+  public $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea, $contexto;
     public $inputs = [];
     public $i = 1;
 
