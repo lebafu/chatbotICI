@@ -40,6 +40,7 @@ class CrearPregsugerencias extends Component
         $this->nombre = null;
         $this->email = null;
         $this->pregunta_sin_respuesta = null;
+        $this->i = 1;
     }
 
     public function store()

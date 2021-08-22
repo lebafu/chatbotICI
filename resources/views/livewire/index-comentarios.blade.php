@@ -34,10 +34,3 @@
     {{ $comentarios->links() }}
   </div>
 </div>
-
-
-
-
-
-
-

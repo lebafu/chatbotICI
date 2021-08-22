@@ -11,24 +11,20 @@ use Illuminate\Http\Request;
 
 class EditarPregunta extends Component
 {
-	public $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea, $contexto;
+	public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea, $contexto;
     public $inputs = [];
     public $i = 1;
     public $archivoPreg;
 
     public function render()
     {
-    	$pregeditar = ArchivoPregunta::findOrFail($this->archivoPreg->id);
-     //   $this->id = $pregunta->id;
-        $this->resp = $pregeditar->resp;
-        $this->vence = $pregeditar->vence;
-        $this->fecha_caducacion = $pregeditar->fecha_caducacion;
-        $this->archivo_qna = $pregeditar->archivo_qna;
-        $this->habilitada = $pregeditar->habilitada;
-        $this->pregunta = $pregeditar->pregunta;
-        $this->contexto = $pregeditar->contexto;
-        $this->id_foranea = $pregeditar->id_foranea;
         return view('livewire.editar-pregunta');
+    }
+
+    public function mount()
+    {
+    	$pregeditar = ArchivoPregunta::findOrFail($this->archivoPreg->id);
+    	$this->edit($pregeditar->id);
     }
 
     public function add($i)
@@ -56,33 +52,29 @@ class EditarPregunta extends Component
 
     public function edit($id)
     {
-        $pregunta = ArchivoPregunta::findOrFail($this->archivoPreg->$id);
-        $this->id = $id;
-        $this->resp = $pregunta->resp;
-        $this->vence = $pregunta->vence;
-        $this->fecha_caducacion = $pregunta->fecha_caducacion;
-        $this->archivo_qna = $pregunta->archivo_qna;
-        $this->habilitada = $pregunta->habilitada;
-        $this->pregunta = $pregunta->pregunta;
-        $this->contexto = $pregunta->contexto;
-        $this->id_foranea = $pregunta->id_foranea;
+    	//dd($id);
+        $pregeditar = ArchivoPregunta::findOrFail($id);
+    //    dd($pregeditar);
+        $this->selected_id = $id;
+        $this->resp = $pregeditar->nombre;
+        $this->vence = $pregeditar->vence;
+        $this->fecha_caducacion = $pregeditar->fecha_caducacion;
+        $this->contexto = $pregeditar->contexto;
     }
 
     public function update()
     {
         $this->validate([
             'selected_id' => 'required|numeric',
-            'name' => 'required|min:5',
-            'email' => 'required|email:rfc,dns'
         ]);
         if ($this->selected_id) {
-            $record = Contactos::find($this->selected_id);
-            $record->update([
-                'name' => $this->name,
-                'email' => $this->email
+            $pregeditar = ArchivoPregunta::find($this->selected_id);
+            $pregeditar->update([
+                'nombre' => $this->resp,
+                'vence' => $this->vence,
+                'fecha_caducacion' => $this->fecha_caducacion,
             ]);
-            $this->resetInput();
-            $this->updateMode = false;
+            session()->flash('message', 'Pregunta actualizada correctamente');
         }
     }
 

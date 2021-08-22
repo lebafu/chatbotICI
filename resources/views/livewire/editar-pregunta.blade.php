@@ -2,9 +2,9 @@
   <div class="panel-body">
 
     <div>
-        @if (session()->has('problema_con_parentesis'))
-            <div class="alert alert-danger">
-                {{ session('problema_con_parentesis') }}
+      @if (session()->has('message'))
+            <div class="alert alert-success">
+                {{ session('message') }}
             </div>
         @endif
     </div>

@@ -16,7 +16,7 @@ class IndexPregSugeridas extends Component
     public function render()
     {
         return view('livewire.index-preg-sugeridas', [
-            'PregSugeridas' => PregSugeridas::orderBy('updated_at', 'desc')->paginate(10),
+            'PregSugeridas' => PregSugeridas::orderBy('updated_at', 'desc')->paginate(3),
         ]);
     }
 

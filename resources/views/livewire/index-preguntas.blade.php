@@ -35,6 +35,6 @@
         </div>
       </div>
     @endforeach
-    {{ $archivoPregs->links() }}
   </div>
+ {{ $archivoPregs->links() }}
 </div>
