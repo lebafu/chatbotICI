@@ -12,7 +12,7 @@
                 {{ session('problema_con_parentesis') }}
             </div>
         @endif
-    </div>
+    </div>    
 
     <div class="form-row">
       <div class="form-group col-md-7">
@@ -43,8 +43,8 @@
     <div class="form-group col-md-5">
       <div class="row">
         <div class="form-group col-md-12">
-          <label for="Respuesta"><b>Respuesta (requerido):</b></label>
-          <textarea wire:model="resp" type="text" rows="4" class="form-control" placeholder="Respuesta:"></textarea>
+          <label for="resp"><b>Respuesta (requerido):</b></label>
+          <textarea wire:model="resp" name="resp" id="resp" type="text" rows="4" class="form-control" placeholder="Respuesta:"></textarea>
         </div>
       </div>
       <div class="row">
