@@ -19,8 +19,12 @@ class AgregarPregsugerida extends Component
 
     public function render()
     {
-    	$this->pregunta[0] = $this->PregSugerida->pregunta_sin_respuesta;
         return view('livewire.agregar-pregsugerida');
+    }
+
+    public function mount()
+    {
+        $this->pregunta[0] = $this->PregSugerida->pregunta_sin_respuesta;
     }
 
     public function delete($id)
