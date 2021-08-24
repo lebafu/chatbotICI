@@ -8,12 +8,14 @@ use App\Http\Livewire\Answers;
 use App\Models\Question as Preguntas;
 use App\Http\Livewire\Field;
 use Illuminate\Http\Request;
+use DB;
 
 class EditarPregunta extends Component
 {
 	public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea, $contexto;
+    //public $pregunta=[];
     public $inputs = [];
-    public $i = 1;
+    public $i = 0;
     public $archivoPreg;
 
     public function render()
@@ -24,6 +26,7 @@ class EditarPregunta extends Component
     public function mount()
     {
     	$pregeditar = ArchivoPregunta::findOrFail($this->archivoPreg->id);
+        $preguntas =DB::table('questions')->where('id_answers','=',$this->id)->select('pregunta')->get();
     	$this->edit($pregeditar->id);
     }
 
@@ -54,7 +57,24 @@ class EditarPregunta extends Component
     {
     	//dd($id);
         $pregeditar = ArchivoPregunta::findOrFail($id);
-    //    dd($pregeditar);
+        //dd($preguntas);
+        $preguntas=DB::table('questions')->where('id_answers','=',$id)->select('pregunta')->get();
+        //$this->pregunta=$pregunta->nombre;
+        $cantidad_preguntas=DB::table('questions')->where('id_answers','=',$id)->count();
+        //array_push($this->pregunta,1);
+        //$this->pregunta=array();
+        //dd($this->pregunta,$preguntas);
+        $pregunta=array();
+        for($i=0;$i<$cantidad_preguntas;$i++){
+            array_push($pregunta,$preguntas[$i]->pregunta);
+            
+        }
+        //dd($pregunta);
+        $this->pregunta=$pregunta;
+        //dd($this->pregunta);
+        //dd($this->preguntas,$cantidad_preguntas);
+        //$this->pregunta[$i]->pregunta
+        //dd($pregeditar,$this->pregunta[0]->pregunta);
         $this->selected_id = $id;
         $this->resp = $pregeditar->nombre;
         $this->vence = $pregeditar->vence;
