@@ -29,6 +29,7 @@
                   <button class="btn btn-danger btn-sm" wire:click="remove({{$key}})">X</button>
               </div>
             </div>
+          <input wire:model="pregunta_copy.{{ $value }}" type="hidden" class="form-control" name="pregunta_copy"></input>
           @endforeach
           @error('pregunta.*')
               <p class="text-danger">{{ $message }}</p>
