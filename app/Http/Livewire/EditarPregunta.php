@@ -12,7 +12,7 @@ use DB;
 
 class EditarPregunta extends Component
 {
-	public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea, $contexto;
+	public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea, $contexto,$pregunta_copy;
     //public $pregunta=[];
     public $inputs = [];
     public $i = 0;
@@ -50,6 +50,7 @@ class EditarPregunta extends Component
         $this->archivo_qna = null;
         $this->habilitada = null;
         $this->pregunta = null;
+        $this->pregunta_copy=null;
         $this->id_foranea = null;
     }
 
@@ -71,7 +72,8 @@ class EditarPregunta extends Component
         }
         //dd($pregunta);
         $this->pregunta=$pregunta;
-        //dd($this->pregunta);
+        $this->pregunta_copy=$pregunta;
+        //dd($this->pregunta,$this->pregunta_copy);
         //dd($this->preguntas,$cantidad_preguntas);
         //$this->pregunta[$i]->pregunta
         //dd($pregeditar,$this->pregunta[0]->pregunta);
@@ -87,13 +89,25 @@ class EditarPregunta extends Component
         $this->validate([
             'selected_id' => 'required|numeric',
         ]);
+
+        
         if ($this->selected_id) {
             $pregeditar = ArchivoPregunta::find($this->selected_id);
+            //dd($this->pregunta[0]);
+            $i=0;
+             foreach($this->pregunta_copy as $pregunta_actual){
+                DB::table('questions')->where('pregunta','=',$pregunta_actual)->update(['pregunta'=> $this->pregunta[$i]]);
+                $i=$i+1;
+                //dd($pregunta_actual);
+            }
+            //dd($pregeditar,$this);
             $pregeditar->update([
                 'nombre' => $this->resp,
                 'vence' => $this->vence,
                 'fecha_caducacion' => $this->fecha_caducacion,
             ]);
+
+
             session()->flash('message', 'Pregunta actualizada correctamente');
         }
     }
