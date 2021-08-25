@@ -28,7 +28,7 @@
         <div id="collapse{{$archivoPreg->id}}" class="collapse show" aria-labelledby="heading{{$archivoPreg->id}}" data-parent="#accordion">
           <div class="card-body">
             <br><div class="float-right">
-              @livewire('editar-pregunta', ['archivoPreg' => $archivoPreg])
+              @livewire('editar-pregunta', ['archivoPreg' => $archivoPreg], key($archivoPreg->id))
               Fecha creación: {{date('d/m/Y h:m', strtotime($archivoPreg->updated_at))}}
             </div>
           </div>

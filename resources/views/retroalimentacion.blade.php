@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
+        <style>
+            input[type="textpreg"] {
+               border:none; /* Get rid of the browser's styling */
+               border-bottom:1px solid black; /* Add your own border */
+               padding-bottom: 0px;
+            }
+
+            .row-bottom-margin {margin-bottom: -15px;  }
+            
+        </style>
+
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 

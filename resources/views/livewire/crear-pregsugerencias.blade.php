@@ -30,10 +30,10 @@
             @enderror
           </div>   
     </div>
-    <div class="row">
+    <div class="row row-bottom-margin">
       <div class="form-group col-md-11">
             <label for="preguntas"><b>Preguntas que desee agregar (requerido):</b></label>
-            <input wire:model="pregunta_sin_respuesta.0" type="text" class="form-control" name="preguntas"></input>
+            <input wire:model="pregunta_sin_respuesta.0" wire:keydown.enter="add({{$i}})" type="textpreg" class="form-control" name="preguntas"></input>
       </div>
       <div class="form-group col-md-1">
             @if($i < 10)
@@ -45,9 +45,9 @@
     </div>
 
     @foreach($inputs as $key => $value)
-                <div class="row">
+                <div class="row row-bottom-margin">
                   <div class="form-group col-md-11">
-                      <input wire:model="pregunta_sin_respuesta.{{ $value }}" type="text" rows="4" class="form-control" name="preguntas"></input>
+                      <input wire:model="pregunta_sin_respuesta.{{ $value }}" wire:keydown.enter="add({{$i}})" type="textpreg" class="form-control" name="preguntas"></input>
                       
                   </div>
                   <div class="form-group col-md-1">
@@ -60,7 +60,7 @@
         <p class="text-danger">{{ $message }}</p>
     @enderror
 
-    <div class="form-row justify-content-center">
+    <br><div class="form-row justify-content-center">
         @if(strlen($nombre) > 0 && strlen($email) > 0)
             <button wire:click="store()" class="btn btn-success center">Guardar</button>
         @else

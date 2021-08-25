@@ -26,7 +26,7 @@
         </div>
         <div id="collapse{{$PregSugerida->id}}" class="collapse show" aria-labelledby="heading{{$PregSugerida->id}}" data-parent="#accordion">
           <div class="card-body">
-            @livewire('agregar-pregsugerida', ['PregSugerida' => $PregSugerida])
+            @livewire('agregar-pregsugerida', ['PregSugerida' => $PregSugerida], key($PregSugerida->id))
           </div>
         </div>
       </div>

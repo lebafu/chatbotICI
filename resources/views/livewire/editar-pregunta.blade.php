@@ -14,7 +14,7 @@
           <div class="row row-bottom-margin">
             <div class="form-group col-md-10">
                   <label for="preguntas"><b>Preguntas que desee agregar (requerido):</b></label>
-                  <input wire:model="pregunta.0" type="text" class="form-control" name="preguntas"></input>
+                  <input wire:model="pregunta.0"  wire:keydown.enter="add({{$i}})" type="text" class="form-control" name="preguntas"></input>
             </div>
             <div class="form-group col-md-1">
                   <button class="btn text-white btn-info btn-sm" wire:click="add({{$i}})">Añadir</button>
@@ -23,7 +23,7 @@
           @foreach($inputs as $key => $value)
             <div class="row row-bottom-margin">
               <div class="form-group col-md-10">
-                  <input wire:model="pregunta.{{ $value }}" type="text" class="form-control" name="preguntas"></input>
+                  <input wire:model="pregunta.{{ $value }}"  wire:keydown.enter="add({{$i}})" type="text" class="form-control" name="preguntas"></input>
               </div>
               <div class="form-group col-md-1">
                   <button class="btn btn-danger btn-sm" wire:click="remove({{$key}})">X</button>
@@ -78,4 +78,5 @@
               <button wire:click="update()" class="btn btn-success center" disabled>Actualizar</button>
           @endif
     </div>
+</div>
 </div>
