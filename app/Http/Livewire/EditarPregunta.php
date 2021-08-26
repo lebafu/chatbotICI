@@ -38,8 +38,20 @@ class EditarPregunta extends Component
     }
 
     public function remove($i)
-    {
+    {   
+
+        
+        //dd($this->inputs,$i,$this->inputs[$i],$this,$this->pregunta_copy[$i+1],$question);
+
+        //$question=DB::table('questions')->where('pregunta','=',$this_pregunta[$i+1])->first();
+        
         unset($this->inputs[$i]);
+        if(array_key_exists($i+1,$this->pregunta)){
+        DB::table('questions')->where('pregunta','=',$this->pregunta_copy[$i+1])->delete();
+        
+        session()->flash('message_delete', 'Se ha eliminado Input Correctamente');
+        }
+
     }
 
     public function resetInput()
@@ -93,12 +105,30 @@ class EditarPregunta extends Component
         
         if ($this->selected_id) {
             $pregeditar = ArchivoPregunta::find($this->selected_id);
-            //dd($this->pregunta[0]);
+            $cantidad_preguntas_anterior=count($this->pregunta_copy);
+            $cantidad_preguntas_nueva=count($this->pregunta);
+            dd($this->pregunta,$this->pregunta_copy,$cantidad_preguntas_nueva,$cantidad_preguntas_anterior);
+            if($cantidad_preguntas_anterior<$cantidad_pregunta_nueva){
             $i=0;
              foreach($this->pregunta_copy as $pregunta_actual){
                 DB::table('questions')->where('pregunta','=',$pregunta_actual)->update(['pregunta'=> $this->pregunta[$i]]);
                 $i=$i+1;
                 //dd($pregunta_actual);
+            }
+                    while($i<$cantidad_preguntas_nueva){
+                        DB::table('questions')->insert([
+                            'pregunta' => $this->pregunta[$i],
+                            'id_answers' => $this->selected_id
+                     ]);
+                $i=$i+1;
+                    }
+            }elseif($cantidad_preguntas_anterior==$cantidad_pregunta_nueva){
+                    $i=0;
+             foreach($this->pregunta_copy as $pregunta_actual){
+                DB::table('questions')->where('pregunta','=',$pregunta_actual)->update(['pregunta'=> $this->pregunta[$i]]);
+                $i=$i+1;
+                //dd($pregunta_actual);
+                }
             }
             //dd($pregeditar,$this);
             $pregeditar->update([

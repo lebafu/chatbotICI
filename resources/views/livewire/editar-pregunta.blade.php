@@ -6,6 +6,10 @@
             <div class="alert alert-success">
                 {{ session('message') }}
             </div>
+      @elseif( session()->has('message_delete'))
+          <div class="alert alert-danger">
+                {{ session('message_delete') }}
+          </div>
         @endif
     </div>
 
