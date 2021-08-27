@@ -12,7 +12,7 @@ use DB;
 
 class EditarPregunta extends Component
 {
-	public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea, $contexto,$pregunta_copy;
+	public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea,$contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado;
     //public $pregunta=[];
     public $inputs = [];
     public $i = 0;
@@ -82,7 +82,276 @@ class EditarPregunta extends Component
             array_push($pregunta,$preguntas[$i]->pregunta);
             
         }
-        //dd($pregunta);
+        //dd($pregeditar->archivo_qna);
+        $path_archivo=public_path("botpress12120/data/bots/icibot/qna/".$pregeditar->archivo_qna.".json");
+        //dd($path_archivo);
+             $leer = fopen($path_archivo, 'r+');
+      $numlinea=0;
+      while ($linea = fgets($leer)){
+        //echo $linea.'<br/>';
+           if($numlinea==5){
+            //dd($linea);
+              $this->contexto=substr($linea,7,-2);
+           }    
+             $numlinea++;
+        }
+
+        //dd($this->contexto);
+        $this->nombre=$pregeditar->nombre;
+        $pos=strpos($this->nombre,"builtin_image");
+        //dd($pos);
+        if($pos==false){
+          $pos=0;
+        }else{
+          $pos=1;
+        }
+        $qnas_images=DB::table('qnas_images')->where('id_answer','=',$pregeditar->id)->get();
+        //dd($datos,$answers,$nombre,$qnas_images);
+        foreach($qnas_images as $qna_image);
+         //dd($qna_image);
+        //dd($pos);
+
+        if($qnas_images->isEmpty()){
+          $name_image=null;
+        }else{
+            $this->name_image=$qna_image->nombre_imagen_qna;
+        }
+        //return view('qna.edit',compact('question','answer','pos','name_image'));
+       
+        //Busco si existe el arrchivo .flow.json sacado de la base de datos, si es que no existen respuestas a cierta pregunta,
+        //seguirá abriendo el archivo .flow.json buscando los builtin_text y builtin_image del archivo para mostrarlos por pantalla
+        //sino encuentra el termino flow.json en la tabla answer campo nombre, entonces mostrará el archivo tiene las tipicas respuestas directas.
+        $this->es_archivo_flow=strpos($pregeditar->nombre,"flow.json");
+        //dd($datos,$questions,$answer,$pos,$name_image,$es_archivo_flow);
+        if($this->es_archivo_flow==false){
+           //Les paso los elementos de las consultas a la vista.
+          //dd($question,$answer);
+          //dd($es_archivo_flow);
+          //dd($question,$answer,$pos,$name_image,$es_archivo_flow,$id_primero);
+           //return view('qna.edit',compact('question','answer','pos','name_image','es_archivo_flow','contexto','id_primero'));
+        }else{
+             $path_archivo=public_path("botpress12120/data/bots/icibot/flows/".$pregeditar->nombre);
+          $leer = fopen($path_archivo, 'r+');
+      $numlinea=0;
+      while ($linea = fgets($leer)){
+        //echo $linea.'<br/>';
+            $aux[] = $linea;    
+             $numlinea++;
+        }
+        $i=0;
+        //$encuentra_builtins=array();
+
+        $builtins=array(); //arreglo para guardar todos los builtin image y text en el archivo
+        $todo=array(); //Se almacenará los builtin_image y builtin_text con sus respectivos codigos y ruta de imagen si es que corresponde
+        $builtins_images=array(); //Se guardan los builtin_images
+        $links_imagenes=array(); //Se almacenan los links o rutas de las imagenes
+        $builtins_texts=array();  //Se almacenan los builtin_text
+        $this->nombre_imagen=array(); //Se guardan los nombres de las imagenes.
+        $this->textos=array();
+       $i=0;
+       //Recorremos el archivo linea por linea buscando los nombres de las imagenes.
+         while($i<$numlinea){
+          $encuentra_nombre_imagen=strpos($aux[$i],'condition": "temp['); //En esta linea con este string sabremos que es el nombre de la imagen que se guarda aqui, en esta linea
+        
+        if($encuentra_nombre_imagen!=false){;
+           array_push($this->nombre_imagen,substr($aux[$i],65,-5));  //se recorta la linea encontrada y se almacena el nombre de las imagenes
+           //dd($path_archivo,$aux,$aux[$i],$encuentra_builtins,$builtins,$encuentra_nombre_imagen);
+        }
+
+        $i=$i+1;
+        }
+        $i=0;
+        $j=0;
+        //Se recorre el archivo linea por linea buscando los builtin_text  y builtin_image 
+        while($i<$numlinea){
+          $encuentra_builtins=strpos($aux[$i],"builtin");
+          $encuentra_builtin_image=strpos($aux[$i],"builtin_image");
+          $encuentra_builtin_text=strpos($aux[$i],"builtin_text");
+          if($encuentra_builtins!=false){
+          //dd($path_archivo,$aux,$builtins);
+        if($encuentra_builtin_image!=false){
+                    array_push($builtins,substr($aux[$i],$encuentra_builtins,-3));
+                    array_push($builtins_images,substr($aux[$i],$encuentra_builtin_image,-3));
+
+        }if($encuentra_builtin_text!=false){
+            //dd($this->nombre_imagen);
+                    array_push($this->nombre_imagen, null);
+                    array_push($builtins,substr($aux[$i],$encuentra_builtins,-2));
+                    array_push($builtins_texts,substr($aux[$i],$encuentra_builtin_text,-2));
+
+        }
+      }
+                $i=$i+1;
+        }
+        fclose($leer);
+        $builtins_texts_unique=array_unique($builtins_texts);
+        $builtins_texts=array();
+        $i=0;
+        foreach($builtins_texts_unique as $builtin_text)
+        {
+          $builtins_texts[$i]=$builtin_text;
+          $i=$i+1;
+        }
+        //dd($builtins_texts);
+        $i=0;
+        //dd($path_archivo,$aux,$encuentra_builtins,$builtins);
+        //dd($builtins);
+        $k=0;
+        $path_archivo_image=public_path("botpress12120/data/bots/icibot/content-elements/builtin_image.json");
+        $leer_image = fopen($path_archivo_image, 'r+');
+        $numlinea=0;
+
+        while ($linea = fgets($leer_image)){
+        //echo $linea.'<br/>';
+            $aux_image[] = $linea;    
+             $numlinea++;
+        }
+          $j=0;
+        $tam_array=count($builtins_images);
+        $i=0;
+        //dd($i,$numlinea);
+        //Se procede a recorrer el archivo builtin_image linea por linea buscando mediante el codigo builtin_image-codigo la ruta de la imagen.
+        while($i<$numlinea){
+          $j=0;
+          while($j<$tam_array){
+          $encuentra_builtin_image=strpos($aux_image[$i],$builtins_images[$j]);
+            //dd($encuentra_builtin_image,$aux_image[$i+3]);
+          if($encuentra_builtin_image!=false){
+          $encuentra_coma=strpos($aux_image[$i+3],",");
+          if($encuentra_coma!=false){
+            //dd($encuentra_coma,(substr($aux_image[$i+3])));
+          array_push($links_imagenes,substr($aux_image[$i+3],57,-3));
+          array_push($todo,$builtins_images[$j],"builtin_image",substr($aux_image[$i+3],45,-3));
+          }else{
+            //dd($encuentra_coma,(substr($aux_image[$i+3])));
+            array_push($links_imagenes,substr($aux_image[$i+3],57,-2));
+            array_push($todo,$builtins_images[$j],"builtin_image",substr($aux_image[$i+3],45,-2));
+          }
+                    //dd($path_archivo,$aux,$builtins,$todo);
+        }
+
+        $j=$j+1;
+        }
+        $i=$i+1;
+        }
+
+         fclose($leer_image);
+        $cantidad_imagenes=count($links_imagenes);
+        //dd($links_imagenes,$cantidad_imagenes);
+        //dd($path_archivo,$aux,$encuentra_builtins,$builtins,$builtins_images,$builtins_texts,$path_archivo_image,$aux_image,$links_imagenes,$numlinea);
+            //Se procede a recorrer el archivo builtin_text linea por linea buscando mediante el codigo builtin_text-codigo el respectivo texto de ese codigo.
+
+        $path_archivo_text=public_path("botpress12120/data/bots/icibot/content-elements/builtin_text.json");
+        $leer_text= fopen($path_archivo_text, 'r+');
+        $numlinea=0;
+        while ($linea = fgets($leer_text)){
+        //echo $linea.'<br/>';
+            $aux_text[] = $linea;    
+             $numlinea++;
+        }
+        $j=0;
+        $tam_array=count($builtins_texts);
+        $i=0;
+        //dd($i,$numlinea);
+        while($i<$numlinea){
+          $j=0;
+          while($j<$tam_array){
+          $encuentra_builtin_text=strpos($aux_text[$i],$builtins_texts[$j]);
+            //dd($encuentra_builtin_image,$aux_image[$i+3]);
+          if($encuentra_builtin_text!=false){
+          $encuentra_coma=strpos($aux_text[$i+4],",");
+          //$encuentra_coma1=strpos($aux_text[$i+5],",");
+          if($encuentra_coma!=false){
+            //dd($encuentra_coma,(substr($aux_image[$i+3])));
+          array_push($this->textos,substr($aux_text[$i+4],18,-3));
+          array_push($todo,$builtins_texts[$j],"builtin_text",substr($aux_text[$i+4],18,-3));
+          }else{
+            array_push($this->textos,substr($aux_text[$i+4],18,-3));
+            array_push($todo,$builtins_texts[$j],"builtin_text",substr($aux_text[$i+4],18,-3));
+
+            //array_push($todo,substr($aux_image[$i+4],18,-2));
+          }
+                    //dd($path_archivo,$aux,$builtins);
+        }
+        $j=$j+1;
+        }
+        $i=$i+1;
+        }
+
+          fclose($leer_text);
+        $builtins=array_reverse($builtins);
+          //dd($todo,$builtins);
+         $builtins_unique=array_unique($builtins);
+         $builtins=array();
+         $i=0;
+        foreach($builtins_unique as  $builtin){
+          $builtins[$i]=$builtin;
+          $i=$i+1;
+        }
+        //dd($todo,$builtins);
+        //dd($textos);
+        //Se ordena de acuerdo al builtin de acuerdo a como muestra los mensajes el chatbot, de mannera ordenada, texto imagen respectiva.
+       $this->todo_ordenado=array();
+        $tam_array_builtins=count($builtins);
+        $this->tam_array_todo=count($todo);
+        for($i=0;$i<$tam_array_builtins;$i=$i+1){
+          //dd($todo);
+          for($j=0;$j<$this->tam_array_todo;$j=$j+3){
+            if($builtins[$i]==$todo[$j]){
+              array_push($this->todo_ordenado,$todo[$j],$todo[$j+1],$todo[$j+2]);
+              break;
+            }
+          }
+        }
+
+         //dd($todo,$this->todo_ordenado);
+        //if($this->todo_ordenado[2]=="builtin_text"){
+        //A pesar de  que nombre imagen posee un tamaño mucho menor que todo_ordenado, se agrandará el tamañao de $nombres_imagenes llenandolo de null, y colocando en ciertas posiciones los nobres de las imagenes para usar la misma variable en el conntador de la vista.
+        $nombres_imagenes=array();
+        $j=$this->tam_array_todo-1;
+        //dd($j);
+        $i=0;
+        while($j>=0){
+
+          if(strpos($this->todo_ordenado[$j],".jpg")!=false or strpos($this->todo_ordenado[$j],".png")!=false){
+            array_push($nombres_imagenes,$nombre_imagen[$i]);
+             $i=$i+1;
+          }else{
+            array_push($nombres_imagenes,null);
+          }
+          $j=$j-1;
+         /* if($j==0){
+            dd($nombres_imagenes,$this->tam_array_todo,$this->todo_ordenado);
+          }*/
+        }
+        $nombres_imagenes=array_reverse($nombres_imagenes);
+          //dd($nombres_imagenes,$this->tam_array_todo,$this->todo_ordenado);
+
+        $builtins_texts_unico=array_unique($builtins_texts);
+        $this->tam_array_builtins_texts_unique=count($builtins_texts_unico);
+
+        $i=0;
+        $this->builtins_texts_index_unique=array();
+        foreach($builtins_texts as $builtins_texts_unique){
+          //dd($builtins_texts_unique,$builtins_texts);
+          $this->builtins_texts_index_unique[$i]=$builtins_texts_unique;
+          $i=$i+1;
+        }
+       //dd($aux_text,$builtins,$this->builtins_texts_index_unique,$this->tam_array_builtins_texts_unique,$builtins_images,$path_archivo,$textos,$todo,$es_archivo_flow,$this->tam_array_todo,$this->todo_ordenado,$nombre_imagen,$j,$nombres_imagenes,$nombre_imagen);
+        //}
+        //dd($path_archivo,$aux,$builtins);
+        //}
+        //dd($this->textos);
+        $textos_sin_repetir=array_unique($this->textos);
+        $tam_array_textos_unicos=count($textos_sin_repetir);
+        $i=0;
+        $textos_unicos_index_orden=array();
+        foreach($textos_sin_repetir as $textos_sin_repetir_unico){
+          //dd($builtins_texts_unique,$builtins_texts);
+          $textos_unicos_index_orden[$i]=$textos_sin_repetir_unico;
+          $i=$i+1;
+       }
+        }
         $this->pregunta=$pregunta;
         $this->pregunta_copy=$pregunta;
         //dd($this->pregunta,$this->pregunta_copy);
@@ -93,7 +362,8 @@ class EditarPregunta extends Component
         $this->resp = $pregeditar->nombre;
         $this->vence = $pregeditar->vence;
         $this->fecha_caducacion = $pregeditar->fecha_caducacion;
-        $this->contexto = $pregeditar->contexto;
+        //$this->contexto = $pregeditar->contexto;
+
     }
 
     public function update()
