@@ -12,7 +12,7 @@ use DB;
 
 class EditarPregunta extends Component
 {
-	public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea,$contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado;
+	public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea,$contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado,$pos, $nombre_imagen,$nombres_imagenes;
     //public $pregunta=[];
     public $inputs = [];
     public $i = 0;
@@ -98,18 +98,18 @@ class EditarPregunta extends Component
 
         //dd($this->contexto);
         $this->nombre=$pregeditar->nombre;
-        $pos=strpos($this->nombre,"builtin_image");
-        //dd($pos);
-        if($pos==false){
-          $pos=0;
+        $this->pos=strpos($this->nombre,"builtin_image");
+        //dd($this->pos);
+        if($this->pos==false){
+          $this->pos=0;
         }else{
-          $pos=1;
+          $this->pos=1;
         }
         $qnas_images=DB::table('qnas_images')->where('id_answer','=',$pregeditar->id)->get();
         //dd($datos,$answers,$nombre,$qnas_images);
         foreach($qnas_images as $qna_image);
          //dd($qna_image);
-        //dd($pos);
+        //dd($this->pos);
 
         if($qnas_images->isEmpty()){
           $name_image=null;
@@ -122,12 +122,12 @@ class EditarPregunta extends Component
         //seguirá abriendo el archivo .flow.json buscando los builtin_text y builtin_image del archivo para mostrarlos por pantalla
         //sino encuentra el termino flow.json en la tabla answer campo nombre, entonces mostrará el archivo tiene las tipicas respuestas directas.
         $this->es_archivo_flow=strpos($pregeditar->nombre,"flow.json");
-        //dd($datos,$questions,$answer,$pos,$name_image,$es_archivo_flow);
+        //dd($datos,$questions,$answer,$this->pos,$name_image,$es_archivo_flow);
         if($this->es_archivo_flow==false){
            //Les paso los elementos de las consultas a la vista.
           //dd($question,$answer);
           //dd($es_archivo_flow);
-          //dd($question,$answer,$pos,$name_image,$es_archivo_flow,$id_primero);
+          //dd($question,$answer,$this->pos,$name_image,$es_archivo_flow,$id_primero);
            //return view('qna.edit',compact('question','answer','pos','name_image','es_archivo_flow','contexto','id_primero'));
         }else{
              $path_archivo=public_path("botpress12120/data/bots/icibot/flows/".$pregeditar->nombre);
@@ -306,26 +306,26 @@ class EditarPregunta extends Component
 
          //dd($todo,$this->todo_ordenado);
         //if($this->todo_ordenado[2]=="builtin_text"){
-        //A pesar de  que nombre imagen posee un tamaño mucho menor que todo_ordenado, se agrandará el tamañao de $nombres_imagenes llenandolo de null, y colocando en ciertas posiciones los nobres de las imagenes para usar la misma variable en el conntador de la vista.
-        $nombres_imagenes=array();
+        //A pesar de  que nombre imagen posee un tamaño mucho menor que todo_ordenado, se agrandará el tamañao de $this->nombres_imagenes llenandolo de null, y colocando en ciertas posiciones los nobres de las imagenes para usar la misma variable en el conntador de la vista.
+        $this->nombres_imagenes=array();
         $j=$this->tam_array_todo-1;
         //dd($j);
         $i=0;
         while($j>=0){
 
           if(strpos($this->todo_ordenado[$j],".jpg")!=false or strpos($this->todo_ordenado[$j],".png")!=false){
-            array_push($nombres_imagenes,$nombre_imagen[$i]);
+            array_push($this->nombres_imagenes,$this->nombre_imagen[$i]);
              $i=$i+1;
           }else{
-            array_push($nombres_imagenes,null);
+            array_push($this->nombres_imagenes,null);
           }
           $j=$j-1;
          /* if($j==0){
-            dd($nombres_imagenes,$this->tam_array_todo,$this->todo_ordenado);
+            dd($this->nombres_imagenes,$this->tam_array_todo,$this->todo_ordenado);
           }*/
         }
-        $nombres_imagenes=array_reverse($nombres_imagenes);
-          //dd($nombres_imagenes,$this->tam_array_todo,$this->todo_ordenado);
+        $this->nombres_imagenes=array_reverse($this->nombres_imagenes); 
+          //dd($this->nombres_imagenes,$this->tam_array_todo,$this->todo_ordenado);
 
         $builtins_texts_unico=array_unique($builtins_texts);
         $this->tam_array_builtins_texts_unique=count($builtins_texts_unico);
@@ -337,7 +337,7 @@ class EditarPregunta extends Component
           $this->builtins_texts_index_unique[$i]=$builtins_texts_unique;
           $i=$i+1;
         }
-       //dd($aux_text,$builtins,$this->builtins_texts_index_unique,$this->tam_array_builtins_texts_unique,$builtins_images,$path_archivo,$textos,$todo,$es_archivo_flow,$this->tam_array_todo,$this->todo_ordenado,$nombre_imagen,$j,$nombres_imagenes,$nombre_imagen);
+       //dd($aux_text,$builtins,$this->builtins_texts_index_unique,$this->tam_array_builtins_texts_unique,$builtins_images,$path_archivo,$textos,$todo,$es_archivo_flow,$this->tam_array_todo,$this->todo_ordenado,$this->nombre_imagen,$j,$this->nombres_imagenes,$this->nombre_imagen);
         //}
         //dd($path_archivo,$aux,$builtins);
         //}

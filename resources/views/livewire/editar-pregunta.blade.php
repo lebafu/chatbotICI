@@ -41,7 +41,7 @@
               <p class="text-danger">{{ $message }}</p>
           @enderror
     </div>
-
+  @if($pos==0)
     <div class="form-group col-md-5">
       <div class="row">
         <div class="form-group col-md-12">
@@ -49,6 +49,26 @@
           <textarea wire:model="resp" type="text" rows="4" class="form-control" placeholder="Respuesta:"></textarea>
         </div>
       </div>
+@elseif($pos==1)
+    <div class="form-group col-md-5">
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label for="Respuesta"><b>Respuesta (requerido):</b></label>
+          <textarea wire:model="resp" type="text" rows="4" class="form-control" placeholder="Respuesta:" disabled></textarea>
+        </div>
+      </div>
+       <div>
+            <label for="img" class="negrita">La imagen seleccionada fue:</label>
+            <input name="imagen" type=text class="form-control" value="{{$name_image}}" readonly="readonly" hidden="hidden">
+            <img src="images/bp/{{$name_image}}">
+      </div>
+                       
+        <div>
+          <label>Cambiar Imagen: </label>
+          <input type="file" id="image_nueva" name="image_nueva" class="form-control"/>
+          <div class='text-danger'>{{$errors->first('image_nueva')}}</div>
+      </div>
+     @endif
       <div class="row">
         <div class="form-group col-md-12">
           <label for="contexto"><b>Contexto:</b></label>              
