@@ -13,7 +13,7 @@
         @endif
     </div>
 
-    
+    <form id="uploads" enctype="multipart/form-data" wire:submit.prevent="save">
     <div class="form-row">
       <div class="form-group col-md-7">
           <div class="row row-bottom-margin">
@@ -49,6 +49,7 @@
           <textarea wire:model="resp" type="text" rows="4" class="form-control" placeholder="Respuesta:"></textarea>
         </div>
       </div>
+    </div>
 @elseif($pos==1)
     <div class="form-group col-md-5">
       <div class="row">
@@ -57,6 +58,7 @@
           <textarea wire:model="resp" type="text" rows="4" class="form-control" placeholder="Respuesta:" disabled></textarea>
         </div>
       </div>
+    </div>
        <div>
             <label for="img" class="negrita">La imagen seleccionada fue:</label>
             <input name="imagen" type=text class="form-control" value="{{$name_image}}" readonly="readonly" hidden="hidden">
@@ -112,14 +114,40 @@
           
                            <b>Nota: El término \n representa el salto de línea en el chatbot, si lo cree necesario en la oración no lo elimine.</b>
                             @for($i=0;$i<$tam_array_builtins_texts_unique;$i++)
+                            <input  type="hidden" class="form-control" name="builtins_texts_unique[]" wire:model="builtins_texts_index_unique.{{$i}}" required>
+                            @endfor
+                            
+                            @foreach($todo_ordenado as $key => $value)
+                            @if($key>=2)
+                            @if($todo_ordenado[$key-1]=="builtin_image")
+                            <label for="img" class="negrita">La imagen seleccionada fue:Malla {{$nombres_imagenes[$key]}}</label>
+                            <input   type="hidden" class="form-control" wire:model="nombres_imagenes.{{ $key }}" required>
+                            <img src="images/bp/{{$todo_ordenado[$key]}}"><br>
+                            <input type="text" wire:model="todo_ordenado_copy.{{$key}}" hidden>
+                            <label for="img" class="negrita">Cambiar la imagen:</label>
+                            <input  type="file" class="form-control" wire:model="todo_ordenado.{{$key}}">
+                            @elseif($todo_ordenado[$key-1]=="builtin_text")
+                                <input type="text" class="form-control" wire:model="todo_ordenado.{{$key}}">
+                               
+                            @endif
+                            @endif
+                            @endforeach
+                           <!--   <b>Nota: El término \n representa el salto de línea en el chatbot, si lo cree necesario en la oración no lo elimine.</b>
+
+
+                             
+
+
+
+
+                            @for($i=0;$i<$tam_array_builtins_texts_unique;$i++)
                             <input  id="builtins_texts_index_unique{{$i}}" type="hidden" class="form-control" name="builtins_texts_unique[]" value="{{$builtins_texts_index_unique[$i]}}" required>
                             @endfor
-
                             @for ($i=2; $i<$tam_array_todo;$i=$i+3)
                              @if($todo_ordenado[$i-1]=="builtin_image")
 
                             <label for="img" class="negrita">La imagen seleccionada fue:Malla {{$nombres_imagenes[$i]}}</label>
-                            <input  id="nombres_imagenes{{$i}}" type="hidden" class="form-control" name="imagenes_news[]" value="{{$nombres_imagenes[$i]}}" required>
+                            <input  id="nombres_imagenes{{$i}}" type="hidden" class="form-control" name="imagenes_news[]" value="{{$nombres_imagenes[$i]}}" required><br>
 
                             <img src="images/bp/{{$todo_ordenado[$i]}}">
                             <input id="imagen_actual{{$i}}" name=imagen_actual[] type="text" value="{{$todo_ordenado[$i]}}" hidden>
@@ -133,13 +161,14 @@
 
 
                                     @endif
-                            @endfor
+                            @endfor-->
                          
                         @endif
       </div>
           </div>
-      </div>       
-
+      </div>   
+       
+</form>
 
     <div class="form-row justify-content-center">
           @if(strlen($resp) > 0 && (($vence==1 && $fecha_caducacion!=null) || ($vence!=1)))

@@ -9,10 +9,13 @@ use App\Models\Question as Preguntas;
 use App\Http\Livewire\Field;
 use Illuminate\Http\Request;
 use DB;
+use Livewire\WithFileUploads;
 
 class EditarPregunta extends Component
 {
-	public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea,$contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado,$pos, $nombre_imagen,$nombres_imagenes;
+ use WithFileUploads;
+
+	public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea,$contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado,$todo_ordenado_copy,$pos, $nombre_imagen,$nombres_imagenes;
     //public $pregunta=[];
     public $inputs = [];
     public $i = 0;
@@ -352,6 +355,7 @@ class EditarPregunta extends Component
           $i=$i+1;
        }
         }
+        $this->todo_ordenado_copy=$this->todo_ordenado;
         $this->pregunta=$pregunta;
         $this->pregunta_copy=$pregunta;
         //dd($this->pregunta,$this->pregunta_copy);
@@ -372,7 +376,7 @@ class EditarPregunta extends Component
             'selected_id' => 'required|numeric',
         ]);
 
-        
+        dd($this);
         if ($this->selected_id) {
             $pregeditar = ArchivoPregunta::find($this->selected_id);
             $cantidad_preguntas_anterior=count($this->pregunta_copy);
