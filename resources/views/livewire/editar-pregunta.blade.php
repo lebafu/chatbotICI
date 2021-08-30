@@ -19,6 +19,12 @@
           <div class="row row-bottom-margin">
             <div class="form-group col-md-10">
               @if($es_archivo_flow==false)
+              <div class="col-md-12">
+                    <label for="id"><b>Id:</b></label>
+                                <input id="id" type="number" class="form-control" name="id" wire:model="selected_id" required autocomplete="nombre" autofocus readonly>
+
+                              
+                            </div>
                   <label for="preguntas"><b>Preguntas que desee agregar (requerido):</b></label>
                   <input wire:model="pregunta.0" type="text" class="form-control" name="preguntas"></input>
             </div>
@@ -102,6 +108,13 @@
       <div class="form-group col-md-12">
           <div class="row row-bottom-margin">
             <div class="row">
+
+              <div class="col-md-12">
+                <label for="id"><b>Id:</b>
+                <input id="id" type="number" class="form-control" name="id" wire:model="selected_id" required autocomplete="nombre" autofocus readonly>
+
+                              
+                            </div>
         <div class="form-group col-md-12">
           <label for="contexto"><b>Contexto:</b></label>              
             <select wire:model="contexto" name="contexto">
