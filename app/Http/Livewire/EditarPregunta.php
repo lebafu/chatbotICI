@@ -10,12 +10,14 @@ use App\Http\Livewire\Field;
 use Illuminate\Http\Request;
 use DB;
 use Livewire\WithFileUploads;
+use Illuminate\Http\UploadedFile;
+use File;
 
 class EditarPregunta extends Component
 {
  use WithFileUploads;
 
-	public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea,$contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado,$todo_ordenado_copy,$pos, $nombre_imagen,$nombres_imagenes;
+	public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea,$contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado,$todo_ordenado_copy,$pos,$nombre_imagen,$nombres_imagenes,$imagen_nueva,$imagen_actual,$imagenes_nuevas,$strings,$textos_originales;
     //public $pregunta=[];
     public $inputs = [];
     public $i = 0;
@@ -372,6 +374,7 @@ class EditarPregunta extends Component
 
     public function update()
     {
+
         $this->validate([
             'selected_id' => 'required|numeric',
         ]);
@@ -382,7 +385,7 @@ class EditarPregunta extends Component
       $answers=DB::table('answer')->where('id','=',$this->selected_id)->get();
       foreach($answers as $answer);
       $archivos_qnas=DB::table('answer')->where('id','=',$answer->id)->get();
-      dd($this,$this->todo_ordenado,$questions,$answers,$archivos_qnas,$this->es_archivo_flow);
+      //dd($this,$this->todo_ordenado,$questions,$answers,$archivos_qnas,$this->es_archivo_flow);
 
 
       foreach($archivos_qnas as $archivo_qna);
@@ -390,36 +393,65 @@ class EditarPregunta extends Component
       //dd($request->es_archivo_flow);
       //dd($request,$id,$question,$answer,$archivo_qna->nombre,$datos);
       //dd($question);
+      //dd($this->todo_ordenado);
+      $builtin_tipo=array();
+      $builtin_codigo=array();
+      $this->string=array();
+      $this->textos_originales=array();
+      $this->imagen_actual=array();
+      $this->imagen_nueva=array();
       $es_archivo_flow=$this->es_archivo_flow;
-      if($request->es_archivo_flow!=null){
+      if($es_archivo_flow!=null){
+        $largo_array_todo_ordenado_copy=count($this->todo_ordenado_copy);
+        $a=0;
+        while($a<$largo_array_todo_ordenado_copy){
+          $encontrar_image_jpg=strpos($this->todo_ordenado_copy[$a],"jpg");
+          $encontrar_image_png=strpos($this->todo_ordenado_copy[$a],"png");
+          if($encontrar_image_jpg!=false or $encontrar_image_png!=false){
+              array_push($this->imagen_actual,$this->todo_ordenado_copy[$a]);
+              array_push($this->imagen_nueva,$this->todo_ordenado[$a]);
+          }elseif($a>0 and $this->todo_ordenado[$a-1]=="builtin_text"){
+                array_push($this->string,$this->todo_ordenado[$a]);
+                array_push($this->textos_originales,$this->todo_ordenado_copy[$a]);
+                array_push($builtin_tipo,$this->todo_ordenado_copy[$a-1]);
+                array_push($builtin_codigo,$this->todo_ordenado_copy[$a-2]);
+          }
+          $a=$a+1;
+        }
+        
+        //dd($this->imagen_actual,$this->imagen_nueva);
       //dd($request,$request->file('imagen_nueva'));
-      $imagenes_nuevas=$request->file('imagen_nueva');
+      $imagenes_nuevas=$this->imagen_nueva;
       //dd($request->hasfile('imagen_nueva'));
-      $imagen_actual=$request->imagen_actual;
+      //$imagen_actual=$this->imagen_actual;
       //$imagenes_actuales=$request->file('imagenes_actual');
       $imagen_nueva=array();
+      $imagen_actual=array();
       //$imagen1=$imagenes[1]->getClientOriginalName();
       //$names_imagenes=$request->names_imagenes;
       $i=0;
       //dd($request);
-      if($request->file('image_nueva')!=false){
-      $tam_array_imagen=count($request->file('imagen_nueva'));
-      }
-      else{
+      //dd($imagenes_nuevas,$imagen_actual,$imagen_nueva,$this->file('imagenes_nuevas'));
+      if($this->imagen_nueva!=false){
+      $tam_array_imagen=count($this->imagen_nueva);
+      //dd($tam_array_imagen,$this->imagen_nueva);
+      }else{
         $tam_array_imagen=0;
       }
-      $tam_array_text=count($request->string);
-      $builtins_texts_unique=$request->builtins_texts_unique;
-      $textos_originales=$request->textos_originales;
-      $strings=$request->string;
-
+      $builtins_texts_unique=array();
+      //dd($this->imagenes_nuevas,$tam_array_imagen,$this->string,$this->builtins_texts_index_unique);
+      $tam_array_text=count($this->string);
+      $builtins_texts_unique=$this->builtins_texts_index_unique;
+      $textos_originales=$this->textos_originales;
+      $strings=$this->string;
+       //dd($builtins_texts_unique);
       /*$i=0;
         $unique=array();
         foreach($textos_originales_unique as $textos){
           $textos_inicial[$i]=$textos;
           $i=$i+1;
         }*/
-      $es_archivo_flow=$request->es_archivo_flow;
+      $es_archivo_flow=$this->es_archivo_flow;
       $textos_originales_unique=array_unique($textos_originales);
       $tam_textos_unicos=count($textos_originales_unique);
        $i=0;
@@ -440,18 +472,19 @@ class EditarPregunta extends Component
         //dd($textos_inicial);
       //dd($es_archivo_flow);
       //dd($imagen1,$request,$request->file('imagen'),$tam_array_imagen);
-      //dd($request,$textos_iniciales);
+      //dd($this,$textos_iniciales);
+        //dd($this->imagen_actual,$this->imagen_nueva,$imagenes_nuevas[0]->getfilename());
         $i=0;
-      if($request->file('image_nueva')!=false){
+      if($this->imagen_nueva!=false){
       while($i<$tam_array_imagen){
-         if((!empty($request->file('imagen_nueva')[$i]))==true){
-        array_push($imagen_nueva,$imagenes_nuevas[$i]->getClientOriginalName());
-        array_push($imagen_actual,$request->imagen_actual[$i]);
+         if((!empty($this->imagen_nueva[$i]))==true){
+        array_push($imagen_nueva,$this->imagen_nueva[$i]->getfilename());
+        array_push($imagen_actual,$this->imagen_actual[$i]);
       }
         $i=$i+1;
       }
     }
-      //dd($request,$request->file('imagen'),$request->imagen_actual,$imagen_nueva);
+      //dd($this,$imagen_actual,$imagen_nueva);
       
       $path_chatbot=public_path("botpress12120/data/bots/icibot/media/");
       $path_bp_laravel=public_path("images/bp/");
@@ -523,19 +556,22 @@ class EditarPregunta extends Component
       $i=0;
       //dd($imagen_actual);
       //dd($request->hasfile('imagen_nueva'));
-      if(($request->hasfile('imagen_nueva'))==true){
+      //if(($this->hasfile('imagen_nueva'))==true){
       foreach($imagenes_nuevas as $imagen_nueva){
          //dd($imagenes_nuevas[$i]->getClientOriginalName(),$imagen_nueva);
         //dd(!empty($request->file('imagen_nueva')[1]));
-        if((!empty($request->file('imagen_nueva')[$i]))==true){
+        //dd($this->imagen_nueva[$i]);
+        if((!empty($this->imagen_nueva[$i]))==true){
           //dd(!empty($request->file('imagen_nueva')[1]));
-        $filename=time().$imagen_nueva->getClientOriginalName();
-        //dd($filename);
-         $imagen_actual[$i]=$request->imagen_actual[$i];
-         $imagen_nueva->move(public_path('images/bp/'),$filename);
-        $fichero=public_path().'/images/bp/'.$filename;
+        $filename=time().$imagen_nueva->getClientOriginalExtension();
+        //dd($filename,$imagen_nueva);
+         $imagen_actual[$i]=$this->imagen_actual[$i];
+         $imagen_nueva->storeAs(('images/bp/'),$filename);
+        $fichero_storage=storage_path().'/images/bp/'.$filename;
+        $fichero_public=public_path('/images/bp'.$filename);
       $nuevo_fichero=public_path().'/botpress12120/data/bots/icibot/media/'.$filename;
-      copy($fichero,$nuevo_fichero);
+      copy($fichero_storage,$nuevo_fichero);
+      copy($fichero_storage,$fichero_public);
           unlink($path_chatbot.$imagen_actual[$i]);
           unlink($path_bp_laravel.$imagen_actual[$i]);
           rename($path_chatbot.$filename,$path_chatbot.$imagen_actual[$i]);
@@ -544,7 +580,7 @@ class EditarPregunta extends Component
       $i=$i+1;
   }
   $tam_array_imagen=count($imagen_actual);
-}    
+//}    
     $i=0;
     $names_imagenes=$request->imagenes_news;
     //$tam_array_imagen=count($imagen_actual);
@@ -562,7 +598,7 @@ class EditarPregunta extends Component
         }
         fclose($leer);
     
-     $builtins_texts_unique=$request->builtins_texts_unique;
+     $builtins_texts_unique=$this->builtins_texts_unique;
      $tam_array_builtins_texts_unique=count($builtins_texts_unique);
      //dd($builtins_texts_unique,$tam_array_builtins_texts_unique);
     $i=0;
@@ -751,7 +787,7 @@ $tam=count($res);
     //dd($request,$request->file('imagen_nueva'),$textos_iniciales,$textos_finales,$request->imagen_actual,$imagen_nueva,$names_imagenes,$path_chatbot,$path_bp_laravel,$strings,$textos_originales,$tam_array_text,$aux,$contenido,$tam_array_builtins_texts_unique);
     //dd($textos_iniciales,$textos_finales);
       
-      return view('qna.message',compact('imagen_actual','tam_array_text','strings','textos_originales','tam_array_imagen','es_archivo_flow','tam_array_builtins_texts_unique','names_imagenes','textos_iniciales','textos_finales'));
+      /*return view('qna.message',compact('imagen_actual','tam_array_text','strings','textos_originales','tam_array_imagen','es_archivo_flow','tam_array_builtins_texts_unique','names_imagenes','textos_iniciales','textos_finales'));*/
     }else{
 
       //La ruta del directorio dentro de la carpeta public, que como se dijo anteriormente irá dentro de directorio1
