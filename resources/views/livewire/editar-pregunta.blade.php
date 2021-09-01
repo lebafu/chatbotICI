@@ -1,6 +1,14 @@
 <div>
   <div class="panel-body">
 
+
+    <form id="uploads" enctype="multipart/form-data" wire:submit.prevent="update">
+    <div class="form-row">
+      <div class="form-group col-md-7">
+          <div class="row row-bottom-margin">
+            <div class="form-group col-md-10">
+              @if($es_archivo_flow==false)
+
     <div>
       @if (session()->has('message'))
             <div class="alert alert-success">
@@ -12,13 +20,6 @@
           </div>
         @endif
     </div>
-
-    <form id="uploads" enctype="multipart/form-data" wire:submit.prevent="save">
-    <div class="form-row">
-      <div class="form-group col-md-7">
-          <div class="row row-bottom-margin">
-            <div class="form-group col-md-10">
-              @if($es_archivo_flow==false)
               <div class="col-md-12">
                     <label for="id"><b>Id:</b></label>
                                 <input id="id" type="number" class="form-control" name="id" wire:model="selected_id" required autocomplete="nombre" autofocus readonly>
@@ -104,6 +105,20 @@
       </div>       
     </div> 
      @else
+
+
+    <div>
+      @if (session()->has('message'))
+            <div class="alert alert-success">
+                {{ session('message') }}
+            </div>
+      @elseif( session()->has('message_delete'))
+          <div class="alert alert-danger">
+                {{ session('message_delete') }}
+          </div>
+        @endif
+    </div>
+
      <div class="form-row justify-content-center">
       <div class="form-group col-md-12">
           <div class="row row-bottom-margin">
@@ -127,7 +142,7 @@
           
                            <b>Nota: El término \n representa el salto de línea en el chatbot, si lo cree necesario en la oración no lo elimine.</b>
                             @for($i=0;$i<$tam_array_builtins_texts_unique;$i++)
-                            <input  type="hidden" class="form-control" name="builtins_texts_unique[]" wire:model="builtins_texts_index_unique.{{$i}}" required>
+                            <input  type="hidden" class="form-control" wire:model="builtins_texts_index_unique.{{$i}}" required>
                             @endfor
                             
                             @foreach($todo_ordenado as $key => $value)
@@ -185,9 +200,10 @@
 
     <div class="form-row justify-content-center">
           @if(strlen($resp) > 0 && (($vence==1 && $fecha_caducacion!=null) || ($vence!=1)))
-              <button wire:click="update()" class="btn btn-success center">Actualizar</button>
+               <button type="submit" class="btn btn-success center">Actualizar</button>
           @else
-              <button wire:click="update()" class="btn btn-success center" disabled>Actualizar</button>
+          <button type="submit" class="btn btn-success center" disabled>Actualizar</button>
+           
           @endif
     </div>
 </div>

@@ -477,6 +477,7 @@ class EditarPregunta extends Component
         $i=0;
       if($this->imagen_nueva!=false){
       while($i<$tam_array_imagen){
+        //dd($this->imagen_nueva[$i]->getfilename());
          if((!empty($this->imagen_nueva[$i]))==true){
         array_push($imagen_nueva,$this->imagen_nueva[$i]->getfilename());
         array_push($imagen_actual,$this->imagen_actual[$i]);
@@ -563,15 +564,17 @@ class EditarPregunta extends Component
         //dd($this->imagen_nueva[$i]);
         if((!empty($this->imagen_nueva[$i]))==true){
           //dd(!empty($request->file('imagen_nueva')[1]));
-        $filename=time().$imagen_nueva->getClientOriginalExtension();
-        //dd($filename,$imagen_nueva);
+        $filename=time().$imagen_nueva->getfilename(); 
+        //OJO CON LA RUTA STORAGE/APP/IMAGES/BP E AHI EL PROBLEMA POR QUE ABRE LA RUTA /STORAGE/IMAGES/BP OJOOOO
+        //dd($imagen_nueva->getfilename());
          $imagen_actual[$i]=$this->imagen_actual[$i];
          $imagen_nueva->storeAs(('images/bp/'),$filename);
-        $fichero_storage=storage_path().'/images/bp/'.$filename;
-        $fichero_public=public_path('/images/bp'.$filename);
+        $fichero_storage=storage_path().'/app/images/bp/'.$filename;
+        $fichero_public=public_path('/images/bp/'.$filename);
       $nuevo_fichero=public_path().'/botpress12120/data/bots/icibot/media/'.$filename;
       copy($fichero_storage,$nuevo_fichero);
       copy($fichero_storage,$fichero_public);
+         //dd($path_chatbot,$imagen_actual[$i]);
           unlink($path_chatbot.$imagen_actual[$i]);
           unlink($path_bp_laravel.$imagen_actual[$i]);
           rename($path_chatbot.$filename,$path_chatbot.$imagen_actual[$i]);
@@ -582,7 +585,15 @@ class EditarPregunta extends Component
   $tam_array_imagen=count($imagen_actual);
 //}    
     $i=0;
-    $names_imagenes=$request->imagenes_news;
+    //dd($this->nombres_imagenes);
+    $names_imagenes=array();
+    while($i<count($this->nombres_imagenes)){
+      if($this->nombres_imagenes[$i]!=null){
+          array_push($names_imagenes,$this->nombres_imagenes[$i]);
+    }
+    $i=$i+1;
+  }
+  $i=0;
     //$tam_array_imagen=count($imagen_actual);
     //dd($imagen_actual,$es_archivo_flow,$tam_array_imagen,empty($imagen_actual[$i]),$names_imagenes);
     //dd(!empty($imagen_actual[$i]));
@@ -598,7 +609,7 @@ class EditarPregunta extends Component
         }
         fclose($leer);
     
-     $builtins_texts_unique=$this->builtins_texts_unique;
+     $builtins_texts_unique=$this->builtins_texts_index_unique;
      $tam_array_builtins_texts_unique=count($builtins_texts_unique);
      //dd($builtins_texts_unique,$tam_array_builtins_texts_unique);
     $i=0;
@@ -728,7 +739,7 @@ $tam=count($res);
           $pos=substr($aux_intents[$i],5,-2);
           //dd(substr($aux_intents[3],5,-2));
           if(substr($aux_intents[$i],5,-2)=="global" or substr($aux_intents[$i],5,-2)=="regular" or substr($aux_intents[$i],5,-2)=="egresado"){
-            $aux_intents[$i]=str_replace(substr($aux_intents[$i],5,-2),$request->contexto,$aux_intents[$i]);
+            $aux_intents[$i]=str_replace(substr($aux_intents[$i],5,-2),$this->contexto,$aux_intents[$i]);
           }
         $i=$i+1;
         }
@@ -748,7 +759,7 @@ $tam=count($res);
         $tam_archivo_qna=count($aux_qna);
          while($i<$tam_archivo_qna){
           if(substr($aux_qna[$i],7,-2)=="global" or substr($aux_qna[$i],7,-2)=="regular" or substr($aux_qna[$i],7,-2)=="egresado"){
-            $aux_qna[$i]=str_replace(substr($aux_qna[$i],7,-2),$request->contexto,$aux_qna[$i]);
+            $aux_qna[$i]=str_replace(substr($aux_qna[$i],7,-2),$this->contexto,$aux_qna[$i]);
           }
         $i=$i+1;
         }
@@ -786,7 +797,7 @@ $tam=count($res);
 
     //dd($request,$request->file('imagen_nueva'),$textos_iniciales,$textos_finales,$request->imagen_actual,$imagen_nueva,$names_imagenes,$path_chatbot,$path_bp_laravel,$strings,$textos_originales,$tam_array_text,$aux,$contenido,$tam_array_builtins_texts_unique);
     //dd($textos_iniciales,$textos_finales);
-      
+      session()->flash('message', 'Pregunta actualizada correctamente');
       /*return view('qna.message',compact('imagen_actual','tam_array_text','strings','textos_originales','tam_array_imagen','es_archivo_flow','tam_array_builtins_texts_unique','names_imagenes','textos_iniciales','textos_finales'));*/
     }else{
 
@@ -1528,23 +1539,23 @@ $tam=count($res);
    //$answer->save();
    //$dir2->close();
    } 
-   $imagenes=DB::table('qnas_images')->where('id_answer','=',$question->id_answers)->get();
+  /* $imagenes=DB::table('qnas_images')->where('id_answer','=',$question->id_answers)->get();
    foreach($imagenes as $imagen);
    //dd($imagen,$es_archivo_flow);
    //Actualizamos la base de datos mysql con las respectivas tablas
   //dd($request);
-   DB::table('questions')->where('id', $id)->update(['pregunta' => $request->pregunta]);
+   DB::table('questions')->where('id', $this->selected_id)->update(['pregunta' => $request->pregunta]);
    //$question->pregunta=$request->pregunta;
    //$question->save();
    //dd($request);
-    DB::table('answer')->where('id','=',$question->id_answers)->update(['nombre'=>$request->respuesta,'vence'=>$request->vence,'fecha_caducacion'=>date('Y-m-d',strtotime($request->fecha_vencimiento))]);
+    DB::table('answer')->where('id','=',$question->id_answers)->update(['nombre'=>$request->respuesta,'vence'=>$request->vence,'fecha_caducacion'=>date('Y-m-d',strtotime($request->fecha_vencimiento))]);*/
   $tam_array_imagen=0;
-        if ($this->selected_id) {
+        if ($this->selected_id){
             $pregeditar = ArchivoPregunta::find($this->selected_id);
             $cantidad_preguntas_anterior=count($this->pregunta_copy);
             $cantidad_preguntas_nueva=count($this->pregunta);
-            dd($this->pregunta,$this->pregunta_copy,$cantidad_preguntas_nueva,$cantidad_preguntas_anterior);
-            if($cantidad_preguntas_anterior<$cantidad_pregunta_nueva){
+            //dd($this->pregunta,$this->pregunta_copy,$cantidad_preguntas_nueva,$cantidad_preguntas_anterior);
+            if($cantidad_preguntas_anterior<$cantidad_preguntas_nueva){
             $i=0;
              foreach($this->pregunta_copy as $pregunta_actual){
                 DB::table('questions')->where('pregunta','=',$pregunta_actual)->update(['pregunta'=> $this->pregunta[$i]]);
@@ -1558,7 +1569,7 @@ $tam=count($res);
                      ]);
                 $i=$i+1;
                     }
-            }elseif($cantidad_preguntas_anterior==$cantidad_pregunta_nueva){
+            }elseif($cantidad_preguntas_anterior==$cantidad_preguntas_nueva){
                     $i=0;
              foreach($this->pregunta_copy as $pregunta_actual){
                 DB::table('questions')->where('pregunta','=',$pregunta_actual)->update(['pregunta'=> $this->pregunta[$i]]);
