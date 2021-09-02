@@ -68,13 +68,13 @@
     </div>
        <div>
             <label for="img" class="negrita">La imagen seleccionada fue:</label>
-            <input name="imagen" type=text class="form-control" value="{{$name_image}}" readonly="readonly" hidden="hidden">
+            <input wire:model="name_image" readonly="readonly" hidden="hidden">
             <img src="images/bp/{{$name_image}}">
       </div>
                        
         <div>
           <label>Cambiar Imagen: </label>
-          <input type="file" id="image_nueva" name="image_nueva" class="form-control"/>
+          <input type="file" wire:model="image_nueva" class="form-control"/>
           <div class='text-danger'>{{$errors->first('image_nueva')}}</div>
       </div>
      @endif
@@ -191,19 +191,19 @@
                                     @endif
                             @endfor-->
                          
-                        @endif
+                        
       </div>
           </div>
       </div>   
+    @endif
        
 </form>
 
     <div class="form-row justify-content-center">
-          @if(strlen($resp) > 0 && (($vence==1 && $fecha_caducacion!=null) || ($vence!=1)))
-               <button type="submit" class="btn btn-success center">Actualizar</button>
+         @if(strlen($resp) > 0 && (($vence==1 && $fecha_caducacion!=null) || ($vence!=1)))
+              <button wire:click="update()" class="btn btn-success center">Actualizar</button>
           @else
-          <button type="submit" class="btn btn-success center" disabled>Actualizar</button>
-           
+              <button wire:click="update()" class="btn btn-success center" disabled>Actualizar</button>
           @endif
     </div>
 </div>

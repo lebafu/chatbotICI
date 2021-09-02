@@ -17,7 +17,7 @@ class EditarPregunta extends Component
 {
  use WithFileUploads;
 
-	public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea,$contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado,$todo_ordenado_copy,$pos,$nombre_imagen,$nombres_imagenes,$imagen_nueva,$imagen_actual,$imagenes_nuevas,$strings,$textos_originales;
+	public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea,$contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado,$todo_ordenado_copy,$pos,$nombre_imagen,$nombres_imagenes,$imagen_nueva,$imagen_actual,$imagenes_nuevas,$strings,$textos_originales,$imagen,$image_nueva;
     //public $pregunta=[];
     public $inputs = [];
     public $i = 0;
@@ -101,7 +101,6 @@ class EditarPregunta extends Component
              $numlinea++;
         }
 
-        //dd($this->contexto);
         $this->nombre=$pregeditar->nombre;
         $this->pos=strpos($this->nombre,"builtin_image");
         //dd($this->pos);
@@ -117,7 +116,7 @@ class EditarPregunta extends Component
         //dd($this->pos);
 
         if($qnas_images->isEmpty()){
-          $name_image=null;
+          $this->name_image=null;
         }else{
             $this->name_image=$qna_image->nombre_imagen_qna;
         }
@@ -128,6 +127,7 @@ class EditarPregunta extends Component
         //sino encuentra el termino flow.json en la tabla answer campo nombre, entonces mostrará el archivo tiene las tipicas respuestas directas.
         $this->es_archivo_flow=strpos($pregeditar->nombre,"flow.json");
         //dd($datos,$questions,$answer,$this->pos,$name_image,$es_archivo_flow);
+        //dd($pregunta);
         if($this->es_archivo_flow==false){
            //Les paso los elementos de las consultas a la vista.
           //dd($question,$answer);
@@ -357,6 +357,7 @@ class EditarPregunta extends Component
           $i=$i+1;
        }
         }
+        //dd($pregunta);
         $this->todo_ordenado_copy=$this->todo_ordenado;
         $this->pregunta=$pregunta;
         $this->pregunta_copy=$pregunta;
@@ -382,6 +383,7 @@ class EditarPregunta extends Component
         //dd($this,$this->todo_ordenado);
          $questions=DB::table('questions')->where('id_answers','=',$this->selected_id)->get();
       foreach($questions as $question);
+      
       $answers=DB::table('answer')->where('id','=',$this->selected_id)->get();
       foreach($answers as $answer);
       $archivos_qnas=DB::table('answer')->where('id','=',$answer->id)->get();
@@ -390,10 +392,8 @@ class EditarPregunta extends Component
 
       foreach($archivos_qnas as $archivo_qna);
       foreach($answers as $answer);
-      //dd($request->es_archivo_flow);
-      //dd($request,$id,$question,$answer,$archivo_qna->nombre,$datos);
-      //dd($question);
-      //dd($this->todo_ordenado);
+     
+
       $builtin_tipo=array();
       $builtin_codigo=array();
       $this->string=array();
@@ -909,7 +909,9 @@ $tam=count($res);
              $numlinea++;
         }
         fclose($leer1);
-
+        $k=0;
+        while($k<0){
+        foreach($questions as $question){
         $i=0;
         //dd($aux_intents);
         //dd(substr($aux_intents[8],7,-3));
@@ -919,13 +921,16 @@ $tam=count($res);
         while($i<$tam_archivo_intents){
           //dd($pos,$aux_intents[8],substr($aux_intents[8],7,-3),$question->pregunta,$request->pregunta);
           if(substr($aux_intents[$i],7,-3)==$question->pregunta){
-            $aux_intents[$i]=str_replace($question->pregunta,$request->pregunta,$aux_intents[$i]);
+            $aux_intents[$i]=str_replace($question->pregunta,$this->pregunta,$aux_intents[$i]);
           }
            if(substr($aux_intents[$i],5,-2)=="global" or substr($aux_intents[$i],5,-2)=="regular" or substr($aux_intents[$i],5,-2)=="egresado"){
-            $aux_intents[$i]=str_replace(substr($aux_intents[$i],5,-2),$request->contexto,$aux_intents[$i]);
+            $aux_intents[$i]=str_replace(substr($aux_intents[$i],5,-2),$this->contexto,$aux_intents[$i]);
           }
         $i=$i+1;
         }
+      }
+      $k=$k+1;
+    }
         //dd($aux_intents);
   $path_archivo_qna=public_path("/".$nombre_archivo_qna);
   $leer2 = fopen($path_archivo_qna, 'r+');
@@ -937,6 +942,10 @@ $tam=count($res);
         }
         fclose($leer2);
         //dd($aux_qna);
+        $cantidad_preguntas=count($this->pregunta);
+        $k=0;
+        while($k<0){
+        foreach($questions as $question){
         $i=0;
         $pos1=strpos($aux_qna[$i],$question->pregunta);
         $pos2=strpos($aux_qna[$i],$question->pregunta);
@@ -944,16 +953,20 @@ $tam=count($res);
         while($i<$tam_archivo_qna){
           //dd($aux_qna,substr($aux_qna[10],9,-2));
           if(substr($aux_qna[$i],9,-3)==$question->pregunta){
-            $aux_qna[$i]=str_replace($question->pregunta,$request->pregunta,$aux_qna[$i]);
+            print_r($question->pregunta);
+            $aux_qna[$i]=str_replace($question->pregunta,$this->pregunta[$k],$aux_qna[$i]);
           }
           if(substr($aux_qna[$i],9,-2)==$answer->nombre){
-            $aux_qna[$i]=str_replace($answer->nombre,$request->respuesta,$aux_qna[$i]);
+            $aux_qna[$i]=str_replace($answer->nombre,$this->resp,$aux_qna[$i]);
           }
           if(substr($aux_qna[$i],7,-2)=="global" or substr($aux_qna[$i],7,-2)=="regular" or substr($aux_qna[$i],7,-2)=="egresado"){
-            $aux_qna[$i]=str_replace(substr($aux_qna[$i],7,-2),$request->contexto,$aux_qna[$i]);
+            $aux_qna[$i]=str_replace(substr($aux_qna[$i],7,-2),$this->contexto,$aux_qna[$i]);
           }
           $i=$i+1;
         }
+      }
+      $k=$k+1;
+    }
   //dd($request,$id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"],public_path(),$path_archivo_intents,$path_archivo_qna,$aux_intents,$aux_qna);
 
      unlink($path_archivo_intents);
@@ -990,7 +1003,7 @@ $tam=count($res);
       //dd($request,$request->file('image_nueva'));
         //dd($id);
         //dd($request);
-        $imagen=$request->imagen;
+        $imagen=$this->name_image;
         //dd($imagen);
         //consulto por cual es la tupla editada en la tabla questions
        /*$rules = ['image_nueva' => 'required|image'];
@@ -1001,27 +1014,33 @@ $tam=count($res);
         if ($validator->fails()){
             return redirect('/qna_edit{{$id}}')->withErrors($validator);
         }*/
-        $request->validate(
+        $this->validate(
               [
-              'image_nueva' => 'image',
+              'image_nueva' => 'image|mimes:jpg,bmp,png',
             ]);
-        if(($request->hasfile('image_nueva'))==true){
-          $nombre_imagen=time().$request->file('image_nueva')->getClientOriginalName();
+        //dd($this->image_nueva,$imagen);
+        if((!empty($this->image_nueva))==true){
+          $nombre_imagen=time().$this->image_nueva->getfilename(); 
           //dd($imagen,$nombre_imagen);
-          $request->file('image_nueva')->move('images/bp', $nombre_imagen);
+           $this->image_nueva->storeAs(('images/bp/'),$nombre_imagen);
+           $fichero_storage=storage_path().'/app/images/bp/'.$nombre_imagen;
+        $fichero_storage=storage_path().'/app/images/bp/'.$nombre_imagen;
+        $fichero_public=public_path('/images/bp/'.$nombre_imagen);
+      $nuevo_fichero=public_path().'/botpress12120/data/bots/icibot/media/'.$nombre_imagen;
+      copy($fichero_storage,$nuevo_fichero);
+      copy($fichero_storage,$fichero_public);
           $fichero=public_path().'/images/bp/'.$nombre_imagen;
-          $nuevo_fichero=public_path().'/botpress12120/data/bots/icibot/media/'.$nombre_imagen;
-          copy($fichero,$nuevo_fichero);
-          unlink(public_path()."/images/bp/".$imagen);
-          unlink(public_path()."/botpress12120/data/bots/icibot/media/".$imagen);
-          rename(public_path()."/images/bp/".$nombre_imagen,public_path()."/images/bp/".$imagen);
-          rename(public_path()."/botpress12120/data/bots/icibot/media/".$nombre_imagen,public_path()."/botpress12120/data/bots/icibot/media/".$imagen);
+          unlink(public_path()."/images/bp/".$this->name_image);
+          unlink(public_path()."/botpress12120/data/bots/icibot/media/".$this->name_image);
+          //dd($this->name_image,$this->image_nueva);
+          rename(public_path()."/images/bp/".$nombre_imagen,public_path()."/images/bp/".$this->name_image);
+          rename(public_path()."/botpress12120/data/bots/icibot/media/".$nombre_imagen,public_path()."/botpress12120/data/bots/icibot/media/".$this->name_image);
        }
         
         //dd($id);
         //dd($request);
         //consulto por cual es la tupla editada en la tabla questions
-        $questions=DB::table('questions')->where('id','=',$id)->get();
+        $questions=DB::table('questions')->where('id','=',$this->selected_id)->get();
         //Recorro con el foreach para pasar los datos de esta tabla por separado con los de la otra tabla, sin usar un join
         //ya que question y answer en un inicio tenían el mismo nombre y me lanzaba un problema
         foreach($questions as $question);
@@ -1034,7 +1053,7 @@ $tam=count($res);
       $contador_question=DB::table('questions')->where('id_answers','=',$question->id_answers)->count();
       $question_min_id=DB::table('questions')->where('id_answers','=',$question->id_answers)->select('id')->min('id');
       //dd($question_min_id,$question->id);
-      $cadena=$request->pregunta;
+      $cadena=$this->pregunta[0];
       //dd($cadena);
         $cadena = str_replace(
         array('Á', 'À', 'Â', 'Ä', 'á', 'à', 'ä', 'â', 'ª'),
