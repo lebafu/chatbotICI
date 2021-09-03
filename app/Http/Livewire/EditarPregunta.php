@@ -163,6 +163,8 @@ class EditarPregunta extends Component
     public function edit($id)
     {
     	//dd($id);
+
+      
         $pregeditar = ArchivoPregunta::findOrFail($id);
         //dd($preguntas);
         $preguntas=DB::table('questions')->where('id_answers','=',$id)->select('pregunta')->get();
@@ -468,7 +470,13 @@ class EditarPregunta extends Component
         $this->validate([
             'selected_id' => 'required|numeric',
         ]);
-
+        /*  dd($this->imagen_nueva,$this->imagen_actual);
+        $cantidad_of_imagenes=count($this->imagen_actual);
+        for($i=0;$i<$canntidad_of_imagenes;$i++){
+          if($this->imagen_nueva[$i]==$this->imagen_actual[$i]){
+            $this->imagen_nueva[$i]=null;
+          }
+        }*/
         //dd($this,$this->todo_ordenado);
          $questions=DB::table('questions')->where('id_answers','=',$this->selected_id)->get();
       foreach($questions as $question);
@@ -510,7 +518,7 @@ class EditarPregunta extends Component
         
         //dd($this->imagen_actual,$this->imagen_nueva);
       //dd($request,$request->file('imagen_nueva'));
-      dd($this,$this->todo_ordenado,$questions,$answers,$archivos_qnas,$this->es_archivo_flow);
+      //dd($this,$this->todo_ordenado,$questions,$answers,$archivos_qnas,$this->es_archivo_flow);
       $imagenes_nuevas=$this->imagen_nueva;
       //dd($request->hasfile('imagen_nueva'));
       //$imagen_actual=$this->imagen_actual;
@@ -563,12 +571,12 @@ class EditarPregunta extends Component
       //dd($es_archivo_flow);
       //dd($imagen1,$request,$request->file('imagen'),$tam_array_imagen);
       //dd($this,$textos_iniciales);
-        //dd($this->imagen_actual,$this->imagen_nueva,$imagenes_nuevas[0]->getfilename());
+        //dd($this->imagen_actual,$this->imagen_nueva[0]);
         $i=0;
-      if($this->imagen_nueva!=false){
+       if($this->imagen_nueva!=false){
       while($i<$tam_array_imagen){
-        //dd($this->imagen_nueva[$i]->getfilename());
-         if((!empty($this->imagen_nueva[$i]))==true){
+        //dd($this->imagen_nueva[$i]);
+         if(($this->imagen_nueva[$i]!=$this->imagen_actual[$i])){
         array_push($imagen_nueva,$this->imagen_nueva[$i]->getfilename());
         array_push($imagen_actual,$this->imagen_actual[$i]);
       }
@@ -652,7 +660,7 @@ class EditarPregunta extends Component
          //dd($imagenes_nuevas[$i]->getClientOriginalName(),$imagen_nueva);
         //dd(!empty($request->file('imagen_nueva')[1]));
         //dd($this->imagen_nueva[$i]);
-        if((!empty($this->imagen_nueva[$i]))==true){
+        if($this->imagen_nueva[$i]!=$this->imagen_actual[$i]){
           //dd(!empty($request->file('imagen_nueva')[1]));
         $filename=time().$imagen_nueva->getfilename(); 
         //OJO CON LA RUTA STORAGE/APP/IMAGES/BP E AHI EL PROBLEMA POR QUE ABRE LA RUTA /STORAGE/IMAGES/BP OJOOOO
