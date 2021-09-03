@@ -49,12 +49,101 @@ class EditarPregunta extends Component
         //dd($this->inputs,$i,$this->inputs[$i],$this,$this->pregunta_copy[$i+1],$question);
 
         //$question=DB::table('questions')->where('pregunta','=',$this_pregunta[$i+1])->first();
-        
+        //dd($this->selected_id,$this);
         unset($this->inputs[$i]);
         if(array_key_exists($i+1,$this->pregunta)){
-        DB::table('questions')->where('pregunta','=',$this->pregunta_copy[$i+1])->delete();
-        
-        session()->flash('message_delete', 'Se ha eliminado Input Correctamente');
+        $question=DB::table('questions')->where('pregunta','=',$this->pregunta[$i+1])->first();
+        if($question!=null){
+          //dd($this->selected_id);
+          $archivos=DB::table('answer')->where('id','=',$this->selected_id)->get();
+          foreach($archivos as $archivo);
+          
+
+          $path_archivo1=public_path("botpress12120/data/bots/icibot/qna/".$archivo->archivo_qna.".json");
+
+        //dd($path_archivo);
+             $leer1 = fopen($path_archivo1, 'r+');
+      $numlinea=0;
+      $aux_qna=array();
+      while ($linea = fgets($leer1)){
+        //echo $linea.'<br/>';
+        $encontrar_pregunta_eliminar=strpos($linea,$this->pregunta[$i+1]);
+          if($encontrar_pregunta_eliminar==false){
+          $aux_qna[] = $linea;    
+             $numlinea++;
+          }
+        }
+        fclose($leer1);
+        $path_archivo2=public_path("botpress12120/data/bots/icibot/intents/__qna__".$archivo->archivo_qna.".json");
+
+        //dd($path_archivo);
+             $leer2 = fopen($path_archivo2, 'r+');
+      $numlinea=0;
+      $aux_intents=array();
+      while ($linea = fgets($leer2)){
+        //echo $linea.'<br/>';
+        $encontrar_pregunta_eliminar=strpos($linea,$this->pregunta[$i+1]);
+          if($encontrar_pregunta_eliminar==false){
+          $aux_intents[] = $linea;    
+             $numlinea++;
+          }
+        }
+        fclose($leer2);
+
+        $cantidad_lineas_aux_qna=count($aux_qna);
+        $contador_corchetes_qna=0;
+        for($j=0;$j<$cantidad_lineas_aux_qna;$j++){
+          $encontrar_corchete_cerrado=strpos($aux_qna[$j],']');
+          if($encontrar_corchete_cerrado!=false){
+            $contador_corchetes_qna=$contador_corchetes_qna+1;
+          }
+            if($contador_corchetes_qna==3){
+                $encontrar_coma_qna=strpos($aux_qna[$j-1],',');
+                if($encontrar_coma_qna!=false){
+                  $aux_qna[$j-1]=substr($aux_qna[$i-1],0,-2)."\n";
+                }
+            }
+        }
+
+        $cantidad_lineas_aux_intents=count($aux_intents);
+        $contador_corchetes_intents=0;
+        for($j=0;$j<$cantidad_lineas_aux_intents;$j++){
+          $encontrar_corchete_cerrado=strpos($aux_intents[$j],']');
+          if($encontrar_corchete_cerrado!=false){
+            $contador_corchetes_intents=$contador_corchetes_intents+1;
+          }
+            if($contador_corchetes_intents==2){
+                $encontrar_coma_intents=strpos($aux_intents[$j-1],',');
+                if($encontrar_coma_intents!=false){
+                  $aux_intents[$j-1]=substr($aux_intents[$j-1],0,-2)."\n";
+                }
+            }
+        }
+        //dd($this,$archivo->archivo_qna,$aux_qna,$aux_intents);
+        unlink($path_archivo1);
+        unlink($path_archivo2);
+         $j=0;
+      $contenido="";
+      while($j<$cantidad_lineas_aux_qna){
+        $contenido .=$aux_qna[$j];
+        $j=$j+1;
+      }
+      
+       file_put_contents($path_archivo1,$contenido);
+       $j=0;
+       $contenido="";
+      while($j<$cantidad_lineas_aux_intents){
+        $contenido .=$aux_intents[$j];
+        $j=$j+1;
+      }
+       
+       file_put_contents($path_archivo2,$contenido);
+       //dd($this->pregunta_copy[$i+1]);
+          DB::table('questions')->where('pregunta','=',$this->pregunta_copy[$i+1])->delete();
+          session()->flash('message_delete', 'Se ha eliminado Input elemento de la Base de Datos y Archivos Botpress Correctamente');
+        }else{
+          session()->flash('message_delete', 'Se ha eliminado Input Correctamente');
+        }
         }
 
     }
@@ -421,6 +510,7 @@ class EditarPregunta extends Component
         
         //dd($this->imagen_actual,$this->imagen_nueva);
       //dd($request,$request->file('imagen_nueva'));
+      dd($this,$this->todo_ordenado,$questions,$answers,$archivos_qnas,$this->es_archivo_flow);
       $imagenes_nuevas=$this->imagen_nueva;
       //dd($request->hasfile('imagen_nueva'));
       //$imagen_actual=$this->imagen_actual;
