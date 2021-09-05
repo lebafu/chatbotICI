@@ -994,6 +994,7 @@ $tam=count($res);
   //dd($this,$this->selected_id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"]);
 }
   //dd($this,$this->selected_id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"],public_path());
+ 
   $nombre_archivo_intents=$res[$i]["Nombre"];
   $nombre_archivo_qna=$res2[$j]["Nombre"];
   $path_archivo_intents=public_path("/".$nombre_archivo_intents);
@@ -1135,7 +1136,7 @@ $tam=count($res);
             }
     //dd($aux_intents,$aux_qna);
   //dd($request,$id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"],public_path(),$path_archivo_intents,$path_archivo_qna,$aux_intents,$aux_qna);
-
+      
      unlink($path_archivo_intents);
      unlink($path_archivo_qna);
 
@@ -1165,7 +1166,7 @@ $tam=count($res);
         fwrite($escribir2, $contenido2);
        fclose($escribir2);
         
-
+       
        
         //break;
       //dd($request,$request->file('image_nueva'));
@@ -1182,6 +1183,7 @@ $tam=count($res);
         if ($validator->fails()){
             return redirect('/qna_edit{{$id}}')->withErrors($validator);
         }*/
+        if((empty($this->image_nueva))==false){
         $this->validate(
               [
               'image_nueva' => 'image|mimes:jpg,bmp,png',
@@ -1204,7 +1206,7 @@ $tam=count($res);
           rename(public_path()."/images/bp/".$nombre_imagen,public_path()."/images/bp/".$this->name_image);
           rename(public_path()."/botpress12120/data/bots/icibot/media/".$nombre_imagen,public_path()."/botpress12120/data/bots/icibot/media/".$this->name_image);
        }
-        
+     }   
         //dd($id);
         //dd($request);
         //consulto por cual es la tupla editada en la tabla questions
