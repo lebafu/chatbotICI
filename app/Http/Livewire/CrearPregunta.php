@@ -143,12 +143,12 @@ class CrearPregunta extends Component
           $cadena_final=$cadena;
            $cadena_final = str_replace(array(' '),array('_'),$cadena_final);
            $cadena_final =strtolower($cadena_final);
-           $nombre_archivo='__qna__'.$randomString.'_'.$cadena_final.'.json';
-        $nombre_archivo2=$randomString.'_'.$cadena_final.'.json';
+           $nombre_archivo='__qna__'.$randomString.'_'.$cadena_final;
+        $nombre_archivo2=$randomString.'_'.$cadena_final;
         $name_qna='__qna__'.$randomString.$cadena_final;
         $id_qna=$randomString.'_'.$cadena_final;
            //dd($cadena_final,$nombre_archivo,$nombre_archivo2);
-            $path_archivo1=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/intents/".$nombre_archivo);
+            $path_archivo1=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/intents/".$nombre_archivo.".json");
         //dd($path_archivo1);
          $directorio1="botpress12120/data/bots/icibot/intents";
       
@@ -283,7 +283,7 @@ class CrearPregunta extends Component
        //CARPETA QNA CREAR ARCHIVO
 
 
-        $path_archivo2=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/qna/".$nombre_archivo2);
+        $path_archivo2=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/qna/".$nombre_archivo2.".json");
         $leer2 = fopen($archivo_ejemplo2, 'r+');
         $numlinea=0;
          while ($linea = fgets($leer2)){
@@ -292,7 +292,7 @@ class CrearPregunta extends Component
              $numlinea++;
         }
         fclose($leer2);
-      //dd($this,$aux,$numlinea);
+      //dd($this,$aux_qna,$numlinea);
       $ultimas_8_lineas=array();
         $ultimas_8_lineas[0]="    ]\r\n";
         $j=1;
@@ -302,7 +302,7 @@ class CrearPregunta extends Component
            $j=$j+1;
           $i=$i+1;
       }
-       //dd($request,$aux_qna,$numlinea,$ultimas_8_lineas);
+       //dd($this,$aux_qna,$numlinea,$ultimas_8_lineas);
       $i=0;
       $a=0;
       $b=0;
@@ -379,7 +379,7 @@ class CrearPregunta extends Component
 
 
 
-    //dd($aux_qna);
+    
 
       $contenido=null;
        $contenido="";
@@ -392,6 +392,11 @@ class CrearPregunta extends Component
         }
                 $i=$i+1;
       }
+      $aux_qna[$tam_array_aux_qna]="}"."\r\n";
+      //dd($aux_qna);
+      $contenido.=$aux_qna[$tam_array_aux_qna];
+      //$aux_qna[$tam_array_aux_qna-6]=$aux_qna[$tam_array_aux_qna-6]."\r\n";
+      //dd($aux_qna,$tam_array_aux_qna);
       //unlink($path_archivo2);
 
        $escribir2 = fopen($path_archivo2, 'w+');
@@ -419,12 +424,12 @@ class CrearPregunta extends Component
          $cadena_final = str_replace(array(' '),array('_'),$cadena_final);
          //dd($this,$cadena_final);
         //dd($request,$nombre_archivo);
-        $nombre_archivo='__qna__'.$randomString.'_'.$cadena_final.'.json';
-        $nombre_archivo2=$randomString.'_'.$cadena_final.'.json';
+        $nombre_archivo='__qna__'.$randomString.'_'.$cadena_final;
+        $nombre_archivo2=$randomString.'_'.$cadena_final;
         $name_qna='__qna__'.$randomString.$cadena_final;
         $id_qna=$randomString.'_'.$cadena_final;
 
-        $path_archivo1=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/intents/".$nombre_archivo);
+        $path_archivo1=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/intents/".$nombre_archivo.".json");
         //dd($path_archivo1);
          $directorio1="botpress12120/data/bots/icibot/intents";
       
@@ -571,7 +576,7 @@ class CrearPregunta extends Component
        $i=$i+1;         
     }
 
-    //dd($aux,$nombre_archivo);
+    dd($aux,$nombre_archivo);
 
        $contenido="";
        $i=0;
@@ -594,7 +599,7 @@ class CrearPregunta extends Component
        //CARPETA QNA CREAR ARCHIVO
 
 
-        $path_archivo2=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/qna/".$nombre_archivo2);
+        $path_archivo2=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/qna/".$nombre_archivo2.".json");
         $leer2 = fopen($archivo_ejemplo2, 'r+');
         $numlinea=0;
          while ($linea = fgets($leer2)){
@@ -703,8 +708,8 @@ class CrearPregunta extends Component
         }
                 $i=$i+1;
       }
-      //unlink($path_archivo2);
-
+        $aux_qna[$tam_array_aux_qna]="}"."\r\n";
+        $contenido.=$aux_qna[$tam_array_aux_qna];
        $escribir2 = fopen($path_archivo2, 'w+');
          fwrite($escribir2, $contenido);
        fclose($escribir2);

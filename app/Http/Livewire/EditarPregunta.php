@@ -1102,12 +1102,13 @@ $tam=count($res);
          $ultimas_5_lineas=array();
          //$ultimas_5_lineas[0]=;
         $j=0;
-        $i=$numlinea-5;
+        $i=$numlinea-6;
       while($i<$numlinea){
            $ultimas_5_lineas[$j]=$aux_qna[$i];
            $j=$j+1;
           $i=$i+1;
       }
+      //dd($ultimas_5_lineas);
         $k=0;
         $i=0;
         $j=0;
@@ -1150,7 +1151,7 @@ $tam=count($res);
         }
 
          //dd($aux_intents,$aux_qna,$i);
-         for($j=0;$j<5;$j++){
+         for($j=0;$j<6;$j++){
               $aux_qna[$i]=$ultimas_5_lineas[$j];
               $i=$i+1;
             }
