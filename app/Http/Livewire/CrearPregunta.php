@@ -576,7 +576,7 @@ class CrearPregunta extends Component
        $i=$i+1;         
     }
 
-    dd($aux,$nombre_archivo);
+    //dd($aux,$nombre_archivo);
 
        $contenido="";
        $i=0;
