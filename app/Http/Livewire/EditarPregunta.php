@@ -123,7 +123,7 @@ class EditarPregunta extends Component
               }
             }
         }
-      //dd($this,$archivo->archivo_qna,$aux_qna,$aux_intents,$this->remove);
+      //dd($this,$archivo->archivo_qna,$aux_qna,$aux_intents,$this->remove,$this->pregunta_copy,$this->pregunta,$i);
         unlink($path_archivo1);
         unlink($path_archivo2);
          $j=0;
@@ -142,10 +142,13 @@ class EditarPregunta extends Component
       }
        
        file_put_contents($path_archivo2,$contenido);
-       //dd($this->pregunta_copy[$i+1]);
-          DB::table('questions')->where('pregunta','=',$this->pregunta_copy[$i+1])->delete();
+       //dd($this->pregunta_copy,$i,$this->pregunta_copy,$this->pregunta);
+          DB::table('questions')->where('pregunta','=',$this->pregunta[$i+1])->delete();
+          unset($this->pregunta[$i+1]);
+          $i=$i-1;
           session()->flash('message_delete', 'Se ha eliminado Input elemento de la Base de Datos y Archivos Botpress Correctamente');
         }else{
+          $i=$i-1;
           session()->flash('message_delete', 'Se ha eliminado Input Correctamente');
         }
         }
@@ -227,6 +230,7 @@ class EditarPregunta extends Component
            //Les paso los elementos de las consultas a la vista.
           //dd($question,$answer);
           //dd($es_archivo_flow);
+          //dd($this);
           //dd($question,$answer,$this->pos,$name_image,$es_archivo_flow,$id_primero);
            //return view('qna.edit',compact('question','answer','pos','name_image','es_archivo_flow','contexto','id_primero'));
         }else{
@@ -452,7 +456,7 @@ class EditarPregunta extends Component
           $i=$i+1;
        }
         }
-        //dd($pregunta);
+        //dd($this);
         $this->todo_ordenado_copy=$this->todo_ordenado;
         $this->pregunta=$pregunta;
         $this->pregunta_copy=$pregunta;
@@ -475,7 +479,7 @@ class EditarPregunta extends Component
         /*$this->validate([
             'selected_id' => 'required|numeric',
         ]);*/
-    
+        $this->pregunta_copy=$this->pregunta;
         //dd($this,$this->todo_ordenado);
         if($this->remove!=1){
          $questions=DB::table('questions')->where('id_answers','=',$this->selected_id)->get();
@@ -862,6 +866,7 @@ $tam=count($res);
         $i=$i+1;
         }
   //dd($request,$id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"],public_path(),$path_archivo_intents,$path_archivo_qna,$aux_intents,$aux_qna);
+        //dd($aux_qna,$aux_intents);
 
      unlink($path_archivo_intents);
      unlink($path_archivo_qna);
@@ -995,7 +1000,39 @@ $tam=count($res);
   //dd($this,$this->selected_id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"]);
 }
   //dd($this,$this->selected_id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"],public_path());
- 
+   $tam_pregunta=count($this->pregunta);
+   $tam_pregunta_copy=count($this->pregunta_copy);
+        //dd($this->pregunta,$this);
+      $a=0;
+        $b=0;
+        $copy_pregunta=$this->pregunta;
+        $this->pregunta=null;
+        $this->pregunta=array();
+        //$this->pregunta_copy=array();
+      //dd($this,$copy_pregunta,max($this->inputs));
+        while($b<$tam_pregunta){
+            if(array_key_exists($a,$copy_pregunta)){
+                 array_push($this->pregunta,$copy_pregunta[$a]);
+                 //array_push($this->inputs,$b+1);
+                 $b++;
+            }
+            $a++;
+        }
+        $a=0;
+        $b=0;
+        $this->inputs=array();
+        while($b<$tam_pregunta){
+            if(array_key_exists($a,$copy_pregunta)){
+                 array_push($this->inputs,$b+1);
+                 //array_push($this->inputs,$b+1);
+                 $b++;
+            }
+            $a++;
+        }
+        $a=0;
+        $b=0;
+  $this->pregunta_copy=$this->pregunta;
+ //dd($this->pregunta,$this->pregunta_copy,$this);
   $nombre_archivo_intents=$res[$i]["Nombre"];
   $nombre_archivo_qna=$res2[$j]["Nombre"];
   $path_archivo_intents=public_path("/".$nombre_archivo_intents);
@@ -1007,7 +1044,7 @@ $tam=count($res);
             $aux_intents[] = $linea;    
              $numlinea++;
         }
-
+        //dd($aux_intents);
         $ultimas_4_lineas=array();
         $ultimas_4_lineas[0]="    ]\r\n";
         $j=1;
@@ -1017,7 +1054,7 @@ $tam=count($res);
            $j=$j+1;
           $i=$i+1;
       }
-
+        
         fclose($leer1);
         $k=0;
         $cantidad_preguntas_actual=count($this->pregunta);
@@ -1040,7 +1077,7 @@ $tam=count($res);
               while($pos!=false and $k<$cantidad_preguntas_antes){
                     if($pos_coma!=false){
                     $aux_intents[$i]='       "'.$this->pregunta[$k].'",'."\r\n";
-                    //dd($aux_intents,$this->pregunta_copy[$k],$this->pregunta[$k]);
+                    //dd($aux_intents,$this->pregunta_copy[$k],$this->pregunta[$k],$this);
                     $k=$k+1;
                     $i=$i+1;
                     /*if($i==16){
@@ -1055,23 +1092,19 @@ $tam=count($res);
         $i=$i+1;
         }
         $i=$i-1;
-        //dd($aux_intents,$k,$i,$cantidad_preguntas_actual);
+               
         if($k<$cantidad_preguntas_actual){
-        while($k<$cantidad_preguntas_actual){
-             if($k+1==$cantidad_preguntas_actual){
-             $aux_intents[$i]='       "'.$this->pregunta[$k].'"'."\r\n";
-           }else{
-              $aux_intents[$i]='       "'.$this->pregunta[$k].'",'."\r\n";
-
-           }
-             $i=$i+1;
-             $k=$k+1;
-        }
         $aux_intents[$i]=$ultimas_4_lineas[0];
           $aux_intents[$i+1]=$ultimas_4_lineas[1];
           $aux_intents[$i+2]=$ultimas_4_lineas[2];
           $aux_intents[$i+3]=$ultimas_4_lineas[3];
+          //dd($aux_intents,$k,$i,$cantidad_preguntas_actual,$this->pregunta,$this);
         }else{
+          $aux_intents[$i]=$ultimas_4_lineas[0];
+          $aux_intents[$i+1]=$ultimas_4_lineas[1];
+          $aux_intents[$i+2]=$ultimas_4_lineas[2];
+          $aux_intents[$i+3]=$ultimas_4_lineas[3];
+          //dd($aux_intents,$k,$i,$cantidad_preguntas_actual,$this->pregunta,$this);
           $i=0;
             $cantidad_corchetes_intents=0;
               while($i<$numlinea){
@@ -1114,15 +1147,17 @@ $tam=count($res);
         $j=0;
         $pos1=strpos($aux_qna[$i],$this->pregunta_copy[$k]);
         //$pos2=strpos($aux_qna[$i],$this->pregunta_copy[$k]);
+        //dd($pos1,$pos_coma,$this->pregunta);
         $tam_archivo_qna=count($aux_qna);
         while($i<$tam_archivo_qna and $k<$cantidad_preguntas_antes){
           $pos_preguntas=strpos($aux_qna[$i],$this->pregunta_copy[$k]);
-          $pos_respuesta=strpos($aux_qna[$i],$this->resp);
+          $pos_respuesta=strpos($aux_qna[$i],$this->nombre);
           $pos_coma=strpos($aux_qna[$i],',');
           if($pos_respuesta!=false){
             $aux_qna[$i]='         "'.$this->resp.'"'."\r\n";
             $i=$i+1;
           }
+          //dd($pos_preguntas,$k,$cantidad_preguntas_antes,$pos_coma);
           while($pos_preguntas!=false and $k<$cantidad_preguntas_antes){
               if($pos_coma!=false){
                 $aux_qna[$i]='         "'.$this->pregunta[$k].'",'."\r\n";
@@ -1136,43 +1171,44 @@ $tam=count($res);
           $i=$i+1;
         }
         $i=$i-1;
-        
+        //dd($aux_qna,$k,$i,$this);
+        //dd($k,$cantidad_preguntas_actual,$this->pregunta);
         if($k<$cantidad_preguntas_actual){
-        while($k<$cantidad_preguntas_actual){
-             if($k+1==$cantidad_preguntas_actual){
-             $aux_qna[$i]='         "'.$this->pregunta[$k].'"'."\r\n";
-              //dd($aux_qna[$i]);
-           }else{
-              $aux_qna[$i]='         "'.$this->pregunta[$k].'",'."\r\n";
-
-           }
-             $i=$i+1;
-             $k=$k+1;
-        }
-
-         //dd($aux_intents,$aux_qna,$i);
          for($j=0;$j<6;$j++){
               $aux_qna[$i]=$ultimas_5_lineas[$j];
               $i=$i+1;
             }
+            //dd($aux_intents,$aux_qna,$i,$k,$cantidad_preguntas_actual);
            }else{
+             for($j=0;$j<6;$j++){
+              $aux_qna[$i]=$ultimas_5_lineas[$j];
+              $i=$i+1;
+            }
+            //dd($aux_intents,$aux_qna,$i,$k,$cantidad_preguntas_actual);
             $i=0;
+             
             $cantidad_corchetes_qna=0;
+            //dd($aux_intents,$aux_qna,$i,$k,$cantidad_preguntas_actual);
+
               while($i<$numlinea){
-                $encontrar_corchete_qna=strpos($aux_qna[$i],"]\r\n");
-                if($encontrar_corchete_qna!=false){
+                $encontrar_corchete_qna=strpos($aux_qna[$i],"]");
+                //dd($aux_qna[$i],$i);
+             if($encontrar_corchete_qna!=false){
+                //dd($aux_qna[$i],$i,$encontrar_corchete_qna);
                 $cantidad_corchetes_qna=$cantidad_corchetes_qna+1;
                }
-               if($cantidad_corchetes_qna==2){
+               if($cantidad_corchetes_qna==3){
                 $aux_qna[$i-1]=substr($aux_qna[$i-1],0,-3)."\r\n";
                 $cantidad_corchetes_qna=$cantidad_corchetes_qna+1;
+                //dd($cantidad_corchetes_qna,$aux_qna);
                }
+                //$cantidad_corchetes_qna=$cantidad_corchetes_qna+1;
                 $i=$i+1;
               }
-              
-              //dd($aux_qna);
+              //dd($aux_intents,$aux_qna,$i,$k);
            }
-    //dd($aux_intents,$aux_qna);
+            //dd($aux_qna,$k,$i,$this,$aux_intents);
+  //dd($aux_intents,$aux_qna,$this);
   //dd($request,$id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"],public_path(),$path_archivo_intents,$path_archivo_qna,$aux_intents,$aux_qna);
       
      unlink($path_archivo_intents);
@@ -1447,7 +1483,7 @@ $tam=count($res);
 
   $i=0;
   //Si el valor de i es menor a la cantidad de archivos entonces saldrá del ciclo while
-   while($i<$tam){
+  /* while($i<$tam){
     
     //Se van abriendo cada uno de los archivos de la carpeta hasta que abre todos los archivos de la carpeta
     $path_archivo=("C:/Users/LI/Desktop/chtbtICI/public/".$res[$i]["Nombre"]);
@@ -1464,7 +1500,7 @@ $tam=count($res);
     //dd($patron);
 
     //Lo que se desea escribir en el archivo
-    $sustitucion='"'.$request->pregunta.'"';
+    $sustitucion='"'.$this->pregunta[$a].'"';
    
      //Se abre el archivo y se lee
       $leer = fopen($path_archivo, 'r+');
@@ -1488,7 +1524,7 @@ $tam=count($res);
     $i=$i+1;
     //print_r($i);
    //}
-  }
+  }*/
  
 
      //MODIFICO  EL ARCHIVO EN EL QUE SE ENCUENTRE $patron DENTRO DE LA CARPETA INTENTS (QUESTION O PREGUNTA)
@@ -1496,7 +1532,7 @@ $tam=count($res);
    $datosnuevos=null;
     $i=0;
     //Si i es menor que la cantidad de archivos en la carpeta Intents mantiene el ciclo..., sino sale.
-    while($i<$tam){
+    /*while($i<$tam){
     
     //La ruta con los archivos que va abriendo 
     $path_archivo=("C:/Users/LI/Desktop/chtbtICI/public/".$res[$i]["Nombre"]);
@@ -1560,7 +1596,7 @@ $tam=count($res);
   }
     $i=$i+1;
     //print_r($i);
-  }
+  }*/
 
    //CERRAMOS EL DIRECTORIO
   $dir1->close();
@@ -1601,7 +1637,7 @@ $tam=count($res);
   $tam=sizeof($res2);
   //dd($tam);
 
-  $i=0;
+  /*$i=0;
    while($i<$tam){
     //RUTA DE LA CARPETA PUBLIC + RUTA DE DIRECTORIO HASTA CARPETA QNA DONDE RECORRERA CADA UNO DE LOS NOMBRES DE LOS ARCHIVOS QUE TIENE ALMACENADO EN LA VARIABLE RES2
     $path_archivo=("C:/Users/LI/Desktop/chtbtICI/public/".$res2[$i]["Nombre"]);
@@ -1652,11 +1688,11 @@ $tam=count($res);
     $i=$i+1;
     //print_r($i);
    //}
-  }
+  }*/
  
    $datosnuevos=null;
     $i=0;
-    while($i<$tam){
+    /*while($i<$tam){
     //dd($request->pregunta);
     //dd($question->pregunta);
     //if($i+1==11){
@@ -1673,7 +1709,7 @@ $tam=count($res);
     //en este caso no lleva coma, sabemos que no será el ultimo del arreglo questions: es:[]
     $patron= '"'.$question->pregunta.'","';
         // LO QUE SE DESEA ESCRIBIR COMO NUEVA PREGUNTA EN LA TABLA QUESTIONS Y EN LA BASE DE DATOS DE BOTPRESS MEDIANTE MODIFICACION DE ARCHIVO .JSON SE LOGRARÁ.
-    $sustitucion='"'.$request->pregunta.'","';
+    $sustitucion='"'.$this->pregunta.'","';
     //dd($sustitucion);
     //}
        //SE ALMACENA LO QUE SE LEE INTERNAMENTE EN EL ARCHIVO
@@ -1694,7 +1730,7 @@ $tam=count($res);
     }
     $i=$i+1;
     //print_r($i);
-  }
+  }*/
 
      //dd($datosnuevos);
     //Se cierra directorio
@@ -1703,7 +1739,7 @@ $tam=count($res);
   //MODIFICANDO RESPUESTA DE QNA QUESTION PREGUNTA 
   $tam=sizeof($res2);
   $i=0;
-  while($i<$tam){
+  /*while($i<$tam){
     //dd($request->pregunta);
     //dd($question->pregunta);
     //if($i+1==11){
@@ -1756,7 +1792,7 @@ $tam=count($res);
       //dd($datosnuevos);
     $i=$i+1;
     //print_r($i);
-  }
+  }*/
   //dd($archivo_nombre_original,$archivo_nombre_nuevo);
 
 
@@ -1780,6 +1816,12 @@ $tam=count($res);
   $tam_array_imagen=0;
         if ($this->selected_id){
             $pregeditar = ArchivoPregunta::find($this->selected_id);
+            $pregunta_copy=DB::table('questions')->select('pregunta')->where('id_answers','=',$this->selected_id)->get();
+            $this->pregunta_copy=array();
+            foreach($pregunta_copy as $pregunta_hecha){
+              array_push($this->pregunta_copy,$pregunta_hecha->pregunta);
+            }
+            //dd($this->pregunta_copy);
             $cantidad_preguntas_anterior=count($this->pregunta_copy);
             $cantidad_preguntas_nueva=count($this->pregunta);
             //dd($this->pregunta,$this->pregunta_copy,$cantidad_preguntas_nueva,$cantidad_preguntas_anterior);
@@ -1824,6 +1866,7 @@ $tam=count($res);
             session()->flash('message', 'Pregunta actualizada correctamente');
           }
         }else{
+          $this->remove=0;
           session()->flash('message_delete', 'Se ha eliminado Input elemento de la Base de Datos y Archivos Botpress Correctamente');
         }
     }
