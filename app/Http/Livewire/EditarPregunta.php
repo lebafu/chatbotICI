@@ -660,10 +660,11 @@ class EditarPregunta extends Component
       //dd($imagen_actual);
       //dd($request->hasfile('imagen_nueva'));
       //if(($this->hasfile('imagen_nueva'))==true){
+      //dd($this->imagen_nueva,$imagenes_nuevas);
       foreach($imagenes_nuevas as $imagen_nueva){
          //dd($imagenes_nuevas[$i]->getClientOriginalName(),$imagen_nueva);
         //dd(!empty($request->file('imagen_nueva')[1]));
-        //dd($this->imagen_nueva[$i]);
+        //dd($this->imagen_nueva[$i],$this,$this->imagen_actual[$i]);
         if($this->imagen_nueva[$i]!=$this->imagen_actual[$i]){
           //dd(!empty($request->file('imagen_nueva')[1]));
         $filename=time().$imagen_nueva->getfilename(); 
@@ -683,7 +684,11 @@ class EditarPregunta extends Component
           rename($path_bp_laravel.$filename,$path_bp_laravel.$imagen_actual[$i]);
       }
       $i=$i+1;
+      /*if($i==count($this->imagen_actual)){
+        break;
+      }*/
   }
+
   $tam_array_imagen=count($imagen_actual);
 //}    
     $i=0;
@@ -695,6 +700,17 @@ class EditarPregunta extends Component
     }
     $i=$i+1;
   }
+  $i=0;
+  //dd($this->imagen_nueva,$this->imagen_actual);
+  while($i<count($this->imagen_actual)){
+    //dd($this->imagen_nueva[$i],$this->imagen_actual[$i],$this);
+      if($this->imagen_nueva[$i]==$this->imagen_actual[$i]){
+          unset($imagenes_nuevas[$i]);
+          unset($this->imagen_nueva[$i]);
+      }
+  $i=$i+1;
+  }
+    //dd($this,$this->imagen_nueva,$this->imagen_actual,$imagenes_nuevas);
   $i=0;
     //$tam_array_imagen=count($imagen_actual);
     //dd($imagen_actual,$es_archivo_flow,$tam_array_imagen,empty($imagen_actual[$i]),$names_imagenes);
@@ -900,6 +916,7 @@ $tam=count($res);
 
     //dd($request,$request->file('imagen_nueva'),$textos_iniciales,$textos_finales,$request->imagen_actual,$imagen_nueva,$names_imagenes,$path_chatbot,$path_bp_laravel,$strings,$textos_originales,$tam_array_text,$aux,$contenido,$tam_array_builtins_texts_unique);
     //dd($textos_iniciales,$textos_finales);
+       //dd($this,$imagenes_nuevas);
       session()->flash('message', 'Pregunta actualizada correctamente');
       /*return view('qna.message',compact('imagen_actual','tam_array_text','strings','textos_originales','tam_array_imagen','es_archivo_flow','tam_array_builtins_texts_unique','names_imagenes','textos_iniciales','textos_finales'));*/
     }else{
@@ -1257,6 +1274,7 @@ $tam=count($res);
         if ($validator->fails()){
             return redirect('/qna_edit{{$id}}')->withErrors($validator);
         }*/
+        //dd($this->image_nueva);
         if((empty($this->image_nueva))==false){
         $this->validate(
               [
@@ -1802,6 +1820,7 @@ $tam=count($res);
    //$answer->save();
    //$dir2->close();
    } 
+
   /* $imagenes=DB::table('qnas_images')->where('id_answer','=',$question->id_answers)->get();
    foreach($imagenes as $imagen);
    //dd($imagen,$es_archivo_flow);
@@ -1818,10 +1837,12 @@ $tam=count($res);
             $pregeditar = ArchivoPregunta::find($this->selected_id);
             $pregunta_copy=DB::table('questions')->select('pregunta')->where('id_answers','=',$this->selected_id)->get();
             $this->pregunta_copy=array();
+
             foreach($pregunta_copy as $pregunta_hecha){
               array_push($this->pregunta_copy,$pregunta_hecha->pregunta);
             }
             //dd($this->pregunta_copy);
+
             $cantidad_preguntas_anterior=count($this->pregunta_copy);
             $cantidad_preguntas_nueva=count($this->pregunta);
             //dd($this->pregunta,$this->pregunta_copy,$cantidad_preguntas_nueva,$cantidad_preguntas_anterior);
@@ -1862,7 +1883,7 @@ $tam=count($res);
                 'fecha_caducacion' => $this->fecha_caducacion,
             ]);
 
-
+            //dd($this,$imagenes_nuevas,$cantidad_preguntas_anterior,$cantidad_preguntas_nueva,$pregeditar);
             session()->flash('message', 'Pregunta actualizada correctamente');
           }
         }else{
