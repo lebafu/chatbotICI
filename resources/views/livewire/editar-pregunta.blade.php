@@ -101,7 +101,7 @@
       <div class="row">
         <div class="form-group col-md-12">
           @if($vence == 1)
-            <input wire:model="fecha_caducacion" type="date" class="form-control"> 
+            <input wire:model="fecha_caducacion" type="date" min="<?= date('Y-m-d'); ?>" class="form-control"> 
           @else
             <input wire:model="fecha_caducacion" type="date" class="form-control" disabled=""> 
           @endif
