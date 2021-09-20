@@ -12,12 +12,13 @@ use DB;
 use Livewire\WithFileUploads;
 use Illuminate\Http\UploadedFile;
 use File;
+use Carbon\Carbon;
 
 class EditarPregunta extends Component
 {
  use WithFileUploads;
 
-  public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea,$contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado,$todo_ordenado_copy,$pos,$nombre_imagen,$nombres_imagenes,$imagen_nueva,$imagen_actual,$imagenes_nuevas,$strings,$textos_originales,$imagen,$image_nueva,$remove;
+  public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea,$contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado,$todo_ordenado_copy,$pos,$nombre_imagen,$nombres_imagenes,$imagen_nueva,$imagen_actual,$imagenes_nuevas,$strings,$textos_originales,$imagen,$image_nueva,$remove,$fecha_minima;
     //public $pregunta=[];
     public $inputs = [];
     public $i = 0;
@@ -468,6 +469,8 @@ class EditarPregunta extends Component
         $this->resp = $pregeditar->nombre;
         $this->vence = $pregeditar->vence;
         $this->fecha_caducacion = $pregeditar->fecha_caducacion;
+
+        //dd($this->fecha_minima,$hoy);
         //$this->contexto = $pregeditar->contexto;
 
     }
@@ -479,6 +482,7 @@ class EditarPregunta extends Component
         /*$this->validate([
             'selected_id' => 'required|numeric',
         ]);*/
+        //dd($this);
         $this->pregunta_copy=$this->pregunta;
         //dd($this,$this->todo_ordenado);
         if($this->remove!=1){
@@ -780,13 +784,16 @@ $tam=count($res);
 
   }else{
   while($pos==false){
-    //dd(1);
+    //dd($pos);
+    if($i==2){
+      //dd($i,$pos,$res[$i]["Nombre"],$archivo_qna->archivo_qna);
+    }
       $i=$i+1;
       $pos=strpos($res[$i]["Nombre"],$archivo_qna->archivo_qna);
      
 
   }
-   //dd($request,$id,$question,$answer,$archivo_qna->nombre,$datos,$res[$i]["Nombre"]);
+   //dd($this,$this->selected_id,$answer,$archivo_qna->nombre,$res[$i]["Nombre"]);
 }
 
        $directorio2="botpress12120/data/bots/icibot/qna";
@@ -831,9 +838,42 @@ $tam=count($res);
       //dd($request,$id,$question,$answer,$archivo_qna->nombre,$datos,$res2[$j]["Nombre"]);
 
   }
-  //dd($request,$id,$question,$answer,$archivo_qna->nombre,$datos,$res[$i]["Nombre"],$res2[$j]["Nombre"]);
+  //dd($this,$this->selected_id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"]);
 }
-  //dd($request,$id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"],public_path());
+  //dd($this,$this->selected_id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"],public_path());
+   $tam_pregunta=count($this->pregunta);
+   $tam_pregunta_copy=count($this->pregunta_copy);
+        //dd($this->pregunta,$this);
+      $a=0;
+        $b=0;
+        $copy_pregunta=$this->pregunta;
+        $this->pregunta=null;
+        $this->pregunta=array();
+        //$this->pregunta_copy=array();
+      //dd($this,$copy_pregunta,max($this->inputs));
+        while($b<$tam_pregunta){
+            if(array_key_exists($a,$copy_pregunta)){
+                 array_push($this->pregunta,$copy_pregunta[$a]);
+                 //array_push($this->inputs,$b+1);
+                 $b++;
+            }
+            $a++;
+        }
+        $a=0;
+        $b=0;
+        $this->inputs=array();
+        while($b<$tam_pregunta){
+            if(array_key_exists($a,$copy_pregunta)){
+                 array_push($this->inputs,$b+1);
+                 //array_push($this->inputs,$b+1);
+                 $b++;
+            }
+            $a++;
+        }
+        $a=0;
+        $b=0;
+  $this->pregunta_copy=$this->pregunta;
+ //dd($this->pregunta,$this->pregunta_copy,$this);
   $nombre_archivo_intents=$res[$i]["Nombre"];
   $nombre_archivo_qna=$res2[$j]["Nombre"];
   $path_archivo_intents=public_path("/".$nombre_archivo_intents);
@@ -845,25 +885,84 @@ $tam=count($res);
             $aux_intents[] = $linea;    
              $numlinea++;
         }
-        fclose($leer1);
-
-        $i=0;
         //dd($aux_intents);
+        $ultimas_4_lineas=array();
+        $ultimas_4_lineas[0]="    ]\r\n";
+        $j=1;
+        $i=$numlinea-3;
+      while($i<$numlinea){
+           $ultimas_4_lineas[$j]=$aux_intents[$i];
+           $j=$j+1;
+          $i=$i+1;
+      }
+        
+        fclose($leer1);
+        $k=0;
+        $cantidad_preguntas_actual=count($this->pregunta);
+        $cantidad_preguntas_antes=count($this->pregunta_copy);
+        //dd($aux_intents,$questions,$this->pregunta,$this->pregunta_copy,$cantidad_preguntas_antes,$cantidad_preguntas_actual,$ultimas_4_lineas);
+        //dd($this->pregunta_copy,$this->pregunta);
+         //dd(substr($aux_intents[11],7,-3));
+        $i=0;
+        //dd($aux_intents,$question->pregunta,$cantidad_preguntas);
         //dd(substr($aux_intents[8],7,-3));
         //$pos=strpos(substr($aux_intents[$i],7,-3),$question->pregunta);
+        //dd(substr($aux_intents[$i],7,-3));
        //dd($pos,$aux_intents[8],substr($aux_intents[8],7,-3),$question->pregunta);
+        $k=0;
         $tam_archivo_intents=count($aux_intents);
-        while($i<$tam_archivo_intents){
-          $pos=substr($aux_intents[$i],5,-2);
-          //dd(substr($aux_intents[3],5,-2));
-          if(substr($aux_intents[$i],5,-2)=="global" or substr($aux_intents[$i],5,-2)=="regular" or substr($aux_intents[$i],5,-2)=="egresado"){
+        while($i<$tam_archivo_intents and $k<$cantidad_preguntas_antes){
+             $pos=strpos($aux_intents[$i],$this->pregunta_copy[$k]);
+             $pos_coma=strpos($aux_intents[$i],',');
+             //dd($pos,$aux_intents,$this->pregunta_copy);
+              while($pos!=false and $k<$cantidad_preguntas_antes){
+                    if($pos_coma!=false){
+                    $aux_intents[$i]='       "'.$this->pregunta[$k].'",'."\r\n";
+                    //dd($aux_intents,$this->pregunta_copy[$k],$this->pregunta[$k],$this);
+                    $k=$k+1;
+                    $i=$i+1;
+                    /*if($i==16){
+                      dd($aux_intents,$aux_intents[$i],$this->pregunta_copy[$k],$this->pregunta[$k],$i,$k);
+                    }*/
+                  }
+              }
+              //dd($aux_intents,$pos,$this->pregunta_copy[$k],$this->pregunta[$k],$i,$k);
+           if(substr($aux_intents[$i],5,-2)=="global" or substr($aux_intents[$i],5,-2)=="regular" or substr($aux_intents[$i],5,-2)=="egresado"){
             $aux_intents[$i]=str_replace(substr($aux_intents[$i],5,-2),$this->contexto,$aux_intents[$i]);
           }
         $i=$i+1;
         }
-        //dd($aux_intents);
+        $i=$i-1;
+               
+        if($k<$cantidad_preguntas_actual){
+        $aux_intents[$i]=$ultimas_4_lineas[0];
+          $aux_intents[$i+1]=$ultimas_4_lineas[1];
+          $aux_intents[$i+2]=$ultimas_4_lineas[2];
+          $aux_intents[$i+3]=$ultimas_4_lineas[3];
+          //dd($aux_intents,$k,$i,$cantidad_preguntas_actual,$this->pregunta,$this);
+        }else{
+          $aux_intents[$i]=$ultimas_4_lineas[0];
+          $aux_intents[$i+1]=$ultimas_4_lineas[1];
+          $aux_intents[$i+2]=$ultimas_4_lineas[2];
+          $aux_intents[$i+3]=$ultimas_4_lineas[3];
+          //dd($aux_intents,$k,$i,$cantidad_preguntas_actual,$this->pregunta,$this);
+          $i=0;
+            $cantidad_corchetes_intents=0;
+              while($i<$numlinea){
+                $encontrar_coma_intents=strpos($aux_intents[$i],"]");
+                if($encontrar_coma_intents!=false){
+                $cantidad_corchetes_intents=$cantidad_corchetes_intents+1;
+               }
+               if($cantidad_corchetes_intents==2){
+                //dd($aux_intents[$i],$aux_intents);
+                $aux_intents[$i-1]=substr($aux_intents[$i-1],0,-3)."\r\n";
+                $cantidad_corchetes_intents=$cantidad_corchetes_intents+1;
+               }
+                $i=$i+1;
+              }
+        }
+        //dd($aux_intents,$this);
   $path_archivo_qna=public_path("/".$nombre_archivo_qna);
- // dd($path_archivo_qna);
   $leer2 = fopen($path_archivo_qna, 'r+');
    $numlinea=0;
         while ($linea = fgets($leer2)){
@@ -872,18 +971,87 @@ $tam=count($res);
              $numlinea++;
         }
         fclose($leer2);
-        //dd(substr($aux_qna[5],7,-2));
+        //dd($aux_qna);
+        //$cantidad_preguntas=count($this->pregunta);
+         $ultimas_5_lineas=array();
+         //$ultimas_5_lineas[0]=;
+        $j=0;
+        $i=$numlinea-6;
+      while($i<$numlinea){
+           $ultimas_5_lineas[$j]=$aux_qna[$i];
+           $j=$j+1;
+          $i=$i+1;
+      }
+      //dd($ultimas_5_lineas);
+        $k=0;
         $i=0;
+        $j=0;
+        $pos1=strpos($aux_qna[$i],$this->pregunta_copy[$k]);
+        //$pos2=strpos($aux_qna[$i],$this->pregunta_copy[$k]);
+        //dd($pos1,$pos_coma,$this->pregunta);
         $tam_archivo_qna=count($aux_qna);
-         while($i<$tam_archivo_qna){
+        while($i<$tam_archivo_qna and $k<$cantidad_preguntas_antes){
+          $pos_preguntas=strpos($aux_qna[$i],$this->pregunta_copy[$k]);
+          $pos_respuesta=strpos($aux_qna[$i],$this->nombre);
+          $pos_coma=strpos($aux_qna[$i],',');
+          if($pos_respuesta!=false){
+            $aux_qna[$i]='         "'.$this->resp.'"'."\r\n";
+            $i=$i+1;
+          }
+          //dd($pos_preguntas,$k,$cantidad_preguntas_antes,$pos_coma);
+          while($pos_preguntas!=false and $k<$cantidad_preguntas_antes){
+              if($pos_coma!=false){
+                $aux_qna[$i]='         "'.$this->pregunta[$k].'",'."\r\n";
+                $k=$k+1;
+                $i=$i+1;
+          }
+        }
           if(substr($aux_qna[$i],7,-2)=="global" or substr($aux_qna[$i],7,-2)=="regular" or substr($aux_qna[$i],7,-2)=="egresado"){
             $aux_qna[$i]=str_replace(substr($aux_qna[$i],7,-2),$this->contexto,$aux_qna[$i]);
           }
-        $i=$i+1;
+          $i=$i+1;
         }
-  //dd($request,$id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"],public_path(),$path_archivo_intents,$path_archivo_qna,$aux_intents,$aux_qna);
-        //dd($aux_qna,$aux_intents);
+        $i=$i-1;
+        //dd($aux_qna,$k,$i,$this);
+        //dd($k,$cantidad_preguntas_actual,$this->pregunta);
+        if($k<$cantidad_preguntas_actual){
+         for($j=0;$j<6;$j++){
+              $aux_qna[$i]=$ultimas_5_lineas[$j];
+              $i=$i+1;
+            }
+            //dd($aux_intents,$aux_qna,$i,$k,$cantidad_preguntas_actual);
+           }else{
+             for($j=0;$j<6;$j++){
+              $aux_qna[$i]=$ultimas_5_lineas[$j];
+              $i=$i+1;
+            }
+            //dd($aux_intents,$aux_qna,$i,$k,$cantidad_preguntas_actual);
+            $i=0;
+             
+            $cantidad_corchetes_qna=0;
+            //dd($aux_intents,$aux_qna,$i,$k,$cantidad_preguntas_actual);
 
+              while($i<$numlinea){
+                $encontrar_corchete_qna=strpos($aux_qna[$i],"]");
+                //dd($aux_qna[$i],$i);
+             if($encontrar_corchete_qna!=false){
+                //dd($aux_qna[$i],$i,$encontrar_corchete_qna);
+                $cantidad_corchetes_qna=$cantidad_corchetes_qna+1;
+               }
+               if($cantidad_corchetes_qna==3){
+                $aux_qna[$i-1]=substr($aux_qna[$i-1],0,-3)."\r\n";
+                $cantidad_corchetes_qna=$cantidad_corchetes_qna+1;
+                //dd($cantidad_corchetes_qna,$aux_qna);
+               }
+                //$cantidad_corchetes_qna=$cantidad_corchetes_qna+1;
+                $i=$i+1;
+              }
+              //dd($aux_intents,$aux_qna,$i,$k,$this);
+           }
+            //dd($aux_qna,$k,$i,$this,$aux_intents);
+  //dd($aux_intents,$aux_qna,$this);
+  //dd($request,$id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"],public_path(),$path_archivo_intents,$path_archivo_qna,$aux_intents,$aux_qna);
+      
      unlink($path_archivo_intents);
      unlink($path_archivo_qna);
 
@@ -912,7 +1080,7 @@ $tam=count($res);
          //fwrite($escribir1, $data1);
         fwrite($escribir2, $contenido2);
        fclose($escribir2);
-       
+        
 
     //dd($request,$request->file('imagen_nueva'),$textos_iniciales,$textos_finales,$request->imagen_actual,$imagen_nueva,$names_imagenes,$path_chatbot,$path_bp_laravel,$strings,$textos_originales,$tam_array_text,$aux,$contenido,$tam_array_builtins_texts_unique);
     //dd($textos_iniciales,$textos_finales);

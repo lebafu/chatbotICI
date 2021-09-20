@@ -9,10 +9,11 @@ use App\Models\Answers as ArchivoPregunta;
 use App\Models\Question as Preguntas;
 use App\Http\Livewire\Field;
 use Illuminate\Http\Request;
+use DB;
 
 class AgregarPregsugerida extends Component
 {
-    public $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea, $contexto;
+    public $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea, $contexto,$respuesta_existente,$answers,$resp2;
     public $inputs = [];
     public $i = 1;
     public $PregSugerida;
@@ -25,6 +26,10 @@ class AgregarPregsugerida extends Component
     public function mount()
     {
         $this->pregunta[0] = $this->PregSugerida->pregunta_sin_respuesta;
+        $this->respuesta_existente=null;
+        $this->answers=ArchivoPregunta::all();
+        $this->contexto=null;
+        //dd($this->answers,$this->respuesta_existente,$this);
     }
 
     public function delete($id)
@@ -54,11 +59,14 @@ class AgregarPregsugerida extends Component
         $this->habilitada = null;
         $this->pregunta = null;
         $this->id_foranea = null;
+        $this->contexto=null;
     }
 
    public function store()
     {
 
+        //dd($this);
+        if($this->respuesta_existente==false){
         $this->validate([
             'resp' => 'required|min:2',
             'pregunta.0' => 'required|min:1|max:100',
@@ -73,6 +81,8 @@ class AgregarPregsugerida extends Component
         if ($this->vence != 1){
             $this->vence = 0;
         }
+
+        
             $id=$this->PregSugerida->id;
           $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
          $a=0;
@@ -275,6 +285,7 @@ class AgregarPregsugerida extends Component
 
        $i=$i+1;         
     }
+    //dd($aux);
      $contenido="";
        $i=0;
        $tam_array_aux=count($aux);
@@ -348,7 +359,7 @@ class AgregarPregsugerida extends Component
         }elseif($buscar_questions!=false and $buscar_es_corchete!=false and $buscar_es_llave!=false){
           $aux_qna[$i+1]='      '.'"'.'es'.'":'." [\r\n";
           if($cantidad_preguntas==1){
-          $aux_qnaa[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
+          $aux_qna[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
           }else{
            $b=0;
            $c=2;
@@ -391,7 +402,7 @@ class AgregarPregsugerida extends Component
       }
 
 
-
+//dd($aux_qna);
     
 
       $contenido=null;
@@ -575,6 +586,7 @@ class AgregarPregsugerida extends Component
         }
     }if($global!=false){
           $aux[$i]=str_replace("global",$this->contexto,$aux[$i]);
+          //dd($aux);
         }if($name_vacio!=false){
             $aux[$i]=str_replace('"name": "",','"name":'.' "'.$name_qna.'",',$aux[$i]);
         /*elseif($aux[$i]=='"utterances": {' and $aux[$i+1]=='"es": [' and $aux[$i+2]!='},'){
@@ -699,6 +711,7 @@ class AgregarPregsugerida extends Component
         }
         }if($global!=false){
           $aux_qna[$i]=str_replace("global",$this->contexto,$aux_qna[$i]);
+          //dd($aux_qna);
         }if($id_vacio!=false){
             $aux_qna[$i]=str_replace('"id": "",','"id":'.' "'.$id_qna.'",',$aux_qna[$i]);
             $global=strpos($aux_qna[$i], "global");
@@ -708,7 +721,7 @@ class AgregarPregsugerida extends Component
       }
 
 
-    //dd($aux_qna);
+  //dd($aux_qna);
 
       $contenido=null;
        $contenido="";
@@ -751,5 +764,315 @@ class AgregarPregsugerida extends Component
     session()->flash('problema_con_parentesis', 'Los signos de pregunta no estan parejos');
 }
 
+}elseif($this->respuesta_existente==true){
+      //dd($this);
+      $answers=DB::table('answer')->where('id','=',$this->resp2)->get();
+      //dd($this,$answers);
+      foreach($answers as $archivo_qna);
+      //dd($archivo_qna);
+     $directorio1="botpress12120/data/bots/icibot/intents";
+      
+      //Se creaa arreglo para guadar direccion de archivos de carpeta
+      $res = array();
+
+  // Agregamos la barra invertida al final en caso de que no exista
+  if(substr($directorio1, -1) != "/") $directorio1 .= "/";
+
+  // Creamos un puntero al directorio y obtenemos el listado de archivos
+  $dir1 = @dir($directorio1) or die("getFileList: Error abriendo el directorio $directorio1 para leerlo");
+  while(($archivo1 = $dir1->read()) !== false) {
+      // Obviamos los archivos ocultos
+      if($archivo1[0] == ".") continue;
+      if(is_dir($directorio1 . $archivo1)) {
+          $res[] = array(
+            "Nombre" => $directorio1 . $archivo1 . '"/"',
+            "Tamaño" => 0,
+            "Modificado" => filemtime($directorio1 . $archivo1)
+          );
+      } else if (is_readable($directorio1 . $archivo1)) {
+          $res[] = array(
+            "Nombre" => $directorio1 . $archivo1,
+            "Tamaño" => filesize($directorio1 . $archivo1),
+            "Modificado" => filemtime($directorio1 . $archivo1)
+          );
+      }
+  }
+
+$tam=count($res);
+  //dd($tam);
+  $i=0;
+  $pos=strpos($res[$i]["Nombre"],$archivo_qna->archivo_qna);
+  //dd($pos);
+  if($pos!=false){
+
+  }else{
+  while($pos==false){
+    //dd($pos);
+    if($i==2){
+      //dd($i,$pos,$res[$i]["Nombre"],$archivo_qna->archivo_qna);
     }
+      $i=$i+1;
+      $pos=strpos($res[$i]["Nombre"],$archivo_qna->archivo_qna);
+     
+
+  }
+   //dd($this,$this->selected_id,$answer,$archivo_qna->nombre,$res[$i]["Nombre"]);
+}
+
+       $directorio2="botpress12120/data/bots/icibot/qna";
+  $res2 = array();
+
+  // Agregamos la barra invertida al final en caso de que no exista
+
+
+  if(substr($directorio2, -1) != "/") $directorio2 .= "/";
+
+  // Creamos un puntero al directorio y obtenemos el listado de archivos
+  $dir2 = @dir($directorio2) or die("getFileList: Error abriendo el directorio $directorio2 para leerlo");
+  while(($archivo2 = $dir2->read()) !== false) {
+      // Obviamos los archivos ocultos
+      if($archivo2[0] == ".") continue;
+      if(is_dir($directorio2 . $archivo2)) {
+          $res2[] = array(
+            "Nombre" => $directorio2 . $archivo2 . "/",
+            "Tamaño" => 0,
+            "Modificado" => filemtime($directorio2 . $archivo2)
+          );
+      } else if (is_readable($directorio2 . $archivo2)) {
+          $res2[] = array(
+            "Nombre" => $directorio2.$archivo2,
+            "Tamaño" => filesize($directorio2.$archivo2),
+            "Modificado" => filemtime($directorio2.$archivo2)
+          );
+      }
+  }
+
+  $tam=count($res2);
+  //dd($tam);
+  $j=0;
+  $pos=strpos($res2[$j]["Nombre"],$archivo_qna->archivo_qna);
+  //dd($pos); dd($question);
+  if($pos!=false){
+
+  }else{
+      while($pos==false){
+          $j=$j+1;
+          $pos=strpos($res2[$j]["Nombre"],$archivo_qna->archivo_qna);
+      //dd($request,$id,$question,$answer,$archivo_qna->nombre,$datos,$res2[$j]["Nombre"]);
+
+  }
+  //dd($this,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"]);
+}
+   $nombre_archivo_intents=$res[$i]["Nombre"];
+  $nombre_archivo_qna=$res2[$j]["Nombre"];
+  $path_archivo_intents=public_path("/".$nombre_archivo_intents);
+  $leer1 = fopen($path_archivo_intents, 'r+');
+        $numlinea=0;
+        while ($linea = fgets($leer1)){
+        //echo $linea.'<br/>';
+            $aux_intents[] = $linea;    
+             $numlinea++;
+        }
+        //dd($aux_intents);
+        $ultimas_4_lineas=array();
+        $ultimas_4_lineas[0]="    ]\r\n";
+        $j=1;
+        $i=$numlinea-3;
+      while($i<$numlinea){
+           $ultimas_4_lineas[$j]=$aux_intents[$i];
+           $j=$j+1;
+          $i=$i+1;
+      }
+        
+        fclose($leer1);
+        $questions=DB::table('questions')->where('id_answers','=',$this->resp2)->get();
+        foreach($questions as $question);
+        $i=0;
+        $k=0;
+        $cont_corchete=0;
+        $a=0;
+        $b=0;
+        //dd($this->pregunta);
+        $pregunta=array();
+        $tam_preguntas_nuevas=count($this->pregunta);
+         while($b<$tam_preguntas_nuevas){
+            if(array_key_exists($a,$this->pregunta)){
+                 array_push($pregunta,$this->pregunta[$a]);
+                 //array_push($this->inputs,$b+1);
+                 $b++;
+            }
+            $a++;
+        }
+        $tam_archivo_intents=count($aux_intents);
+        while($i<$tam_archivo_intents){
+              $pos_corchete=strpos($aux_intents[$i],"]");
+             if($pos_corchete!=false){
+                $cont_corchete=$cont_corchete+1;
+             }
+             if($cont_corchete==2 and $tam_preguntas_nuevas==1){
+                    $aux_intents[$i-1]='       "'.$question->pregunta.'",'."\r\n";
+                    $aux_intents[$i]='       "'.$pregunta[0].'"'."\r\n";
+                    $aux_intents[$i+1]=$ultimas_4_lineas[0];
+                    $aux_intents[$i+2]=$ultimas_4_lineas[1];
+                    $aux_intents[$i+3]=$ultimas_4_lineas[2];
+                    $aux_intents[$i+4]=$ultimas_4_lineas[3];
+                    /*if($i==16){
+                      dd($aux_intents,$aux_intents[$i],$this->pregunta_copy[$k],$this->pregunta[$k],$i,$k);
+                    }*/
+                  }elseif($cont_corchete==2 and $tam_preguntas_nuevas>1){
+                    $aux_intents[$i-1]='       "'.$question->pregunta.'",'."\r\n";
+                    $aux_intents[$i]='       "'.$pregunta[0].'",'."\r\n";
+                    $a=1;
+                    while($a<$tam_preguntas_nuevas){
+                         //dd($aux_intents,$i,$a,$pregunta);
+                         $aux_intents[$i+$a]='       "'.$pregunta[$a].'"'."\r\n"; 
+                         $a=$a+1;
+                    }
+                    $i=$i+1;
+                    $aux_intents[$i+1]=$ultimas_4_lineas[0];
+                    $aux_intents[$i+2]=$ultimas_4_lineas[1];
+                    $aux_intents[$i+3]=$ultimas_4_lineas[2];
+                    $aux_intents[$i+4]=$ultimas_4_lineas[3];
+                  }
+              //dd($aux_intents,$pos,$this->pregunta_copy[$k],$this->pregunta[$k],$i,$k);
+                  //dd($aux_intents,$aux_intents[3],substr($aux_intents[3],5,-3),$this->contexto,$this);
+           if(substr($aux_intents[$i],5,-2)=="global" or substr($aux_intents[$i],5,-2)=="regular" or substr($aux_intents[$i],5,-2)=="egresado"){
+            $aux_intents[$i]=str_replace(substr($aux_intents[$i],5,-2),$this->contexto,$aux_intents[$i]);
+          }
+           if(substr($aux_intents[$i],5,-3)=="global" or substr($aux_intents[$i],5,-3)=="regular" or substr($aux_intents[$i],5,-3)=="egresado"){
+            $aux_intents[$i]=str_replace(substr($aux_intents[$i],5,-3),$this->contexto,$aux_intents[$i]);
+          }
+        $i=$i+1;
+        }
+        //dd($aux_intents);
+
+
+        $path_archivo_qna=public_path("/".$nombre_archivo_qna);
+  $leer2 = fopen($path_archivo_qna, 'r+');
+   $numlinea=0;
+        while ($linea = fgets($leer2)){
+        //echo $linea.'<br/>';
+            $aux_qna[] = $linea;    
+             $numlinea++;
+        }
+        fclose($leer2);
+        //dd($aux_qna);
+        //$cantidad_preguntas=count($this->pregunta);
+         $ultimas_5_lineas=array();
+         //$ultimas_5_lineas[0]=;
+        $j=0;
+        $i=$numlinea-6;
+      while($i<$numlinea){
+           $ultimas_5_lineas[$j]=$aux_qna[$i];
+           $j=$j+1;
+          $i=$i+1;
+      }
+       $k=0;
+        $i=0;
+        $j=0;
+        $cont_corchete=0;
+        //dd($ultimas_5_lineas);
+        $tam_archivo_qna=count($aux_qna);
+         $tam_archivo_intents=count($aux_intents);
+        while($i<$tam_archivo_qna){
+              $pos_corchete=strpos($aux_qna[$i],"]");
+             if($pos_corchete!=false){
+                $cont_corchete=$cont_corchete+1;
+             }
+             if($cont_corchete==3 and $tam_preguntas_nuevas==1){
+                    $aux_qna[$i-1]='       "'.$question->pregunta.'",'."\r\n";
+                    $aux_qna[$i]='       "'.$pregunta[0].'"'."\r\n";
+                    $aux_qna[$i+1]=$ultimas_5_lineas[0];
+                    $aux_qna[$i+2]=$ultimas_5_lineas[1];
+                    $aux_qna[$i+3]=$ultimas_5_lineas[2];
+                    $aux_qna[$i+4]=$ultimas_5_lineas[3];
+                    $aux_qna[$i+5]=$ultimas_5_lineas[4];
+                    $aux_qna[$i+6]=$ultimas_5_lineas[5];
+                    /*if($i==16){
+                      dd($aux_intents,$aux_intents[$i],$this->pregunta_copy[$k],$this->pregunta[$k],$i,$k);
+                    }*/
+                  }elseif($cont_corchete==3 and $tam_preguntas_nuevas>1){
+                    //dd($aux_qna,$pregunta);
+                    $aux_qna[$i-1]='       "'.$question->pregunta.'",'."\r\n";
+                    $aux_qna[$i]='       "'.$pregunta[0].'",'."\r\n";
+                    $a=1;
+                    //dd($aux_qna);
+                    while($a<$tam_preguntas_nuevas){
+                         $aux_qna[$i+$a]='       "'.$pregunta[$a].'"'."\r\n"; 
+                         $a=$a+1;
+                    }
+                    //dd($aux_qna,$i,$a);
+                    $i=$i+$a;
+                    $aux_qna[$i]=$ultimas_5_lineas[0];
+                    $aux_qna[$i+1]=$ultimas_5_lineas[1];
+                    $aux_qna[$i+2]=$ultimas_5_lineas[2];
+                    $aux_qna[$i+3]=$ultimas_5_lineas[3];
+                    $aux_qna[$i+4]=$ultimas_5_lineas[4];
+                    $aux_qna[$i+5]=$ultimas_5_lineas[5];
+                    $cont_corchete=$cont_corchete+1;
+                  //dd($aux_qna,$i,$a,substr($aux_qna[5],7,-2));
+                  }
+              //dd($aux_intents,$pos,$this->pregunta_copy[$k],$this->pregunta[$k],$i,$k);
+                  //dd($aux_intents,$aux_intents[3],substr($aux_intents[3],5,-3),$this->contexto,$this);
+           if(substr($aux_qna[$i],7,-2)=="global" or substr($aux_qna[$i],7,-2)=="regular" or substr($aux_qna[$i],7,-2)=="egresado"){
+            $aux_qna[$i]=str_replace(substr($aux_qna[$i],7,-2),$this->contexto,$aux_qna[$i]);
+          }
+           if(substr($aux_qna[$i],7,-3)=="global" or substr($aux_qna[$i],7,-3)=="regular" or substr($aux_qna[$i],7,-3)=="egresado"){
+            $aux_qna[$i]=str_replace(substr($aux_qna[$i],7,-3),$this->contexto,$aux_qna[$i]);
+          }
+        $i=$i+1;
+        }
+        //dd($aux_intents,$aux_qna);
+         unlink($path_archivo_intents);
+     unlink($path_archivo_qna);
+
+      $contenido1="";
+       $i=0;
+       $tam_array_aux_intents=count($aux_intents);
+      while($i<$tam_array_aux_intents){
+        $contenido1 .=$aux_intents[$i];
+        $i=$i+1;
+      }
+
+        $escribir1 = fopen($path_archivo_intents, 'w+');
+         //fwrite($escribir1, $data1);
+        fwrite($escribir1, $contenido1);
+       fclose($escribir1);
+
+      $contenido2="";
+       $i=0;
+       $tam_array_aux_qna=count($aux_qna);
+      while($i<$tam_array_aux_qna){
+        $contenido2.=$aux_qna[$i];
+        $i=$i+1;
+      }
+
+        $escribir2 = fopen($path_archivo_qna, 'w+');
+         //fwrite($escribir1, $data1);
+        fwrite($escribir2, $contenido2);
+       fclose($escribir2);
+       $i=0;
+       while($i<$tam_preguntas_nuevas){
+                        $questions_existe=DB::table('questions')->where('pregunta','=',$pregunta[$i])->count();
+                        //dd($questions);
+                        if($questions_existe==0){
+                        DB::table('questions')->insert([
+                            'pregunta' => $pregunta[$i],
+                            'id_answers' => $this->resp2,
+                     ]);
+                      }
+                $i=$i+1;
+                    }
+                    $this->inputs = [];
+        $this->resetInput();
+          $id=$this->PregSugerida->id;
+        $this->delete($id);
+        session()->flash('message', 'Pregunta sugerida ingresada en el sistema');
+        return redirect()->route('index_preguntas_sugeridas');
+
+}
+
+    }
+
+
 }

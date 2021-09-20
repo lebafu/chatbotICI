@@ -20,7 +20,7 @@
                <div class="form-group col-md-10">
                         <b><label for="contexto">Seleccionar Contexto:</label></b>
                             <br>
-                            <select wire:model="contexto" name="contexto">
+                            <select wire:model="contexto" id="contexto">
                                 <option value="global">global</option>
                                 <option value="regular">regular</option>
                                 <option value="egresado">egresado</option>
@@ -29,7 +29,7 @@
                       </div>
             <div class="form-group col-md-10">
                   <label for="preguntas"><b>Preguntas que desee agregar (requerido):</b></label>
-                  <input wire:model="pregunta.0" type="text" class="form-control" name="preguntas" disabled></input>
+                  <input wire:model="pregunta.0" type="text" class="form-control" name="preguntas"></input>
             </div>
             <div class="form-group col-md-1">
                   <button class="btn text-white btn-info btn-sm" wire:click="add({{$i}})">Añadir</button>
@@ -53,8 +53,22 @@
     <div class="form-group col-md-5">
       <div class="row">
         <div class="form-group col-md-12">
-          <label for="Respuesta"><b>Respuesta (requerido):</b></label>
+          <label for="vence"><b>Respuesta existente</b></label><br>
+          <input wire:model="respuesta_existente" type="checkbox" class="form-control">Añadir a respuesta existente
+          @if($respuesta_existente==null)
+            <label for="Respuesta"><b>Respuesta (requerido):</b></label>
           <input wire:model="resp" type="text" class="form-control" placeholder="Respuesta:">
+          @else
+             <select wire:model="resp2">
+                @foreach($answers as $answer)
+                      @if($answer->nombre=="#!builtin_image-euONpC")
+                          <option value="#!builtin_image-euONpC">Mapa de Salas</option>
+                      @else
+                          <option value="{{$answer->id}}">{{$answer->nombre}}</option>
+                      @endif
+                @endforeach
+              </select>
+          @endif
         </div>
       </div>
       <div class="row">
@@ -76,10 +90,12 @@
   </div>
     
     <div class="form-row justify-content-center">
-          @if(strlen($resp) > 0 && (($vence==1 && $fecha_caducacion!=null) || ($vence!=1)))
-              <button wire:click="store($id)" class="btn btn-success center">Guardar</button>
-          @else
-              <button wire:click="store($id)" class="btn btn-success center" disabled>Guardar</button>
+          @if((strlen($resp)>0 && $respuesta_existente==0) && (($vence==1 && $fecha_caducacion!=null) || ($vence!=1)))
+              <button wire:click="store()" class="btn btn-success center">Guardar</button>
+          @elseif((strlen($resp2)>0 && $respuesta_existente==1) && (($vence==1 && $fecha_caducacion!=null) || ($vence!=1)))
+              <button wire:click="store()" class="btn btn-success center">Guardar</button>
+           @else
+               <button wire:click="store()" class="btn btn-success center" disabled>Guardar</button>
           @endif
     </div>
 </div>
