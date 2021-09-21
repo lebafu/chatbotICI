@@ -980,8 +980,8 @@ $tam=count($res);
                 $cont_corchete=$cont_corchete+1;
              }
              if($cont_corchete==3 and $tam_preguntas_nuevas==1){
-                    $aux_qna[$i-1]='       "'.$question->pregunta.'",'."\r\n";
-                    $aux_qna[$i]='       "'.$pregunta[0].'"'."\r\n";
+                    $aux_qna[$i-1]='         "'.$question->pregunta.'",'."\r\n";
+                    $aux_qna[$i]='         "'.$pregunta[0].'"'."\r\n";
                     $aux_qna[$i+1]=$ultimas_5_lineas[0];
                     $aux_qna[$i+2]=$ultimas_5_lineas[1];
                     $aux_qna[$i+3]=$ultimas_5_lineas[2];
@@ -993,12 +993,12 @@ $tam=count($res);
                     }*/
                   }elseif($cont_corchete==3 and $tam_preguntas_nuevas>1){
                     //dd($aux_qna,$pregunta);
-                    $aux_qna[$i-1]='       "'.$question->pregunta.'",'."\r\n";
-                    $aux_qna[$i]='       "'.$pregunta[0].'",'."\r\n";
+                    $aux_qna[$i-1]='         "'.$question->pregunta.'",'."\r\n";
+                    $aux_qna[$i]='         "'.$pregunta[0].'",'."\r\n";
                     $a=1;
                     //dd($aux_qna);
                     while($a<$tam_preguntas_nuevas){
-                         $aux_qna[$i+$a]='       "'.$pregunta[$a].'"'."\r\n"; 
+                         $aux_qna[$i+$a]='         "'.$pregunta[$a].'"'."\r\n"; 
                          $a=$a+1;
                     }
                     //dd($aux_qna,$i,$a);
