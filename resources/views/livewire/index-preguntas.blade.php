@@ -17,11 +17,17 @@
       <div class="card">
         <div class="card-header" id="heading{{$archivoPreg->id}}">
           <h5 class="mb-0">
-            <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{$archivoPreg->id}}" aria-expanded="true" aria-controls="collapse{{$archivoPreg->id}}">
-             {{$archivoPreg->nombre}}
-            </button>
-            <div class="float-right">
-              <button class="btn btn-danger btn-sm" wire:click="habilitada({{ $archivoPreg->id}})">Deshabilitar</button>
+            <div class="row">
+            <div class="col-md-11">
+              <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{$archivoPreg->id}}" aria-expanded="true" aria-controls="collapse{{$archivoPreg->id}}">
+               {{$archivoPreg->nombre}}
+              </button>
+            </div>
+            <div class="col-md-1">
+              <div class="float-right">
+                <button class="btn btn-danger btn-sm" wire:click="habilitada({{ $archivoPreg->id}})">Deshabilitar</button>
+              </div>
+              </div>
             </div>
           </h5>
         </div>

@@ -13,7 +13,7 @@
     @foreach ($PregSugeridas as $PregSugerida)
       <div class="card">
         <div class="card-header" id="heading{{$PregSugerida->id}}">
-          <h5 class="mb-0">
+          <h5>
             <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{$PregSugerida->id}}" aria-expanded="true" aria-controls="collapse{{$PregSugerida->id}}">
               #{{$PregSugerida->id}} : {{$PregSugerida->pregunta_sin_respuesta}}  
             </button>
