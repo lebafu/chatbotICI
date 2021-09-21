@@ -18,7 +18,7 @@ class EditarPregunta extends Component
 {
  use WithFileUploads;
 
-  public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea,$contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado,$todo_ordenado_copy,$pos,$nombre_imagen,$nombres_imagenes,$imagen_nueva,$imagen_actual,$imagenes_nuevas,$strings,$textos_originales,$imagen,$image_nueva,$remove,$fecha_minima;
+  public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea,$contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado,$todo_ordenado_copy,$pos,$nombre_imagen,$nombres_imagenes,$imagen_nueva,$imagen_actual,$imagenes_nuevas,$strings,$textos_originales,$imagen,$image_nueva,$remove,$fecha_minima,$agregar;
     //public $pregunta=[];
     public $inputs = [];
     public $i = 0;
@@ -41,6 +41,8 @@ class EditarPregunta extends Component
         $i = $i + 1;
         $this->i = $i;
         array_push($this->inputs ,$i);
+        $this->agregar=1;
+        //dd($this->agregar);
     }
 
     public function remove($i)
@@ -477,7 +479,7 @@ class EditarPregunta extends Component
 
     public function update()
     {
-
+        //dd($this->agregar);
             //dd($this);
         /*$this->validate([
             'selected_id' => 'required|numeric',
@@ -904,11 +906,6 @@ $tam=count($res);
         //dd($this->pregunta_copy,$this->pregunta);
          //dd(substr($aux_intents[11],7,-3));
         $i=0;
-        //dd($aux_intents,$question->pregunta,$cantidad_preguntas);
-        //dd(substr($aux_intents[8],7,-3));
-        //$pos=strpos(substr($aux_intents[$i],7,-3),$question->pregunta);
-        //dd(substr($aux_intents[$i],7,-3));
-       //dd($pos,$aux_intents[8],substr($aux_intents[8],7,-3),$question->pregunta);
         $k=0;
         $tam_archivo_intents=count($aux_intents);
         while($i<$tam_archivo_intents and $k<$cantidad_preguntas_antes){
@@ -1988,7 +1985,7 @@ $tam=count($res);
    //$answer->save();
    //$dir2->close();
    } 
-
+  //dd($this->agregar);
   /* $imagenes=DB::table('qnas_images')->where('id_answer','=',$question->id_answers)->get();
    foreach($imagenes as $imagen);
    //dd($imagen,$es_archivo_flow);
@@ -2002,6 +1999,7 @@ $tam=count($res);
     //dd($this);
   $tam_array_imagen=0;
         if ($this->selected_id){
+
             $pregeditar = ArchivoPregunta::find($this->selected_id);
             $pregunta_copy=DB::table('questions')->select('pregunta')->where('id_answers','=',$this->selected_id)->get();
             $this->pregunta_copy=array();
@@ -2009,10 +2007,12 @@ $tam=count($res);
             foreach($pregunta_copy as $pregunta_hecha){
               array_push($this->pregunta_copy,$pregunta_hecha->pregunta);
             }
+            //dd($this->agregar);
             //dd($this->pregunta_copy);
 
             $cantidad_preguntas_anterior=count($this->pregunta_copy);
             $cantidad_preguntas_nueva=count($this->pregunta);
+
             //dd($this->pregunta,$this->pregunta_copy,$cantidad_preguntas_nueva,$cantidad_preguntas_anterior);
             if($cantidad_preguntas_anterior<$cantidad_preguntas_nueva){
             $i=0;
@@ -2021,7 +2021,7 @@ $tam=count($res);
                 $i=$i+1;
                 //dd($pregunta_actual);
             }
-                    
+                
                    //dd($this,$i,$cantidad_preguntas_anterior,$cantidad_preguntas_nueva,$questions,$this->pregunta_copy,$$this->pregunta);
                     while($i<$cantidad_preguntas_nueva){
                         $questions_existe=DB::table('questions')->where('pregunta','=',$this->pregunta[$i])->count();
@@ -2037,6 +2037,7 @@ $tam=count($res);
                     //$questions=DB::table('questions')->get();
                     //dd($this,$i,$cantidad_preguntas_anterior,$cantidad_preguntas_nueva,$questions,$this->pregunta_copy,$this->pregunta);
             }elseif($cantidad_preguntas_anterior==$cantidad_preguntas_nueva){
+               //dd($this->agregar);    
                     $i=0;
              foreach($this->pregunta_copy as $pregunta_actual){
                 DB::table('questions')->where('pregunta','=',$pregunta_actual)->update(['pregunta'=> $this->pregunta[$i]]);
@@ -2045,18 +2046,24 @@ $tam=count($res);
                 }
             }
             //dd($pregeditar,$this);
+
             $pregeditar->update([
                 'nombre' => $this->resp,
                 'vence' => $this->vence,
                 'fecha_caducacion' => $this->fecha_caducacion,
             ]);
-
+                   
             //dd($this,$imagenes_nuevas,$cantidad_preguntas_anterior,$cantidad_preguntas_nueva,$pregeditar);
-            session()->flash('message', 'Pregunta actualizada correctamente');
+            if($this->agregar!=1){
+              session()->flash('message', 'Pregunta actualizada correctamente');
+            }else{
+              $this->agregar=0;
+            }
+            //dd($this->agregar);
           }
         }else{
           $this->remove=0;
-          session()->flash('message_delete', 'Se ha eliminado Input elemento de la Base de Datos y Archivos Botpress Correctamente');
+          //session()->flash('message_delete', 'Se ha eliminado Input elemento de la Base de Datos y Archivos Botpress Correctamente');
         }
     }
 
