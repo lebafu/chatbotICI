@@ -17,9 +17,6 @@ class DatabaseSeeder extends Seeder
 
     	$this->call(AnswerSeeder::class);
     	$this->call(QuestionSeeder::class);
-        $this->call(ArchivoNluSeeder::class);
-    	$this->call(NluNameSeeder::class);
-    	$this->call(NluQuestionSeeder::class);
         $this->call(QnaImageSeeder::class);
         $this->call(NluImageSeeder::class);
 

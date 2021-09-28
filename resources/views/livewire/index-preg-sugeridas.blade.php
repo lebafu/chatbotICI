@@ -22,7 +22,7 @@
             </div>
           </h5>
           <h2>
-            Sugerida por: {{$PregSugerida->nombre}} ({{date('d/m/Y h:m', strtotime($PregSugerida->created_at))}})
+            Sugerida por: {{$PregSugerida->nombre}} ({{date('d/m/Y h:i', strtotime($PregSugerida->created_at))}})
           </h2>
         </div>
         <div id="collapse{{$PregSugerida->id}}" class="collapse show" aria-labelledby="heading{{$PregSugerida->id}}" data-parent="#accordion">

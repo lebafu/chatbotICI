@@ -17,7 +17,7 @@ class preguntas_sin_respuestas extends Model
         'pregunta_sin_respuesta'
     ];
 
-    public $timestamps = false;
+    public $timestamps = true;
 }
 
 

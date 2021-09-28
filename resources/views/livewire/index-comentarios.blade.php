@@ -25,7 +25,7 @@
           <div class="card-body">
             "{{$comentario->comentarios_y_sugerencias}}"
             <br><div class="float-right">
-              Fecha creación: {{date('d/m/Y h:m', strtotime($comentario->created_at))}}
+              Fecha creación: {{date('d/m/Y h:i', strtotime($comentario->created_at))}}
             </div>
           </div>
         </div>
