@@ -13,18 +13,21 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-2 sm:-my-px sm:ml-12 sm:flex">
-                    <x-jet-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-jet-nav-link>
+                <div class="hidden space-x-4 sm:-my-px sm:ml-12 sm:flex text-gray-100">
                     <x-jet-nav-link href="{{ route('qna_index') }}" :active="request()->routeIs('qna_index')">
-                        {{ __('QnA') }}
+                        <div class="text-gray-100">
+                            {{ __('Preguntas Chatbot') }}
+                        </div>
                     </x-jet-nav-link>
                     <x-jet-nav-link href="{{ route('index_preguntas_sugeridas') }}" :active="request()->routeIs('index_preguntas_sugeridas')">
-                        {{ __('Q_sin_A') }}
+                        <div class="text-gray-100">
+                            {{ __('Preguntas Sugeridas') }}
+                        </div>
                     </x-jet-nav-link>
                     <x-jet-nav-link href="{{ route('index_comentarios') }}" :active="request()->routeIs('index_comentarios')">
-                        {{ __('Comentarios') }}
+                        <div class="text-gray-100">
+                            {{ __('Comentarios') }}
+                        </div>
                     </x-jet-nav-link>     
                 </div>
             </div>
@@ -52,7 +55,7 @@
                             <x-slot name="content">
                                 <div class="w-60">
                                     <div class="block px-4 py-2 text-xs text-gray-400">
-                                        {{ __('Manage TeamAAAAAA') }}
+                                        {{ __('Manage Team') }}
                                     </div>
                                     <x-jet-dropdown-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}">
                                         {{ __('Team Settings') }}
@@ -103,11 +106,11 @@
                         <x-slot name="content">
                             <!-- Account Management -->
                             <div class="block px-4 py-2 text-xs text-gray-400">
-                                {{ __('Manage Account') }}
+                                {{ __('Administrar Cuenta') }}
                             </div>
 
                             <x-jet-dropdown-link href="{{ route('profile.show') }}">
-                                {{ __('Profile') }}
+                                {{ __('Perfil') }}
                             </x-jet-dropdown-link>
 
                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
@@ -125,7 +128,7 @@
                                 <x-jet-dropdown-link href="{{ route('logout') }}"
                                          onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                    {{ __('Log Out') }}
+                                    {{ __('Cerrar Sesión') }}
                                 </x-jet-dropdown-link>
                             </form>
                         </x-slot>
