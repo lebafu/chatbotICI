@@ -60,7 +60,7 @@ class CrearPregunta extends Component
             $this->vence = 0;
         }
 
-
+        //$ruta_publica="C:\Users\LI\Desktop\chtbtICI\public";
         $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
          $a=0;
          $cantidad_preguntas=count($this->pregunta);
@@ -148,7 +148,7 @@ class CrearPregunta extends Component
         $name_qna='__qna__'.$randomString.$cadena_final;
         $id_qna=$randomString.'_'.$cadena_final;
            //dd($cadena_final,$nombre_archivo,$nombre_archivo2);
-            $path_archivo1=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/intents/".$nombre_archivo.".json");
+            $path_archivo1=public_path("botpress12120/data/bots/icibot/intents/".$nombre_archivo.".json");
         //dd($path_archivo1);
          $directorio1="botpress12120/data/bots/icibot/intents";
       
@@ -182,9 +182,9 @@ class CrearPregunta extends Component
   //dd($vector_substring);
 
 
-   $archivo_ejemplo1="C:/Users/LI/Desktop/chtbtICI/public/__qna__intents_prueba.txt";
-        $archivo_ejemplo2="C:/Users/LI/Desktop/chtbtICI/public/qna__qna_prueba.txt";
-
+   $archivo_ejemplo1=public_path("__qna__intents_prueba.txt");
+        $archivo_ejemplo2=public_path("qna__qna_prueba.txt");
+       dd($archivo_ejemplo1,$archivo_ejemplo2,$path_archivo1);
         $leer1 = fopen($archivo_ejemplo1, 'r+');
         $numlinea=0;
         while ($linea = fgets($leer1)){
@@ -283,7 +283,7 @@ class CrearPregunta extends Component
        //CARPETA QNA CREAR ARCHIVO
 
 
-        $path_archivo2=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/qna/".$nombre_archivo2.".json");
+        $path_archivo2=public_path("botpress12120/data/bots/icibot/qna/".$nombre_archivo2.".json");
         $leer2 = fopen($archivo_ejemplo2, 'r+');
         $numlinea=0;
          while ($linea = fgets($leer2)){
@@ -335,7 +335,7 @@ class CrearPregunta extends Component
         }elseif($buscar_questions!=false and $buscar_es_corchete!=false and $buscar_es_llave!=false){
           $aux_qna[$i+1]='      '.'"'.'es'.'":'." [\r\n";
           if($cantidad_preguntas==1){
-          $aux_qnaa[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
+          $aux_qna[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
           }else{
            $b=0;
            $c=2;
@@ -359,15 +359,17 @@ class CrearPregunta extends Component
 
             }
           //$aux_qna[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
+          //dd($aux_qna,$i,$c);
           $aux_qna[$i+$c]=$ultimas_8_lineas[0];
-          $aux_qna[$i+2+$c]=$ultimas_8_lineas[4];
-          $aux_qna[$i+3+$c]=$ultimas_8_lineas[5];
-          $aux_qna[$i+4+$c]=$ultimas_8_lineas[6];
-          $aux_qna[$i+5+$c]=$ultimas_8_lineas[7];
-          $aux_qna[$i+6+$c]=$ultimas_8_lineas[8];
-          //dd($aux_qna,$this->pregunta,$a,$c);
+          $aux_qna[$i+1+$c]=$ultimas_8_lineas[4];
+          $aux_qna[$i+2+$c]=$ultimas_8_lineas[5];
+          $aux_qna[$i+3+$c]=$ultimas_8_lineas[6];
+          $aux_qna[$i+4+$c]=$ultimas_8_lineas[7];
+          $aux_qna[$i+5+$c]=$ultimas_8_lineas[8];
+          //dd($aux_qna,$this->pregunta,$a,$c,$ultimas_8_lineas);
         }
         }if($global!=false){
+
           $aux_qna[$i]=str_replace("global",$this->contexto,$aux_qna[$i]);
         }if($id_vacio!=false){
             $aux_qna[$i]=str_replace('"id": "",','"id":'.' "'.$id_qna.'",',$aux_qna[$i]);
@@ -392,9 +394,9 @@ class CrearPregunta extends Component
         }
                 $i=$i+1;
       }
-      $aux_qna[$tam_array_aux_qna]="}"."\r\n";
+      //$aux_qna[$tam_array_aux_qna]="}"."\r\n";
       //dd($aux_qna);
-      $contenido.=$aux_qna[$tam_array_aux_qna];
+      //$contenido.=$aux_qna[$tam_array_aux_qna];
       //$aux_qna[$tam_array_aux_qna-6]=$aux_qna[$tam_array_aux_qna-6]."\r\n";
       //dd($aux_qna,$tam_array_aux_qna);
       //unlink($path_archivo2);
@@ -429,7 +431,7 @@ class CrearPregunta extends Component
         $name_qna='__qna__'.$randomString.$cadena_final;
         $id_qna=$randomString.'_'.$cadena_final;
 
-        $path_archivo1=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/intents/".$nombre_archivo.".json");
+        $path_archivo1=public_path("botpress12120/data/bots/icibot/intents/".$nombre_archivo.".json");
         //dd($path_archivo1);
          $directorio1="botpress12120/data/bots/icibot/intents";
       
@@ -489,9 +491,9 @@ class CrearPregunta extends Component
     //print_r($i);
    //}
   }*/
-  $archivo_ejemplo1="C:/Users/LI/Desktop/chtbtICI/public/__qna__intents_prueba.txt";
-        $archivo_ejemplo2="C:/Users/LI/Desktop/chtbtICI/public/qna__qna_prueba.txt";
-
+  $archivo_ejemplo1=public_path("__qna__intents_prueba.txt");
+        $archivo_ejemplo2=public_path("qna__qna_prueba.txt");
+         //dd($archivo_ejemplo1,$archivo_ejemplo2,$path_archivo1);
         $leer1 = fopen($archivo_ejemplo1, 'r+');
         $numlinea=0;
         while ($linea = fgets($leer1)){
@@ -599,7 +601,7 @@ class CrearPregunta extends Component
        //CARPETA QNA CREAR ARCHIVO
 
 
-        $path_archivo2=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/qna/".$nombre_archivo2.".json");
+        $path_archivo2=public_path("botpress12120/data/bots/icibot/qna/".$nombre_archivo2.".json");
         $leer2 = fopen($archivo_ejemplo2, 'r+');
         $numlinea=0;
          while ($linea = fgets($leer2)){
@@ -652,7 +654,7 @@ class CrearPregunta extends Component
         }elseif($buscar_questions!=false and $buscar_es_corchete!=false and $buscar_es_llave!=false){
           $aux_qna[$i+1]='      '.'"'.'es'.'":'." [\r\n";
           if($cantidad_preguntas==1){
-          $aux_qnaa[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
+          $aux_qna[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
           }else{
            $b=0;
            $c=2;
@@ -677,11 +679,11 @@ class CrearPregunta extends Component
             }
           //$aux_qna[$i+2]='        '.'"'.$this->pregunta[$a].'"'."\r\n";
           $aux_qna[$i+$c]=$ultimas_8_lineas[0];
-          $aux_qna[$i+2+$c]=$ultimas_8_lineas[4];
-          $aux_qna[$i+3+$c]=$ultimas_8_lineas[5];
-          $aux_qna[$i+4+$c]=$ultimas_8_lineas[6];
-          $aux_qna[$i+5+$c]=$ultimas_8_lineas[7];
-          $aux_qna[$i+6+$c]=$ultimas_8_lineas[8];
+          $aux_qna[$i+1+$c]=$ultimas_8_lineas[4];
+          $aux_qna[$i+2+$c]=$ultimas_8_lineas[5];
+          $aux_qna[$i+3+$c]=$ultimas_8_lineas[6];
+          $aux_qna[$i+4+$c]=$ultimas_8_lineas[7];
+          $aux_qna[$i+5+$c]=$ultimas_8_lineas[8];
           //dd($aux_qna,$this->pregunta,$a,$c);
         }
         }if($global!=false){
@@ -708,8 +710,8 @@ class CrearPregunta extends Component
         }
                 $i=$i+1;
       }
-        $aux_qna[$tam_array_aux_qna]="}"."\r\n";
-        $contenido.=$aux_qna[$tam_array_aux_qna];
+        //$aux_qna[$tam_array_aux_qna]="}"."\r\n";
+        //$contenido.=$aux_qna[$tam_array_aux_qna];
        $escribir2 = fopen($path_archivo2, 'w+');
          fwrite($escribir2, $contenido);
        fclose($escribir2);
