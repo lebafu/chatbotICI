@@ -8,9 +8,13 @@
     @endif
     </div>
 
+<div class="row">
+<div class="col-md-12">
   <div class="float-right">
-    <button class="btn btn-danger btn-sm" wire:click="vista_des()">Ver deshabilitadas</button>
+    <button class="btn btn-secondary btn-xl" wire:click="vista_des()">Ver deshabilitadas</button>
   </div>
+</div>
+</div><br>
 
   <div id="accordion">
     @foreach ($archivoPregs as $archivoPreg)
@@ -25,7 +29,9 @@
             </div>
             <div class="col-md-1">
               <div class="float-right">
-                <button class="btn btn-danger btn-sm" wire:click="habilitada({{ $archivoPreg->id}})">Deshabilitar</button>
+                <button class="btn btn-danger btn-sm" wire:click="habilitada({{ $archivoPreg->id}})">
+                <i class="material-icons" style="font-size: 15px">comments_disabled</i> Deshabilitar
+              </button>
               </div>
               </div>
             </div>

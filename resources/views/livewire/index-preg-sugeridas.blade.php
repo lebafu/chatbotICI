@@ -18,7 +18,9 @@
               #{{$PregSugerida->id}} : {{$PregSugerida->pregunta_sin_respuesta}}  
             </button>
             <div class="float-right">
-              <button class="btn btn-danger btn-sm" wire:click="delete({{ $PregSugerida->id }})">X</button>
+              <button class="btn btn-danger btn-sm" wire:click="delete({{ $PregSugerida->id }})">
+                <i class="material-icons">delete_outline</i>
+              </button>
             </div>
           </h5>
           <h2>

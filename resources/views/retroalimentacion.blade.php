@@ -8,7 +8,7 @@
                padding-bottom: 0px;
             }
 
-            .row-bottom-margin {margin-bottom: -15px;  }
+            .row-bottom-margin {margin-bottom: -16px;  }
             
         </style>
 
@@ -17,6 +17,7 @@
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
         <title>Retroalimentación Chatbot</title>
         @livewireStyles
@@ -61,30 +62,30 @@
             </div><br>
 
             <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="tabbable" id="tabs-947638">
-                        <ul class="nav nav-tabs">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#tab1" data-toggle="tab">Sugerir nuevas preguntas</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#tab2" data-toggle="tab">Comentarios y sugerencias</a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            <div class="tab-pane" id="tab1">
-                                <p>
-                                    @livewire('crear-pregsugerencias')
-                                </p>
-                            </div>
-                            <div class="tab-pane" id="tab2">
-                                <p>
-                                    @livewire('crear-comentario')
-                                </p>
-                            </div>
+                <div class="col-md-10 border">
+                    <div class="row justify-content-center">
+                <div class="col-md-11 center">
+                    <br><nav>
+                        <div class="nav nav-tabs nav-fill" id="nav-tabs" role="tablist">
+                            <a class="nav-item nav-link active" id="nav-sugerencias-tab" data-toggle="tab" href="#nav-sugerencias" role="tab" aria-controls="nav-sugerencias" aria-selected="true"><p><i class="material-icons">quiz</i><strong> Sugerir nuevas preguntas</strong></p></a>
+                            <a class="nav-item nav-link" id="nav-comentarios-tab" data-toggle="tab" href="#nav-comentarios" role="tab" aria-controls="nav-comentarios" aria-selected="false"><p><i class="material-icons">rate_review</i><strong>Comentarios y sugerencias</strong></p></a>
+                      </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav-sugerencias" role="tabpanel" aria-labelledby="nav-sugerencias-tab">
+                            <p>
+                                @livewire('crear-pregsugerencias')
+                            </p>
+                        </div>
+                        <div class="tab-pane fade" id="nav-comentarios" role="tabpanel" aria-labelledby="nav-comentarios-tab">
+                            <p>
+                                @livewire('crear-comentario')
+                            </p>
                         </div>
                     </div>
                 </div>
+            </div>
+            </div>
             </div>
         </div>
 
@@ -93,3 +94,4 @@
 
     </body>
 </html>
+

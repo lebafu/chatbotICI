@@ -31,15 +31,15 @@
           </div>   
     </div>
     <div class="row row-bottom-margin">
-      <div class="form-group col-md-11">
-            <label for="preguntas"><b>Preguntas que desee agregar (requerido):</b></label>
-            <input wire:model="pregunta_sin_respuesta.0" wire:keydown.enter="add({{$i}})" type="textpreg" class="form-control" name="preguntas"></input>
+      <label for="preguntas"><b>Preguntas que desee agregar (requerido):</b></label>
+      <div class="form-group col-md-11">    
+        <input wire:model="pregunta_sin_respuesta.0" wire:keydown.enter="add({{$i}})" type="textpreg" class="form-control" name="preguntas"></input>
       </div>
       <div class="form-group col-md-1">
             @if($i < 10)
-                <button class="btn text-white btn-info btn-sm" wire:click="add({{$i}})">Añadir</button>
+                <button class="btn text-white btn-info btn-sm" wire:click="add({{$i}})">✚</button>
             @else
-                <button class="btn text-white btn-info btn-sm" wire:click="max()">Añadir</button>
+                <button class="btn text-white btn-info btn-sm" wire:click="max()">✚</button>
             @endif
       </div>
     </div>
@@ -51,7 +51,7 @@
                       
                   </div>
                   <div class="form-group col-md-1">
-                      <button class="btn btn-danger btn-sm" wire:click="remove({{$key}})">X</button>
+                      <button class="btn btn-danger btn-sm" wire:click="remove({{$key}})">✕</button>
                   </div>
                 </div>
     @endforeach

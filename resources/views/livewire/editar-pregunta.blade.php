@@ -17,12 +17,12 @@
         <div class="form-group col-md-7">
           <div class="row row-bottom-margin">
             <input id="id" type="hidden" class="form-control" name="id" wire:model="selected_id" required autocomplete="nombre" autofocus readonly></input>
+            <label for="preguntas"><b>Preguntas que desee agregar (requerido):</b></label>
             <div class="form-group col-md-10">
-              <label for="preguntas"><b>Preguntas que desee agregar (requerido):</b></label>
               <input wire:model="pregunta.0" type="text" class="form-control" name="preguntas" disabled></input>
             </div>
             <div class="form-group col-md-1">
-              <button class="btn text-white btn-info btn-sm" wire:click="add({{$i}})">Añadir</button>
+              <button class="btn text-white btn-info btn-sm" wire:click="add({{$i}})">✚</button>
             </div>
           </div>
           @foreach($inputs as $key => $value)
@@ -31,7 +31,7 @@
                 <input wire:model="pregunta.{{ $value }}" wire:keydown.enter="add({{$i}})" type="text" class="form-control" name="preguntas"></input>
               </div>
               <div class="form-group col-md-1">
-                <button class="btn btn-danger btn-sm" wire:click="remove({{$key}})">X</button>
+                <button class="btn btn-danger btn-sm" wire:click="remove({{$key}})">✕</button>
               </div>
             </div>
             <input wire:model="pregunta_copy.{{ $value }}" type="hidden" class="form-control" name="pregunta_copy"></input>
