@@ -15,10 +15,11 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-    	$this->call(AnswerSeeder::class);
+    	$this->call(CategoriaSeeder::class);
+      $this->call(AnswerSeeder::class);
     	$this->call(QuestionSeeder::class);
-        $this->call(QnaImageSeeder::class);
-        $this->call(NluImageSeeder::class);
+      $this->call(QnaImageSeeder::class);
+      $this->call(NluImageSeeder::class);
 
         //$ruta="public/botpress12120/ucm-botpress1/media/";
         $directorio1="public/botpress12120/data/bots/icibot/media";

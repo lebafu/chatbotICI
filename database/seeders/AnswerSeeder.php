@@ -134,7 +134,7 @@ class AnswerSeeder extends Seeder
          $carbon = new \Carbon\Carbon();
         $fecha_actual = $carbon->now();
         //$fecha_actual= strtotime($fecha_actual->format('Y-m-d'));
-     		DB::table('answer')->insert(['nombre'=>$nombre,'archivo_qna'=>$res_nombres[$i] ,'habilitada'=> $habilitada,'created_at' => $fecha_actual,'updated_at'=>$fecha_actual]);
+     		DB::table('answer')->insert(['nombre'=>$nombre,'archivo_qna'=>$res_nombres[$i] ,'habilitada'=> $habilitada, 'id_categoria'=>1 , 'created_at' => $fecha_actual,'updated_at'=>$fecha_actual]);
     
     	//DB::table('answer')->insert(['nombre'=>$res_nombres[$i]]);
      		fclose($leer);
