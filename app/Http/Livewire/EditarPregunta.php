@@ -32,7 +32,7 @@ class EditarPregunta extends Component
     public function mount()
     {
       $pregeditar = ArchivoPregunta::findOrFail($this->archivoPreg->id);
-        $preguntas =DB::table('questions')->where('id_answers','=',$this->id)->select('pregunta')->get();
+      $preguntas =DB::table('questions')->where('id_answers','=',$this->id)->select('pregunta')->get();
       $this->edit($pregeditar->id);
     }
 
@@ -176,6 +176,10 @@ class EditarPregunta extends Component
 
       
         $pregeditar = ArchivoPregunta::findOrFail($id);
+        if($pregeditar->vence!="1"){
+          $pregeditar->vence=NULL;
+        }
+
         //dd($preguntas);
         $preguntas=DB::table('questions')->where('id_answers','=',$id)->select('pregunta')->get();
         //$this->pregunta=$pregunta->nombre;
@@ -479,6 +483,10 @@ class EditarPregunta extends Component
 
     public function update()
     {
+      if ($this->vence != 1){
+        $this->vence = NULL;
+        $this->fecha_caducacion = NULL;
+      }
         //dd($this->agregar);
             //dd($this);
         /*$this->validate([

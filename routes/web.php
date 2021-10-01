@@ -19,6 +19,8 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 	    return view('dashboard');
 	})->name('dashboard');
 
+Route::view('/retroalimentacion','retroalimentacion')->name('retroalimentacion');
+
 Route::middleware(['auth'])->group(function () {
 
 	Route::get('/', function () {
@@ -30,7 +32,6 @@ Route::middleware(['auth'])->group(function () {
 	});
 
 	//Rutas livewire
-	Route::view('/retroalimentacion','retroalimentacion')->name('retroalimentacion');
 	Route::view('/qna_index','qna.qna_name_index')->name('qna_index');
 	Route::view('/index_comentarios','comentarios.index')->name('index_comentarios');
 	Route::view('/index_preguntas_sugeridas','qna.index_preguntas_sin_respuestas')->name('index_preguntas_sugeridas');

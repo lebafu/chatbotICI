@@ -10,6 +10,17 @@
     </div>
 
     <div class="form-row">
+      <div class="form-group col-md-12">
+        <label for="tipo"><b>Contexto:</b></label>              
+        <select wire:model="tipo" name="tipo">
+          <option value="positivo">Positivo</option>
+          <option value="neutral">Neutral</option>
+          <option value="negativo">Negativo</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
       <div class="form-group col-md-6">
             <label for="Nombre"><b>Nombre (requerido):</b></label>
             <input wire:model="nombre" type="text" class="form-control" placeholder="Ingrese su nombre">

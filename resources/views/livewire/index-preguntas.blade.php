@@ -39,6 +39,7 @@
         </div>
         <div id="collapse{{$archivoPreg->id}}" class="collapse show" aria-labelledby="heading{{$archivoPreg->id}}" data-parent="#accordion">
           <div class="card-body">
+            {{$archivoPreg->categorias->nombre}}
             @livewire('editar-pregunta', ['archivoPreg' => $archivoPreg], key($archivoPreg->id))
           </div>
         </div>

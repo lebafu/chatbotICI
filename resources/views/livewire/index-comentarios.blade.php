@@ -11,9 +11,13 @@
   <div id="accordion">
     @foreach ($comentarios as $comentario)
       <div class="card">
-        <div class="card-header" id="heading{{$comentario->id}}">
+        <div class="card-header style="background-color:#bcbcbc"
+        @if ($comentario->tipo == 'positivo') style="background-color:#89E380"
+        @elseif ($comentario->tipo == 'neutral') style="background-color:#bcbcbc"
+        @else style="background-color:#dc6767" @endif"
+        id="heading{{$comentario->id}}">
           <h5 class="mb-0">
-            <button class="btn btn-link" data-toggle="collapse" data-target="#collapse{{$comentario->id}}" aria-expanded="true" aria-controls="collapse{{$comentario->id}}">
+            <button class="btn btn-link text-black" data-toggle="collapse" data-target="#collapse{{$comentario->id}}" aria-expanded="true" aria-controls="collapse{{$comentario->id}}">
               Comentario: #{{$comentario->id}} ({{$comentario->nombre}})
             </button>
             <div class="float-right">
@@ -27,7 +31,7 @@
           <div class="card-body">
             "{{$comentario->comentarios_y_sugerencias}}"
             <br><div class="float-right">
-              Fecha creación: {{date('d/m/Y h:i', strtotime($comentario->created_at))}}
+              Recibido el: {{date('d/m/Y h:i', strtotime($comentario->created_at))}}
             </div>
           </div>
         </div>
