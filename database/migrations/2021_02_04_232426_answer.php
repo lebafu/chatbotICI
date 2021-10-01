@@ -20,6 +20,7 @@ class Answer extends Migration
             $table->string('vence')->default('No');
             $table->date('fecha_caducacion')->nullable();
             //$table->foreignId('id_archivo')->references('id')->on('archivo_qna');
+            $table->foreignId('id_categoria')->references('id')->on('categorias');
             $table->string('archivo_qna');
             $table->integer('habilitada');
             $table->timestamps();
