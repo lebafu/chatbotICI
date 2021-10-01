@@ -4,28 +4,20 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Answers as ArchivoPregunta;
-use App\Models\Question as Preguntas;
-use App\Models\Categorias;
 use App\Http\Livewire\Answers;
+use App\Models\Question as Preguntas;
 use App\Http\Livewire\Field;
 use Illuminate\Http\Request;
 
 class CrearPregunta extends Component
 {
-  public $resp, $vence, $fecha_caducacion, $categoria, $nueva_cat, $archivo_qna, $habilitada, $pregunta, $id_foranea, $contexto;
+  public $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea, $contexto;
     public $inputs = [];
     public $i = 1;
 
     public function render()
     {
-      $categorias = Categorias::all();
-      return view('livewire.crear-pregunta',['categorias' => $categorias]);
-    }
-
-    public function mount()
-    {
-      $this->contexto = "global";
-      $this->categoria = "1";
+        return view('livewire.crear-pregunta');
     }
 
     public function add($i)
@@ -45,7 +37,6 @@ class CrearPregunta extends Component
         $this->resp = null;
         $this->vence = null;
         $this->fecha_caducacion = null;
-        $this->categoria = null;
         $this->archivo_qna = null;
         $this->habilitada = null;
         $this->pregunta = null;
@@ -66,7 +57,7 @@ class CrearPregunta extends Component
         ]);
 
         if ($this->vence != 1){
-            $this->vence = NULL;
+            $this->vence = 0;
         }
 
         //$ruta_publica="C:\Users\LI\Desktop\chtbtICI\public";
@@ -193,7 +184,7 @@ class CrearPregunta extends Component
 
    $archivo_ejemplo1=public_path("__qna__intents_prueba.txt");
         $archivo_ejemplo2=public_path("qna__qna_prueba.txt");
-       dd($archivo_ejemplo1,$archivo_ejemplo2,$path_archivo1);
+       //dd($archivo_ejemplo1,$archivo_ejemplo2,$path_archivo1);
         $leer1 = fopen($archivo_ejemplo1, 'r+');
         $numlinea=0;
         while ($linea = fgets($leer1)){
@@ -725,7 +716,7 @@ class CrearPregunta extends Component
          fwrite($escribir2, $contenido);
        fclose($escribir2);
 
-       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'categoria' => $this->categoria, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
+       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
 
 
 
