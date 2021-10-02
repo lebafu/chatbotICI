@@ -24,7 +24,7 @@ class CrearComentario extends Component
     {
         $this->nombre = null;
         $this->email = null;
-        $this->tipo = null;
+        $this->tipo = "neutral";
         $this->comentarios_y_sugerencias = null;
     }
 

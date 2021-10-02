@@ -14,6 +14,7 @@ class comentarios_y_sugerencias extends Model
     protected $fillable = [
         'nombre',
         'email',
+        'tipo',
         'comentarios_y_sugerencias'
     ];
 

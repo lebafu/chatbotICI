@@ -12,9 +12,12 @@ class Categorias extends Model
     protected $table = 'categorias';
     protected $primarykey = 'id';
     protected $fillable = [
-        'nombre',
-        'id_categoria'
+        'nombre'
     ];
 
     public $timestamps = false;
+
+    public function Answers() {
+      return $this->hasOne('App\Models\Answers','id_categoria');
+    }
 }

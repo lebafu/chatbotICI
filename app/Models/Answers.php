@@ -15,9 +15,15 @@ class Answers extends Model
         'nombre',
         'vence',
         'fecha_caducacion',
+        'id_categoria',
         'archivo_qna',
         'habilitada'
     ];
 
     public $timestamps = true;
+
+    public function Categorias()
+      {
+        return $this->belongsTo('App\Models\Categorias','id_categoria','id');
+      }
 }

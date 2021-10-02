@@ -59,10 +59,10 @@
                         </div>
                     </div>
                 </div>
-            </div><br>
+            </div>
 
             <div class="row justify-content-center">
-                <div class="col-md-10 border">
+                <div class="col-md-10 border-right border-left">
                     <div class="row justify-content-center">
                 <div class="col-md-11 center">
                     <br><nav>

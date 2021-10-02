@@ -4,20 +4,28 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Answers as ArchivoPregunta;
-use App\Http\Livewire\Answers;
 use App\Models\Question as Preguntas;
+use App\Models\Categorias;
+use App\Http\Livewire\Answers;
 use App\Http\Livewire\Field;
 use Illuminate\Http\Request;
 
 class CrearPregunta extends Component
 {
-  public $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea, $contexto;
+  public $resp, $vence, $fecha_caducacion, $categoria, $nueva_cat, $archivo_qna, $habilitada, $pregunta, $id_foranea, $contexto;
     public $inputs = [];
     public $i = 1;
 
     public function render()
     {
-        return view('livewire.crear-pregunta');
+      $categorias = Categorias::all();
+      return view('livewire.crear-pregunta',['categorias' => $categorias]);
+    }
+
+    public function mount()
+    {
+      $this->contexto = "global";
+      $this->categoria = "1";
     }
 
     public function add($i)
@@ -37,6 +45,7 @@ class CrearPregunta extends Component
         $this->resp = null;
         $this->vence = null;
         $this->fecha_caducacion = null;
+        $this->categoria = null;
         $this->archivo_qna = null;
         $this->habilitada = null;
         $this->pregunta = null;
@@ -57,7 +66,7 @@ class CrearPregunta extends Component
         ]);
 
         if ($this->vence != 1){
-            $this->vence = 0;
+            $this->vence = NULL;
         }
 
         //$ruta_publica="C:\Users\LI\Desktop\chtbtICI\public";
@@ -715,8 +724,9 @@ class CrearPregunta extends Component
        $escribir2 = fopen($path_archivo2, 'w+');
          fwrite($escribir2, $contenido);
        fclose($escribir2);
-
-       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
+       
+       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'categoria' => $this->categoria, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
+ 
 
 
 
