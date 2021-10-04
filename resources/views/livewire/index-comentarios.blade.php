@@ -12,7 +12,7 @@
     <div class="row">
       
       
-  <div class="card-columns" style="padding-left:0px;padding-right:0px;margin-left: 0px;"> 
+  <div class="card-columns" style="padding-left:0px;padding-right:0px"> 
   @foreach ($comentarios as $comentario)   
     <div class="card">
       <div class="card-body style="background-color:#bcbcbc"
@@ -42,7 +42,7 @@
       
 
         <p class="card-text text-center" style="padding-left:0px;padding-right:0px">"{{$comentario->comentarios_y_sugerencias}}"<br>
-          <em  style="font-size: 13px">(Recibido el: {{date('d/m/Y h:i', strtotime($comentario->created_at)) }})</em>
+          <em style="font-size: 13px">(Recibido el: {{date('d/m/Y h:i', strtotime($comentario->created_at)) }})</em>
         </p>
       </div>
     </div>
