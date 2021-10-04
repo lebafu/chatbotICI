@@ -13,7 +13,7 @@ class IndexComentarios extends Component
     public function render()
     {
         return view('livewire.index-comentarios', [
-            'comentarios' => Comentarios::orderBy('created_at', 'desc')->paginate(10),
+            'comentarios' => Comentarios::orderBy('created_at', 'desc')->paginate(9),
         ]);
     }
 

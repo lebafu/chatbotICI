@@ -7,36 +7,49 @@
       </div>
     @endif
     </div>
-    
-  <div id="accordion">
-    @foreach ($comentarios as $comentario)
-      <div class="card">
-        <div class="card-header style="background-color:#bcbcbc"
+
+
+    <div class="row">
+      
+      
+  <div class="card-columns" style="padding-left:0px;padding-right:0px;margin-left: 0px;"> 
+  @foreach ($comentarios as $comentario)   
+    <div class="card">
+      <div class="card-body style="background-color:#bcbcbc"
         @if ($comentario->tipo == 'positivo') style="background-color:#89E380"
         @elseif ($comentario->tipo == 'neutral') style="background-color:#bcbcbc"
-        @else style="background-color:#dc6767" @endif"
-        id="heading{{$comentario->id}}">
-          <h5 class="mb-0">
-            <button class="btn btn-link text-black" data-toggle="collapse" data-target="#collapse{{$comentario->id}}" aria-expanded="true" aria-controls="collapse{{$comentario->id}}">
-              Comentario: #{{$comentario->id}} ({{$comentario->nombre}})
-            </button>
-            <div class="float-right">
-              <button class="btn btn-danger btn-sm" wire:click="delete({{ $comentario->id }})">
-                <i class="material-icons">delete_outline</i>
-              </button>
+        @else style="background-color:#dc6767" @endif">
+          <div class="row">
+            <div class="col-md-2">
+              <i class="material-icons" style="color:rgb(240,240,240);font-size: 30px">
+              @if ($comentario->tipo == 'positivo') thumb_up_alt
+        @elseif ($comentario->tipo == 'neutral') remove_circle_outline
+        @else  thumb_down_alt @endif
+            </i>
             </div>
-          </h5>
+          <div class="col-md-8">
+            <div class="card-title text-center">
+          <strong>#{{$comentario->id}}: {{$comentario->nombre}}</strong>
         </div>
-        <div id="collapse{{$comentario->id}}" class="collapse show" aria-labelledby="heading{{$comentario->id}}" data-parent="#accordion">
-          <div class="card-body">
-            "{{$comentario->comentarios_y_sugerencias}}"
-            <br><div class="float-right">
-              Recibido el: {{date('d/m/Y h:i', strtotime($comentario->created_at))}}
-            </div>
+          </div>
+          <div class="col-md-2 text-center">
+          <button class="btn btn-danger btn-sm" style="height:30px" wire:click="delete({{ $comentario->id }})">
+                <i class="material-icons" style="font-size: 20px">delete_outline</i>
+              </button>
           </div>
         </div>
+      
+      
+
+        <p class="card-text text-center" style="padding-left:0px;padding-right:0px">"{{$comentario->comentarios_y_sugerencias}}"<br>
+          <em  style="font-size: 13px">(Recibido el: {{date('d/m/Y h:i', strtotime($comentario->created_at)) }})</em>
+        </p>
       </div>
+    </div>
     @endforeach
-    {{ $comentarios->links() }}
   </div>
+
+  
+</div>
+    {{ $comentarios->links() }}
 </div>

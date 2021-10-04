@@ -17,7 +17,7 @@ class Answer extends Migration
         Schema::create('answer', function (Blueprint $table) {
             $table->id();
             $table->text('nombre');
-            $table->string('vence')->default('No');
+            $table->string('vence')->nullable();
             $table->date('fecha_caducacion')->nullable();
             //$table->foreignId('id_archivo')->references('id')->on('archivo_qna');
             $table->foreignId('id_categoria')->references('id')->on('categorias')->default('1');
