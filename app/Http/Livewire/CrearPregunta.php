@@ -413,7 +413,7 @@ class CrearPregunta extends Component
        $escribir2 = fopen($path_archivo2, 'w+');
          fwrite($escribir2, $contenido);
        fclose($escribir2);
-       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
+       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'id_categoria' => $this->categoria,'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
 
 
 
@@ -725,8 +725,10 @@ class CrearPregunta extends Component
          fwrite($escribir2, $contenido);
        fclose($escribir2);
        
-       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'categoria' => $this->categoria, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
- 
+       //dd($this);
+       
+       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'id_categoria' => $this->categoria, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
+     
 
 
 
