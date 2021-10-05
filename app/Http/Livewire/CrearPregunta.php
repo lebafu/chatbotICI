@@ -45,8 +45,7 @@ class CrearPregunta extends Component
         $this->resp = null;
         $this->vence = null;
         $this->fecha_caducacion = null;
-        $this->categoria = "1";
-        $this->contexto = "global";
+        $this->categoria = null;
         $this->archivo_qna = null;
         $this->habilitada = null;
         $this->pregunta = null;
