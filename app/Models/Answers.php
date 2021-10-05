@@ -23,7 +23,12 @@ class Answers extends Model
     public $timestamps = true;
 
     public function Categorias()
-      {
+    {
         return $this->belongsTo('App\Models\Categorias','id_categoria','id');
-      }
+    }
+
+    public function Question() {
+      return $this->hasMany('App\Models\Question','id_answers');
+    }
+
 }

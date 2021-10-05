@@ -17,4 +17,9 @@ class Question extends Model
             ];
 
     public $timestamps = false;
+
+    public function Answers()
+    {
+        return $this->belongsTo('App\Models\Answers','id_answers','id');
+    }
 }
