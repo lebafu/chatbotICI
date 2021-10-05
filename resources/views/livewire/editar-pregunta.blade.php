@@ -25,6 +25,9 @@
               <button class="btn text-white btn-info btn-sm" wire:click="add({{$i}})">✚</button>
             </div>
           </div>
+
+{{ $cant_preg }}
+
           @foreach($inputs as $key => $value)
             <div class="row row-bottom-margin">
               <div class="form-group col-md-10">

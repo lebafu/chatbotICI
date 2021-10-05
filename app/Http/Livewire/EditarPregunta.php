@@ -18,7 +18,7 @@ class EditarPregunta extends Component
 {
  use WithFileUploads;
 
-  public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea,$contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado,$todo_ordenado_copy,$pos,$nombre_imagen,$nombres_imagenes,$imagen_nueva,$imagen_actual,$imagenes_nuevas,$strings,$textos_originales,$imagen,$image_nueva,$remove,$fecha_minima,$agregar;
+  public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea,$contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado,$todo_ordenado_copy,$pos,$nombre_imagen,$nombres_imagenes,$imagen_nueva,$imagen_actual,$imagenes_nuevas,$strings,$textos_originales,$imagen,$image_nueva,$remove,$fecha_minima,$agregar, $cant_preg;
     //public $pregunta=[];
     public $inputs = [];
     public $i = 0;
@@ -33,7 +33,9 @@ class EditarPregunta extends Component
     {
       $pregeditar = ArchivoPregunta::findOrFail($this->archivoPreg->id);
       $preguntas =DB::table('questions')->where('id_answers','=',$this->id)->select('pregunta')->get();
-      $this->edit($pregeditar->id);
+      //$cant_preg = $preguntas->count();
+      //dd($cant_preg);
+      $this->edit($pregeditar->id, $cant_preg);
     }
 
     public function add($i)
@@ -170,15 +172,13 @@ class EditarPregunta extends Component
         $this->id_foranea = null;
     }
 
-    public function edit($id)
+    public function edit($id, $cant_preg)
     {
       //dd($id);
 
-      
+        dd($cant_preg);
+
         $pregeditar = ArchivoPregunta::findOrFail($id);
-        if($pregeditar->vence!="1"){
-          $pregeditar->vence=NULL;
-        }
 
         //dd($preguntas);
         $preguntas=DB::table('questions')->where('id_answers','=',$id)->select('pregunta')->get();

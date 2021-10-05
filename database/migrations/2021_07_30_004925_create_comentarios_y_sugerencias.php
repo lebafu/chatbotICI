@@ -17,6 +17,7 @@ class CreateComentariosYSugerencias extends Migration
             $table->id();
             $table->string('nombre');
             $table->string('email');
+            $table->enum('tipo',['positivo','neutral','negativo']);
             $table->text('comentarios_y_sugerencias');
             $table->timestamps();
         });
