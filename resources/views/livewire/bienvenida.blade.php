@@ -1,21 +1,44 @@
 <div class="p-6 sm:px-20 bg-white border-b border-gray-200">
-    <div>
-        <img src="images/logo.png" class="block h-9 w-auto" />
+    <div class="row justify-content-center">
+    <div class="col-md-3 ">
+        <center>
+        <img src="images/logo.png" class=" h-16 w-auto" />
+    </center>
     </div>
-
-    <div class="mt-8 text-2xl">
-        Bienvenido a la aplicación para Modificar Chatbot ICIUCM
+    <div class="col-md-8">
+        <div class="text-2xl">
+            Bienvenido: {{ @Auth::user()->name }}
+        </div>
+        <div class="text-gray-500">
+            <ul>
+                <li class="list-item">
+                    - Correo: {{ @Auth::user()->email }}
+                </li>
+                <li class="list-item">
+                    - Autenticación de 2 pasos: 
+                    @if (@Auth::user()->two_factor_secret != Null)<text class="text-success">Habilitada</text>
+                    @else <text class="text-danger">Deshabilitada</text>
+                    @endif
+                </li>
+                <li class="list-item">
+                    - Ultima actualización de perfil: {{date('d/m/Y', strtotime(@Auth::user()->updated_at)) }}
+                </li>
+                <li class="list-item">
+                    @if (@Auth::user()->updated_at < $limite) <text class="text-danger">No actualizas tu contraseña hace más de 90 días</text>
+                    @else 
+                    @endif 
+                </li>
+            </ul>
+        </div>
     </div>
-
-    <div class="mt-6 text-gray-500">
-        En esta aplicación usted puede cambiar el contenido y respuestas del chatbot de botpress, en la barra de navegación
-        puede ver las Intenciones y las Questions Answer.
-        <!--Laravel Jetstream provides a beautiful, robust starting point for your next Laravel application. Laravel is designed
-        to help you build your application using a development environment that is simple, powerful, and enjoyable. We believe
-        you should love expressing your creativity through programming, so we have spent time carefully crafting the Laravel
-        ecosystem to be a breath of fresh air. We hope you love it.-->
+    <div class="col-md-1">
+        fdsfs
     </div>
 </div>
+</div>
+
+    
+
 
 <div class="bg-gray-200 bg-opacity-25 grid grid-cols-1 md:grid-cols-2">
     <div class="p-6">

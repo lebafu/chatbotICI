@@ -39,8 +39,6 @@
           </div>
         </div>
       
-      
-
         <p class="card-text text-center" style="padding-left:0px;padding-right:0px">"{{$comentario->comentarios_y_sugerencias}}"<br>
           <em style="font-size: 13px">(Recibido el: {{date('d/m/Y h:i', strtotime($comentario->created_at)) }})</em>
         </p>
