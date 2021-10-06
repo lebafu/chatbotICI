@@ -25,7 +25,7 @@
         <div class="row">
           <div class="col-md-11" style="padding-right:35px">
                 <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse{{$archivoPreg->id}}" aria-expanded="false" aria-controls="collapse{{$archivoPreg->id}}">
-                {{$archivoPreg->nombre}}
+                {{$archivoPreg->Question[0]->pregunta }}
                 </a>
           </div>
           <div class="col-md-1" style="padding-right:10px">

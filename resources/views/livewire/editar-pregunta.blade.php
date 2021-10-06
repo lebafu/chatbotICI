@@ -26,7 +26,6 @@
             </div>
           </div>
 
-{{ $cant_preg }}
 
           @foreach($inputs as $key => $value)
             <div class="row row-bottom-margin">
