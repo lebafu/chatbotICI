@@ -30,7 +30,7 @@
     </div>
     <div class="col-md-3">
       <center>
-        <br><button class="btn bg-indigo-600 text-white btn-xl" wire:click="vista_des()">Ajustes de cuenta</button>
+        <br><a class="btn bg-indigo-600 text-white btn-xl" href="{{ route('profile.show') }}">Ajustes de cuenta</a>
       </center>
     </div>
   </div>
