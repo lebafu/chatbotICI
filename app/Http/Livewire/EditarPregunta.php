@@ -158,18 +158,6 @@ class EditarPregunta extends Component
 
     }
 
-    public function resetInput()
-    {
-        $this->resp = null;
-        $this->vence = null;
-        $this->fecha_caducacion = null;
-        $this->archivo_qna = null;
-        $this->habilitada = null;
-        $this->pregunta = null;
-        $this->pregunta_copy=null;
-        $this->id_foranea = null;
-    }
-
     public function edit($id)
     {
       //dd($id);
