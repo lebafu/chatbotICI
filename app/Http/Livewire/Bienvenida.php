@@ -16,12 +16,12 @@ class Bienvenida extends Component
 		$activas = Answers::where('habilitada',1)->count();
 		$inactivas = Answers::where('habilitada',0)->count();
 		$sietedias = Carbon::now()->addDays(7);
-		$finalizan = Answers::where('fecha_caducacion', '>=', 'Carbon::now()')->where('fecha_caducacion', '<=', $sietedias)->get();	
+		$finalizan = Answers::where('fecha_caducacion', '>=', 'Carbon::now()')->where('fecha_caducacion', '<=', $sietedias)->count();	
 		$comentarios = Comentarios::all()->count();
 		$ult_comentario = Comentarios::orderBy('id', 'DESC')->first(); 
 		$sugeridas = Sugerencias::all()->count();
 		$ult_sugerida = Sugerencias::orderBy('id', 'DESC')->first();
-		dd($ult_comentario);
-        return view('livewire.bienvenida')->with('limite', $limite);
+		//dd($ult_sugerida);
+        return view('livewire.bienvenida',['limite' => $limite, 'activas' => $activas, 'inactivas' => $inactivas, 'finalizan' => $finalizan, 'comentarios' => $comentarios, 'ult_comentario' => $ult_comentario, 'sugeridas' => $sugeridas, 'ult_sugerida' => $ult_sugerida]);
     }
 }
