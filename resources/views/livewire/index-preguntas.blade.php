@@ -40,7 +40,6 @@
     </div>
     <div id="collapse{{$archivoPreg->id}}" class="collapse" role="tabpanel" aria-labelledby="heading{{$archivoPreg->id}}">
       <div class="card-block">
-        {{$archivoPreg->categorias->nombre}}
         @livewire('editar-pregunta', ['archivoPreg' => $archivoPreg], key($archivoPreg->id))
       </div>
     </div>
