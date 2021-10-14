@@ -895,6 +895,7 @@ $tam=count($res);
          //dd(substr($aux_intents[11],7,-3));
         $i=0;
         $k=0;
+        $var_contexto_intents=0;
         $tam_archivo_intents=count($aux_intents);
         while($i<$tam_archivo_intents and $k<$cantidad_preguntas_antes){
              $pos=strpos($aux_intents[$i],$this->pregunta_copy[$k]);
@@ -912,9 +913,12 @@ $tam=count($res);
                   }
               }
               //dd($aux_intents,$pos,$this->pregunta_copy[$k],$this->pregunta[$k],$i,$k);
+        if($var_contexto_intents==0){
            if(substr($aux_intents[$i],5,-2)=="global" or substr($aux_intents[$i],5,-2)=="regular" or substr($aux_intents[$i],5,-2)=="egresado"){
             $aux_intents[$i]=str_replace(substr($aux_intents[$i],5,-2),$this->contexto,$aux_intents[$i]);
           }
+          $var_contexto_intents=1;
+        }
         $i=$i+1;
         }
         $i=$i-1;
@@ -990,7 +994,7 @@ $tam=count($res);
                 $k=$k+1;
                 $i=$i+1;
           }
-        }
+        } 
           if(substr($aux_qna[$i],7,-2)=="global" or substr($aux_qna[$i],7,-2)=="regular" or substr($aux_qna[$i],7,-2)=="egresado"){
             $aux_qna[$i]=str_replace(substr($aux_qna[$i],7,-2),$this->contexto,$aux_qna[$i]);
           }
@@ -1105,7 +1109,7 @@ $tam=count($res);
   }
 
 $tam=count($res);
-  //dd($tam);
+  //dd($res);
   $i=0;
   $pos=strpos($res[$i]["Nombre"],$archivo_qna->archivo_qna);
   //dd($pos);
@@ -1238,6 +1242,7 @@ $tam=count($res);
         //$pos=strpos(substr($aux_intents[$i],7,-3),$question->pregunta);
         //dd(substr($aux_intents[$i],7,-3));
        //dd($pos,$aux_intents[8],substr($aux_intents[8],7,-3),$question->pregunta);
+        $var_contexto_intents=0;
         $k=0;
         $tam_archivo_intents=count($aux_intents);
         while($i<$tam_archivo_intents and $k<$cantidad_preguntas_antes){
@@ -1255,12 +1260,18 @@ $tam=count($res);
                     }*/
                   }
               }
-              //dd($aux_intents,$pos,$this->pregunta_copy[$k],$this->pregunta[$k],$i,$k);
-           if((substr($aux_intents[$i],5,-2)=="global" or substr($aux_intents[$i],5,-2)=="regular" or substr($aux_intents[$i],5,-2)=="egresado") and $i<$tam_archivo_intents){
+            
+          if($var_contexto_intents==0){
+           if((substr($aux_intents[$i],5,-2)=="global" or substr($aux_intents[$i],5,-2)=="regular" or substr($aux_intents[$i],5,-2)=="egresado") and $i<$tam_archivo_intents and $var_contexto_intents==0){
             $aux_intents[$i]=str_replace(substr($aux_intents[$i],5,-2),$this->contexto,$aux_intents[$i]);
+            $var_contexto_intents=1;
+            //dd($var_contexto_intents,$k,$cantidad_preguntas_actual,$aux_intents[$i],$this->contexto,substr($aux_intents[$i],5,-2));
           }
+        }
+        //
         $i=$i+1;
         }
+        //dd($aux_intents,$tam_archivo_intents);
         $i=$i-1;
                
         if($k<$cantidad_preguntas_actual){
@@ -1315,6 +1326,7 @@ $tam=count($res);
         $k=0;
         $i=0;
         $j=0;
+        $var_qna_contexto=0;
         //dd($aux_qna,$this->pregunta_copy);
         $pos1=strpos($aux_qna[$i],$this->pregunta_copy[$k]);
         //$pos2=strpos($aux_qna[$i],$this->pregunta_copy[$k]);
@@ -1339,12 +1351,13 @@ $tam=count($res);
                 $i=$i+1;
           }
         }
+        if($var_qna_contexto==0){
           if((substr($aux_qna[$i],7,-2)=="global" or substr($aux_qna[$i],7,-2)=="regular" or substr($aux_qna[$i],7,-2)=="egresado") and $i<$tam_archivo_qna){
             //dd($aux_qna[$i],substr($aux_qna[$i],7,-2));
-
-
             $aux_qna[$i]=str_replace(substr($aux_qna[$i],7,-2),$this->contexto,$aux_qna[$i]);
+            $var_qna_contexto=1;
           }
+        }
           $i=$i+1;
         }
         $i=$i-1;
