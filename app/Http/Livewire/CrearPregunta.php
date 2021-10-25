@@ -45,7 +45,9 @@ class CrearPregunta extends Component
         $this->resp = null;
         $this->vence = null;
         $this->fecha_caducacion = null;
-        $this->categoria = null;
+        $this->categoria = "1";
+        $this->nueva_cat = null;
+        $this->contexto = "global";
         $this->archivo_qna = null;
         $this->habilitada = null;
         $this->pregunta = null;
@@ -66,7 +68,8 @@ class CrearPregunta extends Component
         ]);
 
         if ($this->vence != 1){
-            $this->vence = NULL;
+            $this->vence = null;
+            $this->fecha_caducacion = null;
         }
 
         //$ruta_publica="C:\Users\LI\Desktop\chtbtICI\public";
@@ -726,7 +729,9 @@ class CrearPregunta extends Component
        fclose($escribir2);
        
        //dd($this);
-       
+       if ($this->categoria == 'nueva'){
+        dd($this->categoria);
+       }
        $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'id_categoria' => $this->categoria, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
      
 
