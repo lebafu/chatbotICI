@@ -90,11 +90,8 @@ class AnswerSeeder extends Seeder
             $aux[] = $linea;    
              $numlinea++;
         }
-        
-        if($i==0){
-          //dd($aux);
-        //dd($path_archivo,$leer,$i,$aux);
-        }
+        //dd($aux);
+        $contexto=substr($aux[5],7,-2);
         $pos1=strpos($aux[11],']');
         if($pos1!=false){
         	//dd(substr($aux[10],-1));
@@ -134,7 +131,7 @@ class AnswerSeeder extends Seeder
          $carbon = new \Carbon\Carbon();
         $fecha_actual = $carbon->now();
         //$fecha_actual= strtotime($fecha_actual->format('Y-m-d'));
-     		DB::table('answer')->insert(['nombre'=>$nombre,'archivo_qna'=>$res_nombres[$i] ,'habilitada'=> $habilitada, 'id_categoria'=>1 , 'created_at' => $fecha_actual,'updated_at'=>$fecha_actual]);
+     		DB::table('answer')->insert(['nombre'=>$nombre,'archivo_qna'=>$res_nombres[$i] ,'habilitada'=> $habilitada, 'id_categoria'=>1 ,'contexto'=> $contexto ,'created_at' => $fecha_actual,'updated_at'=>$fecha_actual]);
     
     	//DB::table('answer')->insert(['nombre'=>$res_nombres[$i]]);
      		fclose($leer);
