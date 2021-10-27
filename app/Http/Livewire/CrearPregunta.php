@@ -71,7 +71,7 @@ class CrearPregunta extends Component
             $this->vence = null;
             $this->fecha_caducacion = null;
         }
-
+        //dd($this->contexto);
         //$ruta_publica="C:\Users\LI\Desktop\chtbtICI\public";
         $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
          $a=0;
@@ -416,7 +416,7 @@ class CrearPregunta extends Component
        $escribir2 = fopen($path_archivo2, 'w+');
          fwrite($escribir2, $contenido);
        fclose($escribir2);
-       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'id_categoria' => $this->categoria,'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
+       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion,'contexto'=> $this->contexto,'id_categoria' => $this->categoria,'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
 
 
 
@@ -730,9 +730,9 @@ class CrearPregunta extends Component
        
        //dd($this);
        if ($this->categoria == 'nueva'){
-        dd($this->categoria);
+        //dd($this->categoria);
        }
-       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'id_categoria' => $this->categoria, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
+       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion,'contexto' => $this->contexto,'id_categoria' => $this->categoria, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
      
 
 
