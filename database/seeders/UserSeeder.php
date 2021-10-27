@@ -22,12 +22,3 @@ class UserSeeder extends Seeder
         $user = User::create(['id' => 1, 'name' => 'Administrador', 'email' => 'admin@admin.com', 'password' => Hash::make('admin'), 'current_team_id' => 1, 'created_at' => $fecha, 'updated_at' => $fecha]);
     }
 }
-
-
-
-
-
-
-
-
-

@@ -16,6 +16,7 @@ class Answers extends Model
         'vence',
         'fecha_caducacion',
         'id_categoria',
+        'contexto',
         'archivo_qna',
         'habilitada'
     ];
