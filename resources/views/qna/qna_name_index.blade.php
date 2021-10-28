@@ -25,9 +25,9 @@
 
 
 <div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div id="accordion">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <div id="accordion">
               <div class="card">
                 <div class="card-header" id="headingOne">
                   <h5 class="mb-0">
@@ -44,13 +44,15 @@
                 </div>
               </div>
             </div>
-        </div> 
-        @livewire('index-preguntas')   
-    </div>
+
+            
+  </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+    @livewire('index-preguntas') 
+  </div>
+  </div>
 </div>
 
 </x-app-layout>
-
-
-
-

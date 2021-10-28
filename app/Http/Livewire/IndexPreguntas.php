@@ -5,38 +5,72 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\Answers as ArchivoPregunta;
 use App\Models\Question as Preguntas;
+use App\Models\Categorias;
+use Carbon\Carbon;
 use DB;
 use Livewire\WithPagination;
 
 class IndexPreguntas extends Component
 {
 	 use WithPagination;
-   public $hab=1;
+   public $orden, $estado, $filtro_cat, $cant_pagina;
 
     public function render()
     {
-      if ($this->hab == 1){
-        /*$archivoPregs=ArchivoPregunta::where('habilitada', 1)->orderBy('updated_at', 'desc')->paginate(10);
-            dd($archivoPregs);*/
-        return view('livewire.index-preguntas', [
+      $categorias = Categorias::all();
+      if($this->estado == "todos"){
+        if($this->filtro_cat == "todas"){
+          return view('livewire.index-preguntas', [
+            'archivoPregs' => ArchivoPregunta::orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
+            'categorias' => $categorias
+          ]);
+        }
+        else{
+          return view('livewire.index-preguntas', [
+            'archivoPregs' => ArchivoPregunta::where('id_categoria', $this->filtro_cat)->orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
+            'categorias' => $categorias
+          ]);
 
-            'archivoPregs' => ArchivoPregunta::where('habilitada', 1)->orderBy('updated_at', 'desc')->paginate(10),
-
-        ]);
+        }
+      }
+      else if($this->estado == "filtro_vence"){
+        $sietedias = Carbon::now()->addDays(7);
+        if($this->filtro_cat == "todas"){
+          return view('livewire.index-preguntas', [
+              'archivoPregs' => ArchivoPregunta::where('habilitada', 1)->where('fecha_caducacion', '<=', $sietedias)->orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
+              'categorias' => $categorias
+          ]);
+        }
+        else{
+          return view('livewire.index-preguntas', [
+              'archivoPregs' => ArchivoPregunta::where('habilitada', 1)->where('fecha_caducacion', '<=', $sietedias)->where('id_categoria', $this->filtro_cat)->orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
+              'categorias' => $categorias
+          ]);
+        }
       }
       else{
-        return view('livewire.index-preguntasdeshab', [
-            'archivoPregs' => ArchivoPregunta::where('habilitada', 0)->orderBy('updated_at', 'desc')->paginate(5),
-        ]);
-      } 
+        if($this->filtro_cat == "todas"){
+          return view('livewire.index-preguntas', [
+            'archivoPregs' => ArchivoPregunta::where('habilitada', $this->estado)->orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
+            'categorias' => $categorias
+          ]); 
+        }
+        else{
+          return view('livewire.index-preguntas', [
+            'archivoPregs' => ArchivoPregunta::where('habilitada', $this->estado)->where('id_categoria', $this->filtro_cat)->orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
+            'categorias' => $categorias
+          ]); 
+        }
+        
+      }
+      
     }
 
-    public function vista_hab(){
-      $this->hab = 1;
-    }
-
-    public function vista_des(){
-      $this->hab = 0;
+    public function mount(){
+      $this->orden = "asc";
+      $this->cant_pagina = 10;
+      $this->estado = "1";
+      $this->filtro_cat = "todas";
     }
 
     public function habilitada($id)
