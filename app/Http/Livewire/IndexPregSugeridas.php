@@ -11,13 +11,27 @@ use Illuminate\Http\Request;
 
 class IndexPregSugeridas extends Component
 {
+    public $orden, $cant_pagina;
 	use WithPagination;
 
     public function render()
     {
-        return view('livewire.index-preg-sugeridas', [
-            'PregSugeridas' => PregSugeridas::orderBy('id', 'asc')->paginate(3),
-        ]);
+        if($this->orden == "antiguo"){
+            return view('livewire.index-preg-sugeridas', [
+            'PregSugeridas' => PregSugeridas::orderBy('id', 'asc')->paginate($this->cant_pagina),
+            ]);
+        }
+        else{
+            return view('livewire.index-preg-sugeridas', [
+            'PregSugeridas' => PregSugeridas::orderBy('id', 'desc')->paginate($this->cant_pagina),
+            ]);
+        }
+    }
+
+    public function mount()
+    {
+        $this->orden = "nuevo";
+        $this->cant_pagina = 10;
     }
 
     public function delete($id)

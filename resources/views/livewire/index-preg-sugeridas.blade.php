@@ -1,3 +1,10 @@
+<x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
+            {{ __('Preguntas sugeridas por los estudiantes') }}
+        </h2>
+      
+    </x-slot>
+
 <div class="container">
   <br>
 
@@ -8,6 +15,33 @@
       </div>
     @endif
     </div>
+
+
+<form role="form" class="form-inline">
+<div class="col-md-12"> 
+  <div class="pull-left">
+  <div class="form-group">
+          <label for="orden"><b>Orden:</b></label>              
+            <select wire:model="orden" name="orden" style="margin-left: 10px;">
+              <option value="antiguo">Más antiguas primero</option>
+              <option value="nuevo">Más nuevas primero</option>
+            </select>
+          </div>
+</div>
+<div class="pull-right">
+<div class="form-group">
+            <label for="cant_pagina"><b>Elementos por página:</b></label>
+            <input wire:model="cant_pagina" type="number" min="1" max="99" style="width: 4em;" class="form-control ml-sm-3">
+          </div>
+</div>
+</div>
+</form><br>
+
+       
+            
+
+
+      
 
 <div id="accordion" role="tablist" aria-multiselectable="true" class="o-accordion">
   <div class="card multi">
