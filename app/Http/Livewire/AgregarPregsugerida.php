@@ -7,22 +7,20 @@ use Livewire\Component;
 use App\Models\preguntas_sin_respuestas as PregSugeridas;
 use App\Models\Answers as ArchivoPregunta;
 use App\Models\Question as Preguntas;
-use App\Models\Categorias;
 use App\Http\Livewire\Field;
 use Illuminate\Http\Request;
 use DB;
 
 class AgregarPregsugerida extends Component
 {
-    public $resp, $vence, $fecha_caducacion, $categoria, $nueva_cat, $archivo_qna, $habilitada, $pregunta, $id_foranea, $contexto, $respuesta_existente,$answers,$resp2;
+    public $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea, $contexto,$respuesta_existente,$answers,$resp2;
     public $inputs = [];
     public $i = 1;
     public $PregSugerida;
 
     public function render()
     {
-      $categorias = Categorias::all();
-      return view('livewire.agregar-pregsugerida',['categorias' => $categorias]);
+        return view('livewire.agregar-pregsugerida');
     }
 
     public function mount()
@@ -50,6 +48,18 @@ class AgregarPregsugerida extends Component
      public function remove($i)
     {
         unset($this->inputs[$i]);
+    }
+
+    public function resetInput()
+    {
+        $this->resp = null;
+        $this->vence = null;
+        $this->fecha_caducacion = null;
+        $this->archivo_qna = null;
+        $this->habilitada = null;
+        $this->pregunta = null;
+        $this->id_foranea = null;
+        $this->contexto=null;
     }
 
    public function store()
@@ -161,7 +171,7 @@ class AgregarPregsugerida extends Component
         $name_qna='__qna__'.$randomString.$cadena_final;
         $id_qna=$randomString.'_'.$cadena_final;
            //dd($cadena_final,$nombre_archivo,$nombre_archivo2);
-            $path_archivo1=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/intents/".$nombre_archivo.".json");
+            $path_archivo1=public_path("botpress12120/data/bots/icibot/intents/".$nombre_archivo.".json");
         //dd($path_archivo1);
          $directorio1="botpress12120/data/bots/icibot/intents";
       
@@ -195,8 +205,8 @@ class AgregarPregsugerida extends Component
   //dd($vector_substring);
 
 
-   $archivo_ejemplo1="C:/Users/LI/Desktop/chtbtICI/public/__qna__intents_prueba.txt";
-        $archivo_ejemplo2="C:/Users/LI/Desktop/chtbtICI/public/qna__qna_prueba.txt";
+   $archivo_ejemplo1=public_path("__qna__intents_prueba.txt");
+        $archivo_ejemplo2=public_path("qna__qna_prueba.txt");
 
         $leer1 = fopen($archivo_ejemplo1, 'r+');
         $numlinea=0;
@@ -297,7 +307,7 @@ class AgregarPregsugerida extends Component
        //CARPETA QNA CREAR ARCHIVO
 
 
-        $path_archivo2=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/qna/".$nombre_archivo2.".json");
+        $path_archivo2=public_path("botpress12120/data/bots/icibot/qna/".$nombre_archivo2.".json");
         $leer2 = fopen($archivo_ejemplo2, 'r+');
         $numlinea=0;
          while ($linea = fgets($leer2)){
@@ -426,6 +436,7 @@ class AgregarPregsugerida extends Component
         }
         
         $this->inputs = [];
+        $this->resetInput();
         session()->flash('message', 'Se ha añadido la pregunta y su respuesta al sistema');
   
 
@@ -442,7 +453,7 @@ class AgregarPregsugerida extends Component
         $name_qna='__qna__'.$randomString.$cadena_final;
         $id_qna=$randomString.'_'.$cadena_final;
 
-        $path_archivo1=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/intents/".$nombre_archivo.".json");
+        $path_archivo1=public_path("botpress12120/data/bots/icibot/intents/".$nombre_archivo.".json");
         //dd($path_archivo1);
          $directorio1="botpress12120/data/bots/icibot/intents";
       
@@ -502,8 +513,8 @@ class AgregarPregsugerida extends Component
     //print_r($i);
    //}
   }*/
-  $archivo_ejemplo1="C:/Users/LI/Desktop/chtbtICI/public/__qna__intents_prueba.txt";
-        $archivo_ejemplo2="C:/Users/LI/Desktop/chtbtICI/public/qna__qna_prueba.txt";
+  $archivo_ejemplo1=public_path("__qna__intents_prueba.txt");
+        $archivo_ejemplo2=public_path("qna__qna_prueba.txt");
 
         $leer1 = fopen($archivo_ejemplo1, 'r+');
         $numlinea=0;
@@ -613,7 +624,7 @@ class AgregarPregsugerida extends Component
        //CARPETA QNA CREAR ARCHIVO
 
 
-        $path_archivo2=("C:/Users/LI/Desktop/chtbtICI/public/botpress12120/data/bots/icibot/qna/".$nombre_archivo2.".json");
+        $path_archivo2=public_path("botpress12120/data/bots/icibot/qna/".$nombre_archivo2.".json");
         $leer2 = fopen($archivo_ejemplo2, 'r+');
         $numlinea=0;
          while ($linea = fgets($leer2)){
@@ -731,10 +742,14 @@ class AgregarPregsugerida extends Component
 
        $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
 
+
+
+
         foreach ($this->pregunta as $key => $value) {
             Preguntas::create(['pregunta' => $this->pregunta[$key], 'id_answers' => $registro->id ]);
         }
         $this->inputs = [];
+        $this->resetInput();
         $this->delete($id);
         session()->flash('message', 'Pregunta sugerida ingresada en el sistema');
         return redirect()->route('index_preguntas_sugeridas');
@@ -744,6 +759,7 @@ class AgregarPregsugerida extends Component
 //dd($this,$aux_qna,$aux,$numlinea,$ultimas_8_lineas);
 }else{
     $this->inputs = [];
+    $this->resetInput();
     //dd('AQUI DEBE ENTRAR');
     session()->flash('problema_con_parentesis', 'Los signos de pregunta no estan parejos');
 }
@@ -1048,6 +1064,7 @@ $tam=count($res);
                 $i=$i+1;
                     }
                     $this->inputs = [];
+        $this->resetInput();
           $id=$this->PregSugerida->id;
         $this->delete($id);
         session()->flash('message', 'Pregunta sugerida ingresada en el sistema');

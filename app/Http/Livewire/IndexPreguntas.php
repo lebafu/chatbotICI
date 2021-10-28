@@ -16,8 +16,12 @@ class IndexPreguntas extends Component
     public function render()
     {
       if ($this->hab == 1){
+        /*$archivoPregs=ArchivoPregunta::where('habilitada', 1)->orderBy('updated_at', 'desc')->paginate(10);
+            dd($archivoPregs);*/
         return view('livewire.index-preguntas', [
+
             'archivoPregs' => ArchivoPregunta::where('habilitada', 1)->orderBy('updated_at', 'desc')->paginate(10),
+
         ]);
       }
       else{
@@ -163,7 +167,7 @@ class IndexPreguntas extends Component
    //dd($i,$tam,$res2[$i]["Nombre"]);
    while($i<$tam){
     //RUTA DE LA CARPETA PUBLIC + RUTA DE DIRECTORIO HASTA CARPETA QNA DONDE RECORRERA CADA UNO DE LOS NOMBRES DE LOS ARCHIVOS QUE TIENE ALMACENADO EN LA VARIABLE RES2
-    $path_archivo=("C:/Users/LI/Desktop/chtbtICI/public/".$res2[$i]["Nombre"]);
+    $path_archivo=public_path($res2[$i]["Nombre"]);
     //dd($path_archivo,$cadena_final_actual);
      $encuentra1=strpos($res2[$i]["Nombre"],$cadena_final_actual);
     //dd($encuentra1);
