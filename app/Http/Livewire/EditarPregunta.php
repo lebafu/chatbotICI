@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Answers as ArchivoPregunta;
 use App\Http\Livewire\Answers;
 use App\Models\Question as Preguntas;
+use App\Models\Categorias;
 use App\Http\Livewire\Field;
 use Illuminate\Http\Request;
 use DB;
@@ -18,7 +19,7 @@ class EditarPregunta extends Component
 {
  use WithFileUploads;
 
-  public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea,$contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado,$todo_ordenado_copy,$pos,$nombre_imagen,$nombres_imagenes,$imagen_nueva,$imagen_actual,$imagenes_nuevas,$strings,$textos_originales,$imagen,$image_nueva,$remove,$fecha_minima,$agregar;
+  public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea, $id_categoria, $nueva_cat, $contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado,$todo_ordenado_copy,$pos,$nombre_imagen,$nombres_imagenes,$imagen_nueva,$imagen_actual,$imagenes_nuevas,$strings,$textos_originales,$imagen,$image_nueva,$remove,$fecha_minima,$agregar;
     //public $pregunta=[];
     public $inputs = [];
     public $i = 0;
@@ -26,13 +27,14 @@ class EditarPregunta extends Component
 
     public function render()
     {
-        return view('livewire.editar-pregunta');
+      $categorias = Categorias::all();
+      return view('livewire.editar-pregunta',['categorias' => $categorias]);
     }
 
     public function mount()
     {
       $pregeditar = ArchivoPregunta::findOrFail($this->archivoPreg->id);
-        $preguntas =DB::table('questions')->where('id_answers','=',$this->id)->select('pregunta')->get();
+      $preguntas =DB::table('questions')->where('id_answers','=',$this->id)->select('pregunta')->get();
       $this->edit($pregeditar->id);
     }
 
@@ -459,7 +461,8 @@ class EditarPregunta extends Component
         $this->resp = $pregeditar->nombre;
         $this->vence = $pregeditar->vence;
         $this->fecha_caducacion = $pregeditar->fecha_caducacion;
-
+        $this->id_categoria = $pregeditar->id_categoria;
+        $this->contexto = $pregeditar->contexto;
         //dd($this->fecha_minima,$hoy);
         //$this->contexto = $pregeditar->contexto;
 
