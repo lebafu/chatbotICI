@@ -1651,6 +1651,7 @@ $tam=count($res);
 
             $pregeditar->update([
                 'nombre' => $this->resp,
+                'id_categoria'=>$this->id_categoria,
                 'vence' => $this->vence,
                 'fecha_caducacion' => $this->fecha_caducacion,
             ]);
