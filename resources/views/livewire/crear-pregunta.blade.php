@@ -14,10 +14,6 @@
         @endif
     </div>    
 
-
-{{ $categoria}}
-{{$vence}}
-{{$contexto}}
     <div class="form-row">
       <div class="form-group col-md-7">
           <div class="row row-bottom-margin">
@@ -101,7 +97,7 @@
   </div>
     
     <div class="form-row justify-content-center">
-          @if(strlen($resp) > 0 && (($vence==1 && $fecha_caducacion!=null) || ($vence!=1)))
+          @if(strlen($resp) > 0 && $i>1 && $pregunta[0]!=null && (($vence==1 && $fecha_caducacion!=null) || ($vence!=1)))
               <button wire:click="store()" class="btn btn-success center">Guardar</button>
           @else
               <button wire:click="store()" class="btn btn-success center" disabled>Guardar</button>

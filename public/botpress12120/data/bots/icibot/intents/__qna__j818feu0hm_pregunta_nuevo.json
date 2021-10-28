@@ -1,0 +1,13 @@
+{
+  "name": "__qna__j818feu0hm_pregunta_nuevo",
+  "contexts": [
+    "global"
+  ],
+  "utterances": {
+      "es": [
+        "Pregunta nuevo",
+        "Una segunda forma de preguntas"
+    ]
+  },
+  "slots": []
+}

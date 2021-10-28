@@ -89,9 +89,9 @@
     </div>
     
     <div class="form-row justify-content-center">
-          @if((strlen($resp)>0 && $respuesta_existente==0) && (($vence==1 && $fecha_caducacion!=null) || ($vence!=1)))
+          @if((strlen($resp)>0 && $respuesta_existente==0) && $i>1 && $pregunta[0]!=null && (($vence==1 && $fecha_caducacion!=null) || ($vence!=1)))
               <button wire:click="store()" class="btn btn-success center">Guardar</button>
-          @elseif((strlen($resp2)>0 && $respuesta_existente==1) && (($vence==1 && $fecha_caducacion!=null) || ($vence!=1)))
+          @elseif((strlen($resp2)>0 && $respuesta_existente==1) && $i>1 && $pregunta[0]!=null && (($vence==1 && $fecha_caducacion!=null) || ($vence!=1)))
               <button wire:click="store()" class="btn btn-success center">Guardar</button>
            @else
                <button wire:click="store()" class="btn btn-success center" disabled>Guardar</button>
