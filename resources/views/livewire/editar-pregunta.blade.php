@@ -83,6 +83,27 @@
               </div>
             </div>
           @endif
+
+          <div class="row">
+            <div class="form-group col-md-12">
+              <label for="categoria"><b>Categoría:</b></label>              
+                <select wire:model="categoria" name="categoria">
+                  @foreach($categorias as $cat)
+                    <option value='{{$cat->id}}'>{{$cat->nombre}}</option>
+                  @endforeach
+                  <option value="nueva">Agregar nueva categoría</option>
+                </select>
+            </div>
+          </div>
+
+          @if($categoria=='nueva')
+            <div class="row">
+              <div class="form-group col-md-12">           
+              <input wire:model="nueva_cat" name="nueva_cat" id="nueva_cat" type="text" class="form-control" placeholder="Nombre de la nueva categoría (requerido)"></input>
+              </div>
+            </div>
+          @endif
+
           <div class="row">
             <div class="form-group col-md-12">
               <label for="contexto"><b>Contexto:</b></label>              

@@ -7,20 +7,22 @@ use Livewire\Component;
 use App\Models\preguntas_sin_respuestas as PregSugeridas;
 use App\Models\Answers as ArchivoPregunta;
 use App\Models\Question as Preguntas;
+use App\Models\Categorias;
 use App\Http\Livewire\Field;
 use Illuminate\Http\Request;
 use DB;
 
 class AgregarPregsugerida extends Component
 {
-    public $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea, $contexto,$respuesta_existente,$answers,$resp2;
+    public $resp, $vence, $fecha_caducacion, $categoria, $nueva_cat, $archivo_qna, $habilitada, $pregunta, $id_foranea, $contexto, $respuesta_existente,$answers,$resp2;
     public $inputs = [];
     public $i = 1;
     public $PregSugerida;
 
     public function render()
     {
-        return view('livewire.agregar-pregsugerida');
+      $categorias = Categorias::all();
+      return view('livewire.agregar-pregsugerida',['categorias' => $categorias]);
     }
 
     public function mount()
