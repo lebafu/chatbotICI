@@ -16,9 +16,10 @@ class TestMail extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($details)
     {
         //
+        $this->details= $details;
     }
 
     /**
@@ -28,6 +29,7 @@ class TestMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Envio de contraseña de creación de usuario Chatbot ICI')->view('emails.TestMail');
+        //dd($this->details['name']);
+        return $this->subject('Envio de contraseña de creación de usuario Chatbot ICI')->view('emails.TestMail')->with('details', $this->details);
     }
 }
