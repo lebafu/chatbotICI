@@ -8,21 +8,51 @@ use Livewire\WithPagination;
 
 class IndexComentarios extends Component
 {
-    public $filtro='todos';
+    public $filtro, $orden, $cant_pagina;
     use WithPagination;
 	
     public function render()
     {
         if ($this->filtro == "todos"){
-            return view('livewire.index-comentarios', [
-                'comentarios' => Comentarios::orderBy('created_at', 'desc')->paginate(9)
+            if($this->orden == "nuevo"){
+                return view('livewire.index-comentarios', [
+                'comentarios' => Comentarios::orderBy('created_at', 'desc')->paginate($this->cant_pagina)
             ]);
+            }
+            else if($this->orden == "antiguo"){
+                return view('livewire.index-comentarios', [
+                'comentarios' => Comentarios::orderBy('created_at', 'asc')->paginate($this->cant_pagina)
+            ]);
+            }
+            else{
+                return view('livewire.index-comentarios', [
+                'comentarios' => Comentarios::orderBy('nombre', 'asc')->paginate($this->cant_pagina)
+            ]);
+            }            
         }
         else{
-            return view('livewire.index-comentarios', [
-                'comentarios' => Comentarios::orderBy('created_at', 'desc')->paginate(2)
+            if($this->orden == "nuevo"){
+                return view('livewire.index-comentarios', [
+                'comentarios' => Comentarios::where('tipo',$this->filtro)->orderBy('created_at', 'desc')->paginate($this->cant_pagina)
             ]);
+            }
+            else if($this->orden == "antiguo"){
+                return view('livewire.index-comentarios', [
+                'comentarios' => Comentarios::where('tipo',$this->filtro)->orderBy('created_at', 'asc')->paginate($this->cant_pagina)
+            ]);
+            }
+            else{
+                return view('livewire.index-comentarios', [
+                'comentarios' => Comentarios::where('tipo',$this->filtro)->orderBy('nombre', 'asc')->paginate($this->cant_pagina)
+            ]);
+            } 
         }
+    }
+
+    public function mount(){
+        $this->filtro='todos';
+        $this->orden='nuevo';
+        $this->cant_pagina=9;
     }
 
     public function delete($id)
