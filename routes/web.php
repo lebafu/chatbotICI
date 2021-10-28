@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Livewire\IndexUsuarios;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,8 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('/home', function () {
 	    return view('dashboard');
 	});
+
+	Route::get('/send-email',[IndexUsuarios::class, 'sendEmail']);
 
 	//Rutas livewire
 	Route::view('/qna_index','qna.qna_name_index')->name('qna_index');

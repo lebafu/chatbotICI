@@ -4,6 +4,9 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TestMail;
 use Illuminate\Support\Facades\Hash;
 use Livewire\WithPagination;
 
@@ -49,11 +52,16 @@ class IndexUsuarios extends Component
             'email.email' => 'Debes ingresar un email válido',
         ]);
         $this->contraseña = $this->generate_string();
+        $details=['title'=> 'Usted'.$this->name.'esta recibiendo la contraseña de la cuenta de Chatbot ICI',
+                   'body'=> 'Su contraseña asignada es:'. $this->contraseña,
+                   'name'=> $this->name,
+                   'password'=> $this->contraseña];
         User::create([
             'name' => $this->name,
             'email' => $this->email,
             'password' => Hash::make($this->contraseña),
         ]);
+        Mail::to($this->email)->send(new TestMail($details));
         $this->resetInput();
         session()->flash('message', 'Se ha registrado exitosamente este usuario. El nuevo usuario recibirá un email con su contraseña');
     }
