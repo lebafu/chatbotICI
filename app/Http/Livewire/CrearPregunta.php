@@ -37,7 +37,7 @@ class CrearPregunta extends Component
 
     public function remove($i)
     {
-        unset($this->inputs[$i]);
+      unset($this->inputs[$i]);
     }
 
     public function resetInput()
@@ -71,7 +71,12 @@ class CrearPregunta extends Component
             $this->vence = null;
             $this->fecha_caducacion = null;
         }
-        //dd($this->contexto);
+
+        if ($this->categoria == 'nueva'){
+        $categoria_creada = Categorias::create(['nombre' => $this->nueva_cat]);
+        $this->categoria = $categoria_creada->id;
+       }
+
         //$ruta_publica="C:\Users\LI\Desktop\chtbtICI\public";
         $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
          $a=0;
@@ -416,9 +421,7 @@ class CrearPregunta extends Component
        $escribir2 = fopen($path_archivo2, 'w+');
          fwrite($escribir2, $contenido);
        fclose($escribir2);
-       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion,'contexto'=> $this->contexto,'id_categoria' => $this->categoria,'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
-
-
+       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'id_categoria' => $this->categoria, 'contexto' => $this->contexto, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
 
 
         foreach ($this->pregunta as $key => $value) {
@@ -729,15 +732,9 @@ class CrearPregunta extends Component
        fclose($escribir2);
        
        //dd($this);
-       if ($this->categoria == 'nueva'){
-        //dd($this->categoria);
-       }
-       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion,'contexto' => $this->contexto,'id_categoria' => $this->categoria, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
+       
+       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'id_categoria' => $this->categoria, 'contexto' => $this->contexto, 'contexto' => $this->contexto, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
      
-
-
-
-
         foreach ($this->pregunta as $key => $value) {
             Preguntas::create(['pregunta' => $this->pregunta[$key], 'id_answers' => $registro->id ]);
         }
@@ -753,8 +750,6 @@ class CrearPregunta extends Component
     $this->resetInput();
     //dd('AQUI DEBE ENTRAR');
     session()->flash('problema_con_parentesis', 'Los signos de pregunta no estan parejos');
-}
-         
-        
+}      
   }
 }

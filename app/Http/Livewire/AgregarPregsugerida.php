@@ -50,18 +50,6 @@ class AgregarPregsugerida extends Component
         unset($this->inputs[$i]);
     }
 
-    public function resetInput()
-    {
-        $this->resp = null;
-        $this->vence = null;
-        $this->fecha_caducacion = null;
-        $this->archivo_qna = null;
-        $this->habilitada = null;
-        $this->pregunta = null;
-        $this->id_foranea = null;
-        $this->contexto=null;
-    }
-
    public function store()
     {
 
@@ -436,7 +424,6 @@ class AgregarPregsugerida extends Component
         }
         
         $this->inputs = [];
-        $this->resetInput();
         session()->flash('message', 'Se ha añadido la pregunta y su respuesta al sistema');
   
 
@@ -742,14 +729,10 @@ class AgregarPregsugerida extends Component
 
        $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
 
-
-
-
         foreach ($this->pregunta as $key => $value) {
             Preguntas::create(['pregunta' => $this->pregunta[$key], 'id_answers' => $registro->id ]);
         }
         $this->inputs = [];
-        $this->resetInput();
         $this->delete($id);
         session()->flash('message', 'Pregunta sugerida ingresada en el sistema');
         return redirect()->route('index_preguntas_sugeridas');
@@ -759,7 +742,6 @@ class AgregarPregsugerida extends Component
 //dd($this,$aux_qna,$aux,$numlinea,$ultimas_8_lineas);
 }else{
     $this->inputs = [];
-    $this->resetInput();
     //dd('AQUI DEBE ENTRAR');
     session()->flash('problema_con_parentesis', 'Los signos de pregunta no estan parejos');
 }
@@ -1064,7 +1046,6 @@ $tam=count($res);
                 $i=$i+1;
                     }
                     $this->inputs = [];
-        $this->resetInput();
           $id=$this->PregSugerida->id;
         $this->delete($id);
         session()->flash('message', 'Pregunta sugerida ingresada en el sistema');

@@ -8,13 +8,21 @@ use Livewire\WithPagination;
 
 class IndexComentarios extends Component
 {
+    public $filtro='todos';
     use WithPagination;
 	
     public function render()
     {
-        return view('livewire.index-comentarios', [
-            'comentarios' => Comentarios::orderBy('created_at', 'desc')->paginate(9),
-        ]);
+        if ($this->filtro == "todos"){
+            return view('livewire.index-comentarios', [
+                'comentarios' => Comentarios::orderBy('created_at', 'desc')->paginate(9)
+            ]);
+        }
+        else{
+            return view('livewire.index-comentarios', [
+                'comentarios' => Comentarios::orderBy('created_at', 'desc')->paginate(2)
+            ]);
+        }
     }
 
     public function delete($id)
