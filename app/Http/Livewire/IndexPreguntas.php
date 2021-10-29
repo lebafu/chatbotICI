@@ -13,12 +13,12 @@ use Livewire\WithPagination;
 class IndexPreguntas extends Component
 {
 	 use WithPagination;
-   public $orden, $estado, $filtro_cat, $cant_pagina, $dias;
+   public $orden, $estado, $filtro_cat, $cant_pagina;
 
     public function render()
     {
       $categorias = Categorias::all();
-      $sietedias = Carbon::now()->addDays($this->dias);
+      $sietedias = Carbon::now()->addDays(7);
       if($this->estado == "todos"){
         if($this->filtro_cat == "todas"){
           return view('livewire.index-preguntas', [
@@ -77,100 +77,21 @@ class IndexPreguntas extends Component
       $this->cant_pagina = 10;
       $this->estado = "1";
       $this->filtro_cat = "todas";
-      $this->dias = 7;
     }
 
     public function habilitada($id)
     {
       //dd($question_min_id);
       //dd($question);
+      //dd($id);
       $respuestas=DB::table('answer')->where('id','=',$id)->get();
       //dd($respuestas);
       foreach($respuestas as $respuesta);
       $question=DB::table('questions')->where('id_answers','=',$respuesta->id)->first();
       //foreach($questions as $question);
-      
-
-      //dd($respuesta,$question);
-      $cadena_actual=$question->pregunta;
-      //dd($cadena_actual);
-        $cadena_actual = str_replace(
-        array('Á', 'À', 'Â', 'Ä', 'á', 'à', 'ä', 'â', 'ª'),
-        array('_', '_', '_', '_', '_', '_', '_', '_', '_'),
-        $cadena_actual
-        );
- 
-        //Reemplazamos la E y e
-        $cadena_actual = str_replace(
-        array('É', 'È', 'Ê', 'Ë', 'é', 'è', 'ë', 'ê'),
-        array('_', '_', '_', '_', '_', '_', '_', '_'),
-        $cadena_actual );
- 
-        //Reemplazamos la I y i
-        $cadena_actual = str_replace(
-        array('Í', 'Ì', 'Ï', 'Î', 'í', 'ì', 'ï', 'î'),
-        array('_', '_', '_', '_', '_', '_', '_', '_'),
-        $cadena_actual );
- 
-        //Reemplazamos la O y o
-        $cadena_actual = str_replace(
-        array('Ó', 'Ò', 'Ö', 'Ô', 'ó', 'ò', 'ö', 'ô'),
-        array('_', '_', '_', '_', '_', '_', '_', '_'),
-        $cadena_actual );
- 
-        //Reemplazamos la U y u
-        $cadena_actual = str_replace(
-        array('Ú', 'Ù', 'Û', 'Ü', 'ú', 'ù', 'ü', 'û'),
-        array('_', '_', '_', '_', '_', '_', '_', '_'),
-        $cadena_actual );
- 
-        //Reemplazamos la N, n, C y c
-
-        //OBSERVAR QUE OCURRE CON LOS TERMINOS CON Ñ
-        $cadena_actual = str_replace(
-        array('Ñ', 'ñ', 'Ç', 'ç'),
-        array('N', 'n', '_', '_'),
-        $cadena_actual
-        );
-        //dd($cadena_actual);
-        $init_interrogacion=substr_count($cadena_actual, '¿');
-        $cerrar_interrogacion=substr_count($cadena_actual, '?');
-          $pos_inicial = strpos($cadena_actual, '¿');
-          $pos_final = strpos($cadena_actual,'?');
-          $largo_cadena=strlen($cadena_actual);
-          //dd($pos_inicial);
-          //dd($pos_final);
-          //dd($largo_cadena);
-          //dd($cadena_actual);
-        if(($init_interrogacion==0 and $cerrar_interrogacion==0)){
-            $cadenaf1_actual = str_replace("¿", "", $cadena_actual);
-        $cadenaf2_actual = str_replace("?","",$cadenaf1_actual);
-        $cadena_final_actual=strtolower($cadenaf2_actual);
-         $cadena_final_actual = str_replace(
-        array(' '),
-        array('_'),
-        $cadena_final_actual
-        );
-         $cadena_final_actual = str_replace(
-        array('-'),
-        array('_'),
-        $cadena_final_actual
-        );
-
-        }elseif($init_interrogacion==1 and $cerrar_interrogacion==1){
-        $cadenaf1_actual = str_replace("¿", "", $cadena_actual);
-        $cadenaf2_actual = str_replace("?","",$cadenaf1_actual);
-        $cadena_final_actual=strtolower($cadenaf2_actual);
-         $cadena_final_actual = str_replace(
-        array(' '),
-        array('_'),
-        $cadena_final_actual
-        );
-
-        //dd($cadena_final_actual);
-    }
     //dd($cadena_final_actual);
-
+      $largo_string=strlen($respuesta->archivo_qna);
+       $cadena_final_actual=substr($respuesta->archivo_qna,11);
   $res2 = array();
 
   // Agregamos la barra invertida al final en caso de que no exista
@@ -205,16 +126,17 @@ class IndexPreguntas extends Component
   //dd($tam);
  //dd($cadena_final_actual);
   $i=0;
-   //dd($i,$tam,$res2[$i]["Nombre"]);
+   //dd($i,$tam,$res2);
    while($i<$tam){
     //RUTA DE LA CARPETA PUBLIC + RUTA DE DIRECTORIO HASTA CARPETA QNA DONDE RECORRERA CADA UNO DE LOS NOMBRES DE LOS ARCHIVOS QUE TIENE ALMACENADO EN LA VARIABLE RES2
     $path_archivo=public_path($res2[$i]["Nombre"]);
-    //dd($path_archivo,$cadena_final_actual);
      $encuentra1=strpos($res2[$i]["Nombre"],$cadena_final_actual);
-    //dd($encuentra1);
+    
     if($encuentra1==false){
+
         //dd("NADA");
     }else{
+      
       //dd($encuentra1);
         //dd($path_archivo);
     //print_r($res2[$i]["Nombre"]);
@@ -227,6 +149,7 @@ class IndexPreguntas extends Component
       //if(filesize($path_archivo) > 0){
       //SE ALMACENA LO QUE SE LEE INTERMANETE EN EL ARCHIVO
       //dd($path_archivo);
+      //dd($path_archivo,$cadena_final_actual);
       $data = fread($leer, filesize($path_archivo));
       $encuentra2=strpos($data,'"enabled": true,');
       $encuentra3=strpos($data,'"enabled": false,');
@@ -254,15 +177,17 @@ class IndexPreguntas extends Component
       $escribir = fopen($path_archivo, 'w');
       //dd($datosnuevos);
       //Se escribe en $datosnuevos los en el aarchivo que corresponde
+      //dd($datosnuevos);
       fwrite($escribir, $datosnuevos);
       //cerramos la escritura en el archivo
       fclose($escribir);
-      //dd($datosnuevos);
+      //dd($datosnuevos,$respuesta,$question);
     //print_r($i);
    //}
   }
    $i=$i+1;
 }
+//dd($escribir,$respuesta,$question);
         DB::table('answer')->where('id','=',$respuesta->id)->update(['habilitada'=>0]);
       if($respuesta->habilitada==0){
         DB::table('answer')->where('id','=',$respuesta->id)->update(['habilitada'=>1]);
