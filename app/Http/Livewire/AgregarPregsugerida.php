@@ -14,14 +14,14 @@ use DB;
 
 class AgregarPregsugerida extends Component
 {
-    public $resp, $vence, $fecha_caducacion, $categoria, $nueva_cat, $archivo_qna, $habilitada, $pregunta, $id_foranea, $contexto,$respuesta_existente,$answers,$resp2;
+    public $resp, $vence, $fecha_caducacion, $categoria, $nueva_cat, $archivo_qna, $habilitada, $pregunta, $id_foranea, $contexto, $respuesta_existente, $answers, $resp2;
     public $inputs = [];
     public $i = 1;
     public $PregSugerida;
 
     public function render()
     {
-        $categorias = Categorias::all();
+      $categorias = Categorias::all();
       return view('livewire.agregar-pregsugerida',['categorias' => $categorias]);
     }
 
@@ -30,7 +30,8 @@ class AgregarPregsugerida extends Component
         $this->pregunta[0] = $this->PregSugerida->pregunta_sin_respuesta;
         $this->respuesta_existente=null;
         $this->answers=ArchivoPregunta::all();
-        $this->contexto=null;
+        $this->contexto="global";
+        $this->categoria = "1";
         //dd($this->answers,$this->respuesta_existente,$this);
     }
 
@@ -54,8 +55,6 @@ class AgregarPregsugerida extends Component
 
    public function store()
     {
-
-        //dd($this);
         if($this->respuesta_existente==false){
         $this->validate([
             'resp' => 'required|min:2',
@@ -69,8 +68,14 @@ class AgregarPregsugerida extends Component
         ]);
 
         if ($this->vence != 1){
-            $this->vence = 0;
+            $this->vence = null;
+            $this->fecha_caducacion = null;
         }
+
+        if ($this->categoria == 'nueva'){
+        $categoria_creada = Categorias::create(['nombre' => $this->nueva_cat]);
+        $this->categoria = $categoria_creada->id;
+       }
 
         
             $id=$this->PregSugerida->id;
@@ -416,17 +421,16 @@ class AgregarPregsugerida extends Component
        $escribir2 = fopen($path_archivo2, 'w+');
          fwrite($escribir2, $contenido);
        fclose($escribir2);
-       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
-
-
-
+       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'id_categoria' => $this->categoria, 'contexto' => $this->contexto, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
 
         foreach ($this->pregunta as $key => $value) {
             Preguntas::create(['pregunta' => $this->pregunta[$key], 'id_answers' => $registro->id ]);
         }
         
         $this->inputs = [];
-        session()->flash('message', 'Se ha añadido la pregunta y su respuesta al sistema');
+        $this->delete($id);
+        session()->flash('message', 'Pregunta sugerida ingresada en el sistema');
+        return redirect()->route('index_preguntas_sugeridas');
   
 
         //dd($aux_qna,$aux);
@@ -729,7 +733,7 @@ class AgregarPregsugerida extends Component
          fwrite($escribir2, $contenido);
        fclose($escribir2);
 
-       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
+       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion,  'id_categoria' => $this->categoria, 'contexto' => $this->contexto, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
 
         foreach ($this->pregunta as $key => $value) {
             Preguntas::create(['pregunta' => $this->pregunta[$key], 'id_answers' => $registro->id ]);
@@ -1048,11 +1052,9 @@ $tam=count($res);
                 $i=$i+1;
                     }
                     $this->inputs = [];
-          $id=$this->PregSugerida->id;
         $this->delete($id);
         session()->flash('message', 'Pregunta sugerida ingresada en el sistema');
         return redirect()->route('index_preguntas_sugeridas');
-
 }
 
     }

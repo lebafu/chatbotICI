@@ -733,7 +733,7 @@ class CrearPregunta extends Component
        
        //dd($this);
        
-       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'id_categoria' => $this->categoria, 'contexto' => $this->contexto, 'contexto' => $this->contexto, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
+       $registro = ArchivoPregunta::create(['nombre' => $this->resp, 'vence' => $this->vence, 'fecha_caducacion' => $this->fecha_caducacion, 'id_categoria' => $this->categoria, 'contexto' => $this->contexto, 'archivo_qna' => $nombre_archivo2, 'habilitada' => 1 ]);
      
         foreach ($this->pregunta as $key => $value) {
             Preguntas::create(['pregunta' => $this->pregunta[$key], 'id_answers' => $registro->id ]);
