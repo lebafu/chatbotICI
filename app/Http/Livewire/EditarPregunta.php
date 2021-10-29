@@ -467,7 +467,6 @@ class EditarPregunta extends Component
         //$this->contexto = $pregeditar->contexto;
 
     }
-
     public function update()
     {
         //dd($this->agregar);
@@ -501,7 +500,7 @@ class EditarPregunta extends Component
       foreach($archivos_qnas as $archivo_qna);
       foreach($answers as $answer);
      
-   
+    //dd($this->contexto);
       $builtin_tipo=array();
       $builtin_codigo=array();
       $this->string=array();
@@ -527,7 +526,7 @@ class EditarPregunta extends Component
           }
           $a=$a+1;
         }
-        
+        //dd($this->contexto);
         //dd($this->imagen_actual,$this->imagen_nueva);
       //dd($request,$request->file('imagen_nueva'));
     //dd($this,$this->todo_ordenado,$questions,$answers,$archivos_qnas,$this->es_archivo_flow,'o');
@@ -596,7 +595,7 @@ class EditarPregunta extends Component
       }
     }
       //dd($this,$imagen_actual,$imagen_nueva);
-      
+      dd($this->contexto);
       $path_chatbot=public_path("botpress12120/data/bots/icibot/media/");
       $path_bp_laravel=public_path("images/bp/");
       $path_text=public_path("botpress12120/data/bots/icibot/content-elements/builtin_text.json");
@@ -695,7 +694,7 @@ class EditarPregunta extends Component
         break;
       }*/
   }
-
+  dd($this->contexto);
   $tam_array_imagen=count($imagen_actual);
 //}    
     $i=0;
@@ -925,12 +924,19 @@ $tam=count($res);
                     }*/
                   }
               }
-              //dd($aux_intents,$pos,$this->pregunta_copy[$k],$this->pregunta[$k],$i,$k);
         if($var_contexto_intents==0){
+            //dd($aux_intents[$i],$this->contexto);
            if(substr($aux_intents[$i],5,-2)=="global" or substr($aux_intents[$i],5,-2)=="regular" or substr($aux_intents[$i],5,-2)=="egresado"){
+            //dd(substr($aux_intents[3],5,-2),$this->contexto);
             $aux_intents[$i]=str_replace(substr($aux_intents[$i],5,-2),$this->contexto,$aux_intents[$i]);
+            $var_contexto_intents=1;
           }
-          $var_contexto_intents=1;
+          if(substr($aux_intents[$i],5,-3)=="global" or substr($aux_intents[$i],5,-3)=="regular" or substr($aux_intents[$i],5,-3)=="egresado"){
+            //dd($aux_intents[$i],$this->contexto);
+            $aux_intents[$i]=str_replace(substr($aux_intents[$i],5,-3),$this->contexto,$aux_intents[$i]);
+            $var_contexto_intents=1;
+          }
+          
         }
         $i=$i+1;
         }
@@ -1009,6 +1015,7 @@ $tam=count($res);
           }
         } 
           if(substr($aux_qna[$i],7,-2)=="global" or substr($aux_qna[$i],7,-2)=="regular" or substr($aux_qna[$i],7,-2)=="egresado"){
+            dd(substr($aux_qna[$i],7,-2),$this->contexto);
             $aux_qna[$i]=str_replace(substr($aux_qna[$i],7,-2),$this->contexto,$aux_qna[$i]);
           }
           $i=$i+1;
@@ -1090,6 +1097,7 @@ $tam=count($res);
       session()->flash('message', 'Pregunta actualizada correctamente');
       /*return view('qna.message',compact('imagen_actual','tam_array_text','strings','textos_originales','tam_array_imagen','es_archivo_flow','tam_array_builtins_texts_unique','names_imagenes','textos_iniciales','textos_finales'));*/
     }else{
+      //dd($this->contexto);
      // dd($this,$this->todo_ordenado,$questions,$answers,$archivos_qnas,$this->es_archivo_flow);
       //La ruta del directorio dentro de la carpeta public, que como se dijo anteriormente irá dentro de directorio1
       //dd($this);
@@ -1280,6 +1288,11 @@ $tam=count($res);
             $var_contexto_intents=1;
             //dd($var_contexto_intents,$k,$cantidad_preguntas_actual,$aux_intents[$i],$this->contexto,substr($aux_intents[$i],5,-2));
           }
+          if((substr($aux_intents[$i],5,-3)=="global" or substr($aux_intents[$i],5,-3)=="regular" or substr($aux_intents[$i],5,-3)=="egresado") and $i<$tam_archivo_intents and $var_contexto_intents==0){
+            $aux_intents[$i]=str_replace(substr($aux_intents[$i],5,-3),$this->contexto,$aux_intents[$i]);
+            $var_contexto_intents=1;
+            //dd($var_contexto_intents,$k,$cantidad_preguntas_actual,$aux_intents[$i],$this->contexto,substr($aux_intents[$i],5,-2));
+          }
         }
         //
         $i=$i+1;
@@ -1364,10 +1377,17 @@ $tam=count($res);
                 $i=$i+1;
           }
         }
+        //dd($aux_qna[$i],substr($aux_qna[$i],7,-2),$this->contexto);
         if($var_qna_contexto==0){
+          //dd($aux_qna[$i],substr($aux_qna[5],7,-2),$this->contexto);
           if((substr($aux_qna[$i],7,-2)=="global" or substr($aux_qna[$i],7,-2)=="regular" or substr($aux_qna[$i],7,-2)=="egresado") and $i<$tam_archivo_qna){
-            //dd($aux_qna[$i],substr($aux_qna[$i],7,-2));
+            //dd($aux_qna[$i],substr($aux_qna[$i],7,-2),$this->contexto);
             $aux_qna[$i]=str_replace(substr($aux_qna[$i],7,-2),$this->contexto,$aux_qna[$i]);
+            $var_qna_contexto=1;
+          }
+          if((substr($aux_qna[$i],7,-3)=="global" or substr($aux_qna[$i],7,-3)=="regular" or substr($aux_qna[$i],7,-3)=="egresado") and $i<$tam_archivo_qna){
+            //dd($aux_qna[$i],substr($aux_qna[$i],7,-2),$this->contexto);
+            $aux_qna[$i]=str_replace(substr($aux_qna[$i],7,-3),$this->contexto,$aux_qna[$i]);
             $var_qna_contexto=1;
           }
         }
