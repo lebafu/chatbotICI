@@ -68,7 +68,6 @@
 </div>
 </form><br>
 
-
 <div id="accordion" role="tablist" aria-multiselectable="true" class="o-accordion">
   <div class="card multi">
     @foreach ($archivoPregs as $archivoPreg)
@@ -77,13 +76,26 @@
         <div class="row">
           <div class="col-md-11" style="padding-right:35px">
                 <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse{{$archivoPreg->id}}" aria-expanded="false" aria-controls="collapse{{$archivoPreg->id}}">
+                <i class="material-icons" style="font-size: 12px;
+                @if($archivoPreg->habilitada==1) 
+                  @if($archivoPreg->vence != null && $archivoPreg->fecha_caducacion <= $fecha_limite) color:yellow;">
+                  @else color:green;">
+                  @endif
+                @else color:red;">
+                @endif
+              circle</i>
                 {{$archivoPreg->Question[0]->pregunta }}
                 </a>
           </div>
           <div class="col-md-1" style="padding-right:10px">
               <div class="float-right">
-                <button class="btn btn-danger btn-sm" wire:click="habilitada({{ $archivoPreg->id}})">
-                <i class="material-icons" style="font-size: 15px">comments_disabled</i> Deshabilitar
+                @if($archivoPreg->habilitada==1)
+                  <button class="btn btn-danger btn-sm" wire:click="habilitada({{ $archivoPreg->id}})" style="width:100px">
+                  <i class="material-icons" style="font-size: 15px">comments_disabled</i> Inhabilitar
+                @else
+                  <button class="btn btn-success btn-sm" wire:click="habilitada({{ $archivoPreg->id}})" style="width:100px">
+                  <i class="material-icons" style="font-size: 15px">comment</i> Habilitar
+                @endif
               </button>
               </div>
               </div>

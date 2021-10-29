@@ -18,33 +18,37 @@ class IndexPreguntas extends Component
     public function render()
     {
       $categorias = Categorias::all();
+      $sietedias = Carbon::now()->addDays(7);
       if($this->estado == "todos"){
         if($this->filtro_cat == "todas"){
           return view('livewire.index-preguntas', [
             'archivoPregs' => ArchivoPregunta::orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
-            'categorias' => $categorias
+            'categorias' => $categorias,
+            'fecha_limite' => $sietedias
           ]);
         }
         else{
           return view('livewire.index-preguntas', [
             'archivoPregs' => ArchivoPregunta::where('id_categoria', $this->filtro_cat)->orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
-            'categorias' => $categorias
+            'categorias' => $categorias,
+            'fecha_limite' => $sietedias
           ]);
-
         }
       }
       else if($this->estado == "filtro_vence"){
-        $sietedias = Carbon::now()->addDays(7);
+        
         if($this->filtro_cat == "todas"){
           return view('livewire.index-preguntas', [
               'archivoPregs' => ArchivoPregunta::where('habilitada', 1)->where('fecha_caducacion', '<=', $sietedias)->orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
-              'categorias' => $categorias
+              'categorias' => $categorias,
+              'fecha_limite' => $sietedias
           ]);
         }
         else{
           return view('livewire.index-preguntas', [
               'archivoPregs' => ArchivoPregunta::where('habilitada', 1)->where('fecha_caducacion', '<=', $sietedias)->where('id_categoria', $this->filtro_cat)->orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
-              'categorias' => $categorias
+              'categorias' => $categorias,
+              'fecha_limite' => $sietedias
           ]);
         }
       }
@@ -52,13 +56,15 @@ class IndexPreguntas extends Component
         if($this->filtro_cat == "todas"){
           return view('livewire.index-preguntas', [
             'archivoPregs' => ArchivoPregunta::where('habilitada', $this->estado)->orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
-            'categorias' => $categorias
+            'categorias' => $categorias,
+            'fecha_limite' => $sietedias
           ]); 
         }
         else{
           return view('livewire.index-preguntas', [
             'archivoPregs' => ArchivoPregunta::where('habilitada', $this->estado)->where('id_categoria', $this->filtro_cat)->orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
-            'categorias' => $categorias
+            'categorias' => $categorias,
+            'fecha_limite' => $sietedias
           ]); 
         }
         
