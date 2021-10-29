@@ -595,7 +595,7 @@ class EditarPregunta extends Component
       }
     }
       //dd($this,$imagen_actual,$imagen_nueva);
-      dd($this->contexto);
+      //dd($this->contexto);
       $path_chatbot=public_path("botpress12120/data/bots/icibot/media/");
       $path_bp_laravel=public_path("images/bp/");
       $path_text=public_path("botpress12120/data/bots/icibot/content-elements/builtin_text.json");
@@ -694,7 +694,7 @@ class EditarPregunta extends Component
         break;
       }*/
   }
-  dd($this->contexto);
+  //dd($this->contexto);
   $tam_array_imagen=count($imagen_actual);
 //}    
     $i=0;
@@ -1015,7 +1015,7 @@ $tam=count($res);
           }
         } 
           if(substr($aux_qna[$i],7,-2)=="global" or substr($aux_qna[$i],7,-2)=="regular" or substr($aux_qna[$i],7,-2)=="egresado"){
-            dd(substr($aux_qna[$i],7,-2),$this->contexto);
+            //dd(substr($aux_qna[$i],7,-2),$this->contexto);
             $aux_qna[$i]=str_replace(substr($aux_qna[$i],7,-2),$this->contexto,$aux_qna[$i]);
           }
           $i=$i+1;
