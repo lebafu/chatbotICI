@@ -476,6 +476,16 @@ class EditarPregunta extends Component
             'selected_id' => 'required|numeric',
         ]);*/
         //dd($this);
+        if ($this->vence != 1){
+            $this->vence = null;
+            $this->fecha_caducacion = null;
+        }
+
+        if ($this->id_categoria == 'nueva'){
+        $categoria_creada = Categorias::create(['nombre' => $this->nueva_cat]);
+        $this->id_categoria = $categoria_creada->id;
+       }
+
         $this->pregunta_copy=$this->pregunta;
         //dd($this,$this->todo_ordenado);
         if($this->remove!=1){
@@ -1654,6 +1664,7 @@ $tam=count($res);
                 'id_categoria'=>$this->id_categoria,
                 'vence' => $this->vence,
                 'fecha_caducacion' => $this->fecha_caducacion,
+                'contexto'=> $this->contexto,
             ]);
                    
             //dd($this,$imagenes_nuevas,$cantidad_preguntas_anterior,$cantidad_preguntas_nueva,$pregeditar);
