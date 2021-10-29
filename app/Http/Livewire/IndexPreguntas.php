@@ -13,12 +13,12 @@ use Livewire\WithPagination;
 class IndexPreguntas extends Component
 {
 	 use WithPagination;
-   public $orden, $estado, $filtro_cat, $cant_pagina;
+   public $orden, $estado, $filtro_cat, $cant_pagina, $dias;
 
     public function render()
     {
       $categorias = Categorias::all();
-      $sietedias = Carbon::now()->addDays(7);
+      $sietedias = Carbon::now()->addDays($this->dias);
       if($this->estado == "todos"){
         if($this->filtro_cat == "todas"){
           return view('livewire.index-preguntas', [
@@ -77,6 +77,7 @@ class IndexPreguntas extends Component
       $this->cant_pagina = 10;
       $this->estado = "1";
       $this->filtro_cat = "todas";
+      $this->dias = 7;
     }
 
     public function habilitada($id)

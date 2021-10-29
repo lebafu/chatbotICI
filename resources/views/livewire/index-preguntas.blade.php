@@ -8,6 +8,8 @@
     @endif
     </div>
 
+
+
     <div class="row">
       <div class="col-md-3">
 
@@ -21,7 +23,10 @@
          <div><input wire:model="estado" name="estado" type="radio" value="todos"> Mostrar todos</div>
                   <div><input wire:model="estado" name="estado" type="radio" value=1> Solo Habilitadas</div>
                   <div><input wire:model="estado" name="estado" type="radio" value=0> Solo Deshabilitadas</div>
-                  <div><input wire:model="estado" name="estado" type="radio" value="filtro_vence"> Vencen pronto (7 días)</div>
+                  <div><input wire:model="estado" name="estado" type="radio" value="filtro_vence"> Vencen pronto ({{$dias}} días)</div>
+                  @if ($estado == "filtro_vence")
+                  <div><input wire:model="dias" type="range" min="1" max="90" style="width: 12em;" class="form-control ml-sm-3"></div>
+                  @endif
 
 <b>Filtrar por categoría:</b>
         <div><input wire:model="filtro_cat" name="filtro_cat" type="radio" value="todas"> Todas las categorías</div>
@@ -31,18 +36,8 @@
                             
                         </div>
                     </div>
-        
-
-
-    </div>
-  
-
-    
-
-    
-
-    
       
+    </div>     
     
 
  <div class="col-md-9">  
