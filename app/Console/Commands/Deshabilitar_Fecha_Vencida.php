@@ -2,9 +2,14 @@
 
 namespace App\Console\Commands;
 
+use Livewire\Component;
 use Illuminate\Console\Command;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Respuesta_caducada;
 use Carbon\Carbon;
 use DB;
+
 
 class Deshabilitar_Fecha_Vencida extends Command
 {
@@ -43,47 +48,69 @@ class Deshabilitar_Fecha_Vencida extends Command
         $fecha_actual = $carbon->now();
         $fecha_actual= strtotime($fecha_actual->format('Y-m-d'));
         $answers=DB::table('answer')->get();
+         $users=DB::table('users')->get();
         //dd('HOLA');
         foreach($answers as $answer){
             //dd($answer,$fecha_actual);
             //var_dump($fecha_actual);
             $fecha_caducacion=strtotime($answer->fecha_caducacion);
-            if(($fecha_caducacion <= $fecha_actual)){
+            $vence=$answer->vence;
+            if(($vence==1 and $fecha_caducacion <= $fecha_actual and $answer->habilitada==1)){
                 DB::table('answer')->where('id','<=',$answer->id)->update(['habilitada'=>0]);
-
+                //Log::info("true en archivo");
+                $respuesta_caduca=$answer->nombre;
             $archivos=DB::table('answer')->where('id','=',$answer->id)->get();
             foreach($archivos as $archivo);
-              $path_archivo=public_path("botpress12120/data/icibot/qna/".$archivo->archivo_qna.".json");
+              $path_archivo=public_path("botpress12120/data/bots/icibot/qna/".$archivo->archivo_qna.".json");
               
-        $leer1 = fopen($path_archivo, 'r');
-        $numlinea=0;
-        while ($linea = fgets($leer1)){
-        //echo $linea.'<br/>';
-            if((substr($linea,15,-2))==true){
-                Log::info("true en archivo");
-            $aux[] = str_replace("true","false",$aux[$numlinea]);    
-             $numlinea++;
-            }
-        }
-        fclose($leer1);
-        unlink($path_archivo);
-
-        //$contenido=file_get_contents($path_archivo);
-         $contenido=null;
-         $tam_array_aux=count($aux);
-      while($i<$tam_array_aux){
-        $contenido .=$aux_[$i];
-        $i=$i+1;
+        $leer = fopen($path_archivo, 'r+');
+      //if(filesize($path_archivo) > 0){
+      //SE ALMACENA LO QUE SE LEE INTERMANETE EN EL ARCHIVO
+      //dd($path_archivo);
+      //dd($path_archivo,$cadena_final_actual);
+      $data = fread($leer, filesize($path_archivo));
+      $encuentra2=strpos($data,'"enabled": true,');
+      $encuentra3=strpos($data,'"enabled": false,');
+      //dd($encuentra2,$encuentra3);
+      //dd($data);
+      //SE CIERRA EL ARCHIVO QUE SE LEE
+      fclose($leer);
+      //SI EN EL ARCHIVO ENCUENTRA $patron entonces lo cambiará por $sustitucion y copiará lo demas del archivo data en la variable $datosnuevos
+      //EL STRING QUE SE ESTA BUSCANDO EN LOS ARCHIVOS DE LA CARPETA QNA, PARA MODIFICAR ALGUNA DE LAS PREGUNTAS, QUE COMO $patron como 
+    //en este caso no lleva coma, sabemos que no será el ultimo del arreglo questions: es:[]
+      if($encuentra2==false){
+        $patron= '"enabled": false,';
+    //dd($patron);
+    // LO QUE SE DESEA ESCRIBIR COMO NUEVA PREGUNTA EN LA TABLA QUESTIONS Y EN LA BASE DE DATOS DE BOTPRESS
+    $sustitucion='"enabled": true,';
       }
-        
-        $escribir = fopen($path_archivo, 'w+');
-         //fwrite($escribir1, $data1);
-        fwrite($escribir, $contenido);
-       fclose($escribir);
+      if($encuentra3==false){
+    $patron= '"enabled": true,';
+    //dd($patron);
+    // LO QUE SE DESEA ESCRIBIR COMO NUEVA PREGUNTA EN LA TABLA QUESTIONS Y EN LA BASE DE DATOS DE BOTPRESS
+    $sustitucion='"enabled": false,';
+    }
+      $datosnuevos = str_replace($patron, $sustitucion, $data); //REEMPLAZA LO QUE CONTINE EL ARCHIVO VIEJO POR EL ARCHIVO NUEVO
+      //dd($datosnuevos);
+      $escribir = fopen($path_archivo, 'w');
+      //dd($datosnuevos);
+      //Se escribe en $datosnuevos los en el aarchivo que corresponde
+      //dd($datosnuevos);
+      fwrite($escribir, $datosnuevos);
+      //cerramos la escritura en el archivo
+      fclose($escribir);
+       
+       foreach($users as $user){
+        $details=['nombre'=> $user->name,
+                   'respuesta' => $answer->nombre];
+                   //Log::info($users,$details);                        
+       Mail::to($user->email)->send(new Respuesta_caducada($details));
+       }
+
           }else{
 
-          }
         }
         
     }
+}
 }
