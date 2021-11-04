@@ -26,8 +26,22 @@
             </div>
           </div>
 
+          @for ($j = 1; $j < $cant_preguntas; $j++)
 
+          <div class="row row-bottom-margin">
+              <div class="form-group col-md-10">
+                <input wire:model="pregunta.{{$j}}" wire:keydown.enter="add({{$i}})" type="text" class="form-control" name="preguntas"></input>
+              </div>
+              <div class="form-group col-md-1">
+                <button class="btn btn-danger btn-sm" wire:click="remove({{$j}})">✕</button>
+              </div>
+            </div>
+            <input wire:model="pregunta_copy.{{$j}}" type="hidden" class="form-control" name="pregunta_copy"></input>
+        
+          @endfor
+          
           @foreach($inputs as $key => $value)
+            @if ($value >= $cant_preguntas)
             <div class="row row-bottom-margin">
               <div class="form-group col-md-10">
                 <input wire:model="pregunta.{{ $value }}" wire:keydown.enter="add({{$i}})" type="text" class="form-control" name="preguntas"></input>
@@ -37,6 +51,7 @@
               </div>
             </div>
             <input wire:model="pregunta_copy.{{ $value }}" type="hidden" class="form-control" name="pregunta_copy"></input>
+            @endif
           @endforeach
           @error('pregunta.*')
             <p class="text-danger">{{ $message }}</p>

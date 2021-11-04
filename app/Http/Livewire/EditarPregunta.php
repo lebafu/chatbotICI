@@ -19,7 +19,7 @@ class EditarPregunta extends Component
 {
  use WithFileUploads;
 
-  public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea, $id_categoria, $nueva_cat, $contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado,$todo_ordenado_copy,$pos,$nombre_imagen,$nombres_imagenes,$imagen_nueva,$imagen_actual,$imagenes_nuevas,$strings,$textos_originales,$imagen,$image_nueva,$remove,$fecha_minima,$agregar;
+  public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea, $id_categoria, $nueva_cat, $contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado,$todo_ordenado_copy,$pos,$nombre_imagen,$nombres_imagenes,$imagen_nueva,$imagen_actual,$imagenes_nuevas,$strings,$textos_originales,$imagen,$image_nueva,$remove,$fecha_minima,$agregar, $cant_preguntas;
     //public $pregunta=[];
     public $inputs = [];
     public $i = 0;
@@ -457,6 +457,7 @@ class EditarPregunta extends Component
         //dd($this->preguntas,$cantidad_preguntas);
         //$this->pregunta[$i]->pregunta
         //dd($pregeditar,$this->pregunta[0]->pregunta);
+        $this->cant_preguntas = $cantidad_preguntas;
         $this->selected_id = $id;
         $this->resp = $pregeditar->nombre;
         $this->vence = $pregeditar->vence;
