@@ -13,25 +13,25 @@ use Livewire\WithPagination;
 class IndexPreguntas extends Component
 {
 	 use WithPagination;
-   public $orden, $estado, $filtro_cat, $cant_pagina;
+   public $orden, $estado, $filtro_cat, $cant_pagina, $dias;
 
     public function render()
     {
       $categorias = Categorias::all();
-      $sietedias = Carbon::now()->addDays(7);
+      $limite = Carbon::now()->addDays($this->dias);
       if($this->estado == "todos"){
         if($this->filtro_cat == "todas"){
           return view('livewire.index-preguntas', [
             'archivoPregs' => ArchivoPregunta::orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
             'categorias' => $categorias,
-            'fecha_limite' => $sietedias
+            'fecha_limite' => $limite
           ]);
         }
         else{
           return view('livewire.index-preguntas', [
             'archivoPregs' => ArchivoPregunta::where('id_categoria', $this->filtro_cat)->orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
             'categorias' => $categorias,
-            'fecha_limite' => $sietedias
+            'fecha_limite' => $limite
           ]);
         }
       }
@@ -39,16 +39,16 @@ class IndexPreguntas extends Component
         
         if($this->filtro_cat == "todas"){
           return view('livewire.index-preguntas', [
-              'archivoPregs' => ArchivoPregunta::where('habilitada', 1)->where('fecha_caducacion', '<=', $sietedias)->orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
+              'archivoPregs' => ArchivoPregunta::where('habilitada', 1)->where('fecha_caducacion', '<=', $limite)->orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
               'categorias' => $categorias,
-              'fecha_limite' => $sietedias
+              'fecha_limite' => $limite
           ]);
         }
         else{
           return view('livewire.index-preguntas', [
-              'archivoPregs' => ArchivoPregunta::where('habilitada', 1)->where('fecha_caducacion', '<=', $sietedias)->where('id_categoria', $this->filtro_cat)->orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
+              'archivoPregs' => ArchivoPregunta::where('habilitada', 1)->where('fecha_caducacion', '<=', $limite)->where('id_categoria', $this->filtro_cat)->orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
               'categorias' => $categorias,
-              'fecha_limite' => $sietedias
+              'fecha_limite' => $limite
           ]);
         }
       }
@@ -57,14 +57,14 @@ class IndexPreguntas extends Component
           return view('livewire.index-preguntas', [
             'archivoPregs' => ArchivoPregunta::where('habilitada', $this->estado)->orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
             'categorias' => $categorias,
-            'fecha_limite' => $sietedias
+            'fecha_limite' => $limite
           ]); 
         }
         else{
           return view('livewire.index-preguntas', [
             'archivoPregs' => ArchivoPregunta::where('habilitada', $this->estado)->where('id_categoria', $this->filtro_cat)->orderBy('updated_at', $this->orden)->paginate($this->cant_pagina),
             'categorias' => $categorias,
-            'fecha_limite' => $sietedias
+            'fecha_limite' => $limite
           ]); 
         }
         
@@ -77,6 +77,7 @@ class IndexPreguntas extends Component
       $this->cant_pagina = 10;
       $this->estado = "1";
       $this->filtro_cat = "todas";
+      $this->dias = 7;
     }
 
     public function habilitada($id)
