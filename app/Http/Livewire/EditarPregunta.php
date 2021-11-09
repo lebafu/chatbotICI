@@ -19,7 +19,7 @@ class EditarPregunta extends Component
 {
  use WithFileUploads;
 
-  public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea, $id_categoria, $nueva_cat, $contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado,$todo_ordenado_copy,$pos,$nombre_imagen,$nombres_imagenes,$imagen_nueva,$imagen_actual,$imagenes_nuevas,$strings,$textos_originales,$imagen,$image_nueva,$remove,$fecha_minima,$agregar, $cant_preguntas;
+  public $selected_id, $resp, $vence, $fecha_caducacion, $archivo_qna, $habilitada, $pregunta, $id_foranea, $id_categoria, $nueva_cat, $contexto,$pregunta_copy,$es_archivo_flow,$name_image,$nombre,$textos,$tam_array_builtins_texts_unique,$builtins_texts_index_unique,$tam_array_todo,$todo_ordenado,$todo_ordenado_copy,$pos,$nombre_imagen,$nombres_imagenes,$imagen_nueva,$imagen_actual,$imagenes_nuevas,$strings,$textos_originales,$imagen,$image_nueva,$remove,$fecha_minima,$agregar,$cant_preguntas;
     //public $pregunta=[];
     public $inputs = [];
     public $i = 0;
@@ -49,31 +49,34 @@ class EditarPregunta extends Component
 
     public function remove($i)
     {   
-
-        
-        //dd($this->inputs,$i,$this->inputs[$i],$this,$this->pregunta_copy[$i+1],$question);
-
-        //$question=DB::table('questions')->where('pregunta','=',$this_pregunta[$i+1])->first();
-       $this->remove=1;
-        //dd($this->selected_id,$this);
+       //se recorre las preguntas encontradas en el sistema, se actualiza inputs con las preguntas actuales
+       for($j=0;$j<count($this->pregunta);$j++){
+        $this->inputs[$j]=$this->pregunta[$j];
+       }
+       //Si entra a update.
+       $this->remove=1; 
+       //Elimino pregunta de variable inputs que es la que se visualiza en la vista.
         unset($this->inputs[$i]);
-        if(array_key_exists($i+1,$this->pregunta)){
-        $question=DB::table('questions')->where('pregunta','=',$this->pregunta[$i+1])->first();
+        //Si existe el indice en el arreglo pregunta entonces entra al if
+        if(array_key_exists($i,$this->pregunta)){
+          //Se almacena en variable question para obtner la pregunta a eliminar
+        $question=DB::table('questions')->where('pregunta','=',$this->pregunta[$i])->first();
+        //dd($question,$this->pregunta[$i],$i,$this->pregunta);
         if($question!=null){
           //dd($this->selected_id);
           $archivos=DB::table('answer')->where('id','=',$this->selected_id)->get();
           foreach($archivos as $archivo);
           
-
+          //ruta de archivo een carpeta qna a editar
           $path_archivo1=public_path("botpress12120/data/bots/icibot/qna/".$archivo->archivo_qna.".json");
 
-        //dd($path_archivo);
+        //Se abre el archivo y se lee linea por linea y se almacena en un arreglo
              $leer1 = fopen($path_archivo1, 'r+');
       $numlinea=0;
       $aux_qna=array();
       while ($linea = fgets($leer1)){
         //echo $linea.'<br/>';
-        $encontrar_pregunta_eliminar=strpos($linea,$this->pregunta[$i+1]);
+        $encontrar_pregunta_eliminar=strpos($linea,$this->pregunta[$i]);
           if($encontrar_pregunta_eliminar==false){
           $aux_qna[] = $linea;    
              $numlinea++;
@@ -87,9 +90,11 @@ class EditarPregunta extends Component
              $leer2 = fopen($path_archivo2, 'r+');
       $numlinea=0;
       $aux_intents=array();
+
+      //Se lee el archivo en carpeta intents y se almacena e un arreglo.
       while ($linea = fgets($leer2)){
         //echo $linea.'<br/>';
-        $encontrar_pregunta_eliminar=strpos($linea,$this->pregunta[$i+1]);
+        $encontrar_pregunta_eliminar=strpos($linea,$this->pregunta[$i]);
           if($encontrar_pregunta_eliminar==false){
           $aux_intents[] = $linea;    
              $numlinea++;
@@ -97,6 +102,8 @@ class EditarPregunta extends Component
         }
         fclose($leer2);
 
+
+        //Se actualizan ambos arreglos que contienen informacion actual de los archivos
         $cantidad_lineas_aux_qna=count($aux_qna);
         $contador_corchetes_qna=0;
         for($j=0;$j<$cantidad_lineas_aux_qna;$j++){
@@ -129,9 +136,11 @@ class EditarPregunta extends Component
             }
         }
       //dd($this,$archivo->archivo_qna,$aux_qna,$aux_intents,$this->remove,$this->pregunta_copy,$this->pregunta,$i);
+        //Se eliminan los archivos actuales
         unlink($path_archivo1);
         unlink($path_archivo2);
          $j=0;
+         //Se crean ambos archivos de forma actualizada
       $contenido="";
       while($j<$cantidad_lineas_aux_qna){
         $contenido .=$aux_qna[$j];
@@ -148,12 +157,24 @@ class EditarPregunta extends Component
        
        file_put_contents($path_archivo2,$contenido);
        //dd($this->pregunta_copy,$i,$this->pregunta_copy,$this->pregunta);
-          DB::table('questions')->where('pregunta','=',$this->pregunta[$i+1])->delete();
-          unset($this->pregunta[$i+1]);
-          $i=$i-1;
+       //Se elimina pregunta de la base de datos
+          DB::table('questions')->where('pregunta','=',$this->pregunta[$i])->delete();
+
+          //Se actualizann los arreglos de pregunta e inputs para visualizarlos de manera correcta en la vista.
+          $questions=DB::table('questions')->where('id_answers','=',$this->selected_id)->get();
+          $k=0;
+          foreach($questions as $question){
+              $this->pregunta[$k]=$question->pregunta;
+              $this->inputs[$k]=$question->pregunta;
+              $k=$k+1;
+          }
+
+          //unset($this->pregunta[$i]);
+          //dd($this->pregunta,$this->inputs,$this,$i);
+          //$i=$i-1;
           session()->flash('message_delete', 'Se ha eliminado Input elemento de la Base de Datos y Archivos Botpress Correctamente');
         }else{
-          $i=$i-1;
+          //$i=$i-1;
           session()->flash('message_delete', 'Se ha eliminado Input Correctamente');
         }
         }
@@ -1512,7 +1533,6 @@ $tam=count($res);
     //dd($request->pregunta);
     //dd($question->pregunta);
     //if($i+1==11){
-
         //RUTA DE LA CARPETA PUBLIC + RUTA DE DIRECTORIO HASTA CARPETA QNA DONDE RECORRERA CADA UNO DE LOS NOMBRES DE LOS ARCHIVOS QUE TIENE ALMACENADO EN LA VARIABLE RES2
     $find=strpos($res2[$i]["Nombre"],$cadena_final_actual);
      //dd($res);
@@ -1541,7 +1561,6 @@ $tam=count($res);
      //Se escribe en $datosnuevos los en el aarchivo que corresponda a esta iteracion
       fwrite($escribir, $datosnuevos);
       fclose($escribir);
-
       //dd($datosnuevos);
     }
     $i=$i+1;
@@ -1559,7 +1578,6 @@ $tam=count($res);
     //dd($request->pregunta);
     //dd($question->pregunta);
     //if($i+1==11){
-
     //Se abre cada uno de los archivos de la carpeta  QNA, SI SE MODIFICA EL NOMBRE DE BOT DESDE icibot a otro nombree modificar numero 35
     $path_archivo=("C:/Users/LI/Desktop/chtbtICI/public/".$res2[$i]["Nombre"]);
     //dd($path_archivo);
@@ -1591,7 +1609,6 @@ $tam=count($res);
       //cierro el archivo para leer
       fclose($leer);
     //SI EN EL ARCHIVO ENCUENTRA $patron entonces lo cambiará por $sustitucion y copiará lo demas del archivo data en la variable $datosnuevos
-
       $datosnuevos = str_replace($patron, $sustitucion, $data); //REEMPLAZA LO QUE CONTINE EL ARCHIVO VIEJO POR EL ARCHIVO NUEVO
       //dd($datosnuevos);
       //Abro el archivo para escribir en el
