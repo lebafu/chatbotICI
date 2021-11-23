@@ -31,6 +31,7 @@ class EditarPregunta extends Component
       return view('livewire.editar-pregunta',['categorias' => $categorias]);
     }
 
+
     public function mount()
     {
       $pregeditar = ArchivoPregunta::findOrFail($this->archivoPreg->id);
@@ -39,111 +40,92 @@ class EditarPregunta extends Component
     }
 
     public function add($i)
-    {   
+    {
         $i = $i + 1;
         $this->i = $i;
         array_push($this->inputs ,$i);
-        //dd($this->inputs,$i);
         $this->agregar=1;
-        //dd($this->agregar,$this,$i);
+        //dd($this->agregar);
     }
 
- public function remove($i)
+    public function remove($i)
     {   
-       $this->remove=1;
+
+        
+        //dd($this->inputs,$i,$this->inputs[$i],$this,$this->pregunta_copy[$i+1],$question);
+
         //$question=DB::table('questions')->where('pregunta','=',$this_pregunta[$i+1])->first();
-      /*$j=0;
-      $this->inputs=array();
-      $preguntas=$this->pregunta;
-       
-        foreach($preguntas as $pregunta){
-            if($pregunta!=null){
-              array_push($this->inputs,$j+1);
-           }
-           $j=$j+1;
-          }
-          $j=0;*/
-        //dd($this->selected_id,$this,$i,array_key_exists($i+1,$this->pregunta));
-       //dd($this);
+      //dd($i);
+       $this->remove=1;
+        //dd($this->selected_id,$this);
         unset($this->inputs[$i]);
-        //Pregunto si la pregunta a eliminar existe su llave, si existe ejecutará el if
         if(array_key_exists($i+1,$this->pregunta)){
-          //Almaaceno en question la información de la pregunta.
         $question=DB::table('questions')->where('pregunta','=',$this->pregunta[$i+1])->first();
-        //Si la pregunta existe o no es vacia entonces ejecuto el if
         if($question!=null){
-          //Averiguo el nombre del archivo.
+          //dd($this->selected_id);
           $archivos=DB::table('answer')->where('id','=',$this->selected_id)->get();
           foreach($archivos as $archivo);
           
-          //Obtengo la ruta del archivo qna a modificar.
+
           $path_archivo1=public_path("botpress12120/data/bots/icibot/qna/".$archivo->archivo_qna.".json");
 
-        //Procedo a leer el archivo y a mantener las preguntas que no deben ser eliminadas
+        //dd($path_archivo);
              $leer1 = fopen($path_archivo1, 'r+');
       $numlinea=0;
       $aux_qna=array();
       while ($linea = fgets($leer1)){
         //echo $linea.'<br/>';
-        $encontrar_pregunta_eliminar=strpos($linea,'"'.$this->pregunta[$i+1].'"');
+        $encontrar_pregunta_eliminar=strpos($linea,$this->pregunta[$i+1]);
           if($encontrar_pregunta_eliminar==false){
           $aux_qna[] = $linea;    
              $numlinea++;
           }
         }
-        //Cierro el archivo qna
         fclose($leer1);
-         //Obtengo la ruta del archivo intents a modificar.
+        //dd($aux_qna);
         $path_archivo2=public_path("botpress12120/data/bots/icibot/intents/__qna__".$archivo->archivo_qna.".json");
 
-      //Procedo a leer el archivo y a mantener las preguntas que no deben ser eliminadas
-      $leer2 = fopen($path_archivo2, 'r+');
+        //dd($path_archivo);
+             $leer2 = fopen($path_archivo2, 'r+');
       $numlinea=0;
       $aux_intents=array();
       while ($linea = fgets($leer2)){
         //echo $linea.'<br/>';
-        $encontrar_pregunta_eliminar=strpos($linea,'"'.$this->pregunta[$i+1].'"');
+        $encontrar_pregunta_eliminar=strpos($linea,$this->pregunta[$i+1]);
           if($encontrar_pregunta_eliminar==false){
           $aux_intents[] = $linea;    
              $numlinea++;
           }
         }
-        //Cierro archivo intents
         fclose($leer2);
-        //dd($aux_qna);
 
-        //Recorro el archivo qna y si el último termino antes del tercer corchete tiene coma entonces le quito la coma
         $cantidad_lineas_aux_qna=count($aux_qna);
         $contador_corchetes_qna=0;
-        for($k=0;$k<$cantidad_lineas_aux_qna;$k++){
-
-          $encontrar_corchete_qna=strpos($aux_qna[$k],']');
-
+        for($j=0;$j<$cantidad_lineas_aux_qna;$j++){
+          $encontrar_corchete_qna=strpos($aux_qna[$j],']');
           if($encontrar_corchete_qna!=false){
             $contador_corchetes_qna=$contador_corchetes_qna+1;
-            if($contador_corchetes_qna==3){
-                $encontrar_coma_qna=strpos($aux_qna[$k-1],',');
-                if($encontrar_coma_qna!=false){
-                  $aux_qna[$k-1]=substr($aux_qna[$k-1],0,-3)."\r\n";
 
+            if($contador_corchetes_qna==3){
+                $encontrar_coma_qna=strpos($aux_qna[$j-1],',');
+                if($encontrar_coma_qna!=false){
+                  $aux_qna[$j-1]=substr($aux_qna[$j-1],0,-3)."\r\n";
                 }
             }
           }
         }
-        //dd($aux_qna,$aux_intents);
-        //Recorro el archivo qna y si el último termino antes del segundo corchete tiene coma entonces le quito la coma
-
+        //dd($aux_qna);
         $cantidad_lineas_aux_intents=count($aux_intents);
         $contador_corchetes_intents=0;
-        for($k=0;$k<$cantidad_lineas_aux_intents;$k++){
-          $encontrar_corchete_cerrado=strpos($aux_intents[$k],']');
+        for($j=0;$j<$cantidad_lineas_aux_intents;$j++){
+          $encontrar_corchete_cerrado=strpos($aux_intents[$j],']');
           if($encontrar_corchete_cerrado!=false){
             $contador_corchetes_intents=$contador_corchetes_intents+1;
           
             if($contador_corchetes_intents==2){
-                $encontrar_coma_intents=strpos($aux_intents[$k-1],',');
+                $encontrar_coma_intents=strpos($aux_intents[$j-1],',');
                 if($encontrar_coma_intents!=false){
-                  $aux_intents[$k-1]=substr($aux_intents[$k-1],0,-3)."\r\n";
+                  $aux_intents[$j-1]=substr($aux_intents[$j-1],0,-3)."\r\n";
                 }
               }
             }
@@ -151,7 +133,6 @@ class EditarPregunta extends Component
       //dd($this,$archivo->archivo_qna,$aux_qna,$aux_intents,$this->remove,$this->pregunta_copy,$this->pregunta,$i);
         unlink($path_archivo1);
         unlink($path_archivo2);
-        //Elimino los archivos y posteriormente copio la nueva información en los archivos
          $j=0;
       $contenido="";
       while($j<$cantidad_lineas_aux_qna){
@@ -169,27 +150,8 @@ class EditarPregunta extends Component
        
        file_put_contents($path_archivo2,$contenido);
        //dd($this->pregunta_copy,$i,$this->pregunta_copy,$this->pregunta);
-       //Elimino pregunta de la base de datos
           DB::table('questions')->where('pregunta','=',$this->pregunta[$i+1])->delete();
-          //Elimino pregunta de el arreglo pregunta
-          //Procedo a actualizar variables inputs,pregunta y pregunta_copy
           unset($this->pregunta[$i+1]);
-          $preguntas=$this->pregunta;
-          $this->pregunta=array();
-          $this->pregunta_copy=array();
-          $j=0;
-          $this->inputs=null;
-          $this->inputs=array();
-          foreach($preguntas as $pregunta){
-            if($pregunta!=null){
-              array_push($this->inputs,$j+1);
-            $this->pregunta[$j]=$pregunta;
-            $this->pregunta_copy[$j]=$pregunta;
-            $j=$j+1;
-           }
-          }
-          //array_push($this->inputs,$j+1);
-          //dd($this);
           $i=$i-1;
           session()->flash('message_delete', 'Se ha eliminado Input elemento de la Base de Datos y Archivos Botpress Correctamente');
         }else{
@@ -493,11 +455,11 @@ class EditarPregunta extends Component
         $this->todo_ordenado_copy=$this->todo_ordenado;
         $this->pregunta=$pregunta;
         $this->pregunta_copy=$pregunta;
+        $this->cant_preguntas=$cantidad_preguntas;
         //dd($this->pregunta,$this->pregunta_copy);
         //dd($this->preguntas,$cantidad_preguntas);
         //$this->pregunta[$i]->pregunta
         //dd($pregeditar,$this->pregunta[0]->pregunta);
-        $this->cant_preguntas = $cantidad_preguntas;
         $this->selected_id = $id;
         $this->resp = $pregeditar->nombre;
         $this->vence = $pregeditar->vence;
@@ -515,7 +477,6 @@ class EditarPregunta extends Component
         /*$this->validate([
             'selected_id' => 'required|numeric',
         ]);*/
-        //dd($this);
         if ($this->vence != 1){
             $this->vence = null;
             $this->fecha_caducacion = null;
@@ -525,9 +486,9 @@ class EditarPregunta extends Component
         $categoria_creada = Categorias::create(['nombre' => $this->nueva_cat]);
         $this->id_categoria = $categoria_creada->id;
        }
-
+        //dd($this);
         $this->pregunta_copy=$this->pregunta;
-        //dd($this,$this->todo_ordenado);
+        
         if($this->remove!=1){
          $questions=DB::table('questions')->where('id_answers','=',$this->selected_id)->get();
       foreach($questions as $question);
@@ -913,7 +874,6 @@ $tam=count($res);
             }
             $a++;
         }
-        //dd($this->inputs);
         $a=0;
         $b=0;
   $this->pregunta_copy=$this->pregunta;
@@ -939,7 +899,7 @@ $tam=count($res);
            $j=$j+1;
           $i=$i+1;
       }
-        //dd($ultimas_4_lineas,$aux_intents);
+        //dd($ultimas_4_lineas);
         fclose($leer1);
         $k=0;
         $cantidad_preguntas_actual=count($this->pregunta);
@@ -1033,6 +993,7 @@ $tam=count($res);
           $i=$i+1;
       }
       //dd($ultimas_5_lineas);
+      $ultimas_5_lineas[5]="}\n";
         $k=0;
         $i=0;
         $j=0;
@@ -1266,7 +1227,6 @@ $tam=count($res);
             }
             $a++;
         }
-        //dd($this->inputs);
         $a=0;
         $b=0;
   $this->pregunta_copy=$this->pregunta;
@@ -1292,7 +1252,8 @@ $tam=count($res);
            $j=$j+1;
           $i=$i+1;
       }
-        
+       $ultimas_4_lineas[3]="}\n";
+        //dd($ultimas_4_lineas);
         fclose($leer1);
         $k=0;
         $cantidad_preguntas_actual=count($this->pregunta);
@@ -1391,7 +1352,8 @@ $tam=count($res);
            $j=$j+1;
           $i=$i+1;
       }
-      //dd($aux_qna,$ultimas_5_lineas,$i,$numlinea);
+      $ultimas_5_lineas[5]="}\n";
+      //dd($ultimas_5_lineas);
         $k=0;
         $i=0;
         $j=0;
@@ -1474,7 +1436,7 @@ $tam=count($res);
               //dd($aux_intents,$aux_qna,$i,$k);
            }
             //dd($aux_qna,$k,$i,$this,$aux_intents);
-  //dd($aux_intents,$aux_qna,$this);
+//dd($aux_intents,$aux_qna,$this);
   //dd($request,$id,$question,$answer,$archivo_qna->nombre,$res[$i]["Nombre"],$res2[$j]["Nombre"],public_path(),$path_archivo_intents,$path_archivo_qna,$aux_intents,$aux_qna);
       
      unlink($path_archivo_intents);
@@ -1487,7 +1449,7 @@ $tam=count($res);
         $contenido1 .=$aux_intents[$i];
         $i=$i+1;
       }
-      
+
         $escribir1 = fopen($path_archivo_intents, 'w+');
          //fwrite($escribir1, $data1);
         fwrite($escribir1, $contenido1);
@@ -1735,10 +1697,28 @@ $tam=count($res);
             //dd($this->agregar);
           }
         }else{
+          //dd($this);
+          $this->pregunta_copy=null;
+          $this->pregunta_copy=array();
+          $this->cant_preguntas=count($this->pregunta);
+          //dd($this->pregunta);
+          for($i=0;$i<$this->cant_preguntas;$i++){
+                if(array_key_exists($i,$this->pregunta)){
+                  array_push($this->pregunta_copy,$this->pregunta[$i]);
+                }
+          }
+          //dd($this->pregunta_copy,$this);
+          $this->pregunta=null;
+          $this->pregunta=array();
+          for($i=0;$i<$this->cant_preguntas-1;$i++){
+              array_push($this->pregunta,$this->pregunta_copy[$i]);
+          }
+          //dd($this);
           $this->remove=0;
-          //session()->flash('message_delete', 'Se ha eliminado Input elemento de la Base de Datos y Archivos Botpress Correctamente');
+          session()->flash('message_delete', 'Se ha eliminado Input elemento de la Base de Datos y Archivos Botpress Correctamente');
         }
     }
 
 
 }
+
