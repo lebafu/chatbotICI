@@ -25,7 +25,7 @@ class Deshabilitar_Fecha_Vencida extends Command
      *
      * @var string
      */
-    protected $description = 'Deshabilita respuesta con fechaa vencida';
+    protected $description = 'Deshabilita respuesta con fecha vencida';
 
     /**
      * Create a new command instance.
@@ -47,7 +47,7 @@ class Deshabilitar_Fecha_Vencida extends Command
         $carbon = new \Carbon\Carbon();
         $fecha_actual = $carbon->now();
         $fecha_actual= strtotime($fecha_actual->format('Y-m-d'));
-        $answers=DB::table('answer')->get();
+        $answers=DB::table('answer')->where('vence','=',1)->get();
          $users=DB::table('users')->get();
         //dd('HOLA');
         foreach($answers as $answer){
@@ -56,7 +56,6 @@ class Deshabilitar_Fecha_Vencida extends Command
             $fecha_caducacion=strtotime($answer->fecha_caducacion);
             $vence=$answer->vence;
             if(($vence==1 and $fecha_caducacion <= $fecha_actual and $answer->habilitada==1)){
-                DB::table('answer')->where('id','<=',$answer->id)->update(['habilitada'=>0]);
                 //Log::info("true en archivo");
                 $respuesta_caduca=$answer->nombre;
             $archivos=DB::table('answer')->where('id','=',$answer->id)->get();
@@ -78,12 +77,6 @@ class Deshabilitar_Fecha_Vencida extends Command
       //SI EN EL ARCHIVO ENCUENTRA $patron entonces lo cambiará por $sustitucion y copiará lo demas del archivo data en la variable $datosnuevos
       //EL STRING QUE SE ESTA BUSCANDO EN LOS ARCHIVOS DE LA CARPETA QNA, PARA MODIFICAR ALGUNA DE LAS PREGUNTAS, QUE COMO $patron como 
     //en este caso no lleva coma, sabemos que no será el ultimo del arreglo questions: es:[]
-      if($encuentra2==false){
-        $patron= '"enabled": false,';
-    //dd($patron);
-    // LO QUE SE DESEA ESCRIBIR COMO NUEVA PREGUNTA EN LA TABLA QUESTIONS Y EN LA BASE DE DATOS DE BOTPRESS
-    $sustitucion='"enabled": true,';
-      }
       if($encuentra3==false){
     $patron= '"enabled": true,';
     //dd($patron);
@@ -99,14 +92,15 @@ class Deshabilitar_Fecha_Vencida extends Command
       fwrite($escribir, $datosnuevos);
       //cerramos la escritura en el archivo
       fclose($escribir);
-       
+
+       //Enviar mail personalizado a usuarios del sistema de chatbot tesis
        foreach($users as $user){
         $details=['nombre'=> $user->name,
                    'respuesta' => $answer->nombre];
                    //Log::info($users,$details);                        
        Mail::to($user->email)->send(new Respuesta_caducada($details));
        }
-
+         DB::table('answer')->where('id','=',$answer->id)->update(['habilitada'=>0]);
           }else{
 
         }
