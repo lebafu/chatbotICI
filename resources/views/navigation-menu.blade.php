@@ -28,7 +28,14 @@
                         <div class="text-gray-100">
                             {{ __('Comentarios') }}
                         </div>
-                    </x-jet-nav-link>     
+                    </x-jet-nav-link> 
+                      @if(Auth::user()->email=="admin@admin.com")
+                    <x-jet-nav-link href="{{ route('usuarios') }}" :active="request()->routeIs('usuarios')">
+                        <div class="text-gray-100">
+                            {{ __('Usuarios') }}
+                        </div>
+                    </x-jet-nav-link>  
+                 @endif   
                 </div>
             </div>
 

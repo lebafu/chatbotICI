@@ -12,6 +12,7 @@
 							      </div>
 							    @endif
 							    </div>
+							 @if(Auth::user()->name=="Administrador")
 							<div id="accordion" role="tablist" aria-multiselectable="true" class="o-accordion">
 							  <div class="card multi">
 							    <div class="card-header border-bottom border-secondary" style="background-color:#E5E8E8" role="tab" id="heading1">
@@ -25,18 +26,38 @@
     							</div>
     							<div id="collapse1" class="collapse show" role="tabpanel" aria-labelledby="heading1">
       							<div class="card-block">
-         							@include('livewire.crear-usuario')
+      								
+         									@include('livewire.crear-usuario')
+         							
 							      </div>
 							    </div>
 							  </div>
 							</div>
+							@else
+							<div id="accordion" role="tablist" aria-multiselectable="true" class="o-accordion">
+							  <div class="card multi">
+							    <div class="card-header border-bottom border-secondary" style="background-color:#E5E8E8" role="tab" id="heading1">
+							      <h5 class="mb-0">
+							        <div class="row justify-content-center">
+				                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="false" aria-controls="collapse1">
+				                <strong>Usted no puede añadir usuarios, solo el Administrador</strong>
+				                </a>
+							        </div>
+							      </h5>
+    							</div>
+							  </div>
+							</div>
+							@endif
 						</div>
 					</div>
 					<div class="row justify-content-center mt-sm-2 mb-sm-1">	
 						<h2 class="text-xl text-center">
+			 @if(Auth::user()->name=="Administrador")
               Usuarios del sistema
             </h2>
+            @endif
 					</div>
+					@if(Auth::user()->name=="Administrador")
 					<div class="row justify-content-center">
 						<div class="col-md-11">
 							<table class="table table-hover table-sm">
@@ -64,7 +85,10 @@
 						  </table>	
 						</div>
 					</div>
+					@endif
+					@if(Auth::user()->name=="Administrador")
 					{{ $users->links() }}
+					@endif
 				</div>
 			</div>
 		</div>
