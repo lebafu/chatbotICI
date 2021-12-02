@@ -1,3 +1,4 @@
+@if($cantidad_preguntas>0)
 <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight text-center">
             {{ __('Preguntas sugeridas por los estudiantes') }}
@@ -79,4 +80,10 @@
 
     {{ $PregSugeridas->links() }}
 </div>
-
+@else
+        <div class="row justify-content-center">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="false" aria-controls="collapse1">
+                        <strong>No existen nuevas preguntas sugeridas al sistema</strong>
+                        </a>
+          </div>
+@endif
